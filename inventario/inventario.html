@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Sistema de Gestión</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1> OptiStock</h1>
+                <p>Sistema de Gestión</p>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <!-- Dashboard -->
+                    <li class="nav-section" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
+                            <span> Dashboard</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html"
+                                    class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html"
+                                    class="nav-link">Reportes Rápidos</a>
+                            </li>
+                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
+                                    class="nav-link">Notificaciones</a></li>
+                        </ul>
+                    </li>
+                    <!-- Inventario -->
+                    <li class="nav-section active" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')">
+                            <span> Inventario</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../inventario/inventario.html"
+                                    class="nav-link active">Productos</a></li>
+                            <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/proveedores.html"
+                                    class="nav-link">Proveedores</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/transferencias.html"
+                                    class="nav-link">Transferencias</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Facturación -->
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')">
+                            <span> Facturación</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva
+                                    Factura</a></li>
+                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las
+                                    Facturas</a>
+                            </li>
+                            <li class="nav-item"><a href="../facturacion/pendientes.html"
+                                    class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
+                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Reportes -->
+                    <li class="nav-section" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')">
+                            <span> Reportes</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/personalizados.html"
+                                    class="nav-link">Personalizados</a></li>
+                        </ul>
+                    </li>
+                    <!-- Configuración -->
+                    <li class="nav-section" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')">
+                            <span>️ Configuración</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/impuestos.html"
+                                    class="nav-link">Impuestos</a></li>
+                        </ul>
+                    </li>
+                    <!-- Perfil -->
+                    <li class="nav-item">
+                        <a href="../configuracion/perfil.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span>Perfil</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="page-header">
+                <h2 class="page-title">Gestión de Inventario</h2>
+                <p class="page-subtitle">Administra tus productos</p>
+            </header>
+            <!-- Formulario Agregar/Editar Producto -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title" id="form-titulo">➕ Agregar Nuevo Producto</h3>
+                </div>
+                <form id="form-producto">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">Nombre del Producto *</label>
+                            <input type="text" id="nombre" required placeholder="Ej: Laptop Dell Inspiron">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoría *</label>
+                            <select id="categoria" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option value="Tecnología">Tecnología</option>
+                                <option value="Accesorios">Accesorios</option>
+                                <option value="Mobiliario">Mobiliario</option>
+                                <option value="Almacenamiento">Almacenamiento</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="precio">Precio (COP) *</label>
+                            <input type="number" id="precio" required min="0" step="1000" placeholder="50000">
+                        </div>
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad *</label>
+                            <input type="number" id="cantidad" required min="0" placeholder="10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" placeholder="Descripción del producto"></textarea>
+                    </div>
+                    <input type="hidden" id="producto-id">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span></span>
+                            <span id="btn-texto">Agregar Producto</span>
+                        </button>
+                        <button type="button" onclick="cancelarEdicion()" class="btn btn-secondary" id="btn-cancelar"
+                            style="display: none;">
+                            <span>❌</span>
+                            <span>Cancelar</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- Búsqueda y Filtros -->
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="buscar-producto" class="search-input"
+                        placeholder="🔍 Buscar por nombre o categoría...">
+                    <select id="filtro-categoria" class="form-control">
+                        <option value="">Todas las Categorías</option>
+                        <option value="Tecnología">Tecnología</option>
+                        <option value="Accesorios">Accesorios</option>
+                        <option value="Mobiliario">Mobiliario</option>
+                        <option value="Almacenamiento">Almacenamiento</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Tabla de Productos -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"> Lista de Productos</h3>
+                    <span class="badge badge-info" id="total-productos">0 productos</span>
+                </div>
+                <div class="table-container">
+                    <table id="tabla-productos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-productos">
+                            <tr>
+                                <td colspan="7" class="text-center">Cargando productos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/datos.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        let productoEditando = null;
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            await loadProducts();
+            renderTablaProductos();
+            inicializarEventos();
+        });
+
+        function inicializarEventos() {
+            document.getElementById('form-producto').addEventListener('submit', guardarProducto);
+            document.getElementById('buscar-producto').addEventListener('input', filtrarProductos);
+            document.getElementById('filtro-categoria').addEventListener('change', filtrarProductos);
+        }
+
+        function renderTablaProductos(filtro = '') {
+            let productos = getProducts();
+            if (filtro) {
+                productos = productos.filter(p =>
+                    p.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+                    (p.categoria || '').toLowerCase().includes(filtro.toLowerCase())
+                );
+            }
+            const categoriaFiltro = document.getElementById('filtro-categoria').value;
+            if (categoriaFiltro) {
+                productos = productos.filter(p => p.categoria === categoriaFiltro);
+            }
+            const tbody = document.getElementById('tbody-productos');
+            document.getElementById('total-productos').textContent =
+                `${productos.length} producto${productos.length !== 1 ? 's' : ''}`;
+            if (productos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No hay productos</td></tr>';
+                return;
+            }
+            tbody.innerHTML = productos.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.nombre}</td>
+                    <td>${p.categoria || ''}</td>
+                    <td>${formatPrice(p.precio)}</td>
+                    <td>${p.cantidad ?? 0}</td>
+                    <td>
+                        <span class="badge ${(p.cantidad ?? 0) <= 5 ? 'badge-warning' : 'badge-success'}">
+                            ${(p.cantidad ?? 0) <= 5 ? 'Stock bajo' : 'OK'}
+                        </span>
+                    </td>
+                    <td class="table-actions">
+                        <button onclick="editarProducto(${p.id})" class="btn btn-small btn-primary">✏️</button>
+                        <button onclick="eliminarProductoConfirm(${p.id})" class="btn btn-small btn-danger">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarProductos() {
+            renderTablaProductos(document.getElementById('buscar-producto').value);
+        }
+
+        async function guardarProducto(e) {
+            e.preventDefault();
+            const producto = {
+                nombre: document.getElementById('nombre').value,
+                categoria: document.getElementById('categoria').value,
+                precio: parseFloat(document.getElementById('precio').value),
+                cantidad: parseInt(document.getElementById('cantidad').value),
+                descripcion: document.getElementById('descripcion').value
+            };
+            try {
+                if (productoEditando) {
+                    await updateProduct(productoEditando, producto);
+                    showNotification('Producto actualizado correctamente');
+                    cancelarEdicion();
+                } else {
+                    await addProduct(producto);
+                    showNotification('Producto agregado correctamente');
+                }
+                document.getElementById('form-producto').reset();
+                renderTablaProductos();
+            } catch (err) {
+                showNotification('Error al guardar: ' + err.message, 'error');
+            }
+        }
+
+        function editarProducto(id) {
+            const producto = getProduct(id);
+            if (!producto) return;
+            productoEditando = id;
+            document.getElementById('producto-id').value = producto.id;
+            document.getElementById('nombre').value = producto.nombre;
+            document.getElementById('categoria').value = producto.categoria || '';
+            document.getElementById('precio').value = producto.precio;
+            document.getElementById('cantidad').value = producto.cantidad ?? 0;
+            document.getElementById('descripcion').value = producto.descripcion || '';
+            document.getElementById('form-titulo').innerHTML = '✏️ Editar Producto';
+            document.getElementById('btn-texto').textContent = 'Actualizar Producto';
+            document.getElementById('btn-cancelar').style.display = 'inline-flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cancelarEdicion() {
+            productoEditando = null;
+            document.getElementById('form-producto').reset();
+            document.getElementById('form-titulo').innerHTML = '➕ Agregar Nuevo Producto';
+            document.getElementById('btn-texto').textContent = 'Agregar Producto';
+            document.getElementById('btn-cancelar').style.display = 'none';
+        }
+
+        async function eliminarProductoConfirm(id) {
+            const producto = getProduct(id);
+            if (!producto) return;
+            if (confirm(`¿Estás seguro de eliminar "${producto.nombre}"?`)) {
+                try {
+                    await deleteProduct(id);
+                    showNotification('Producto eliminado correctamente');
+                    renderTablaProductos();
+                } catch (err) {
+                    showNotification('Error al eliminar: ' + err.message, 'error');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

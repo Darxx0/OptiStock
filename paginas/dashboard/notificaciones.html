@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones | Sistema de Inventario</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1> OptiStock</h1>
+                <p>Sistema de Gestión</p>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-section active" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
+                            <span> Dashboard</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../../Index.html" class="nav-link">Vista General</a></li>
+                            <li class="nav-item"><a href="../../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a>
+                            </li>
+                            <li class="nav-item"><a href="../../paginas/dashboard/notificaciones.html"
+                                    class="nav-link active">Notificaciones</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')">
+                            <span> Inventario</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../../inventario/inventario.html" class="nav-link">Productos</a></li>
+                            <li class="nav-item"><a href="../../inventario/categorias.html" class="nav-link">Categorías</a>
+                            </li>
+                            <li class="nav-item"><a href="../../inventario/proveedores.html" class="nav-link">Proveedores</a>
+                            </li>
+                            <li class="nav-item"><a href="../../inventario/transferencias.html" class="nav-link">Transferencias</a>
+                            </li>
+                            <li class="nav-item"><a href="../../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                            <li class="nav-item"><a href="../../inventario/historial.html" class="nav-link">Historial</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')">
+                            <span> Facturación</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
+                            <li class="nav-item"><a href="../../facturacion/facturas.html" class="nav-link">Todas las Facturas</a>
+                            </li>
+                            <li class="nav-item"><a href="../../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
+                            <li class="nav-item"><a href="../../facturacion/clientes.html" class="nav-link">Clientes</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')">
+                            <span> Reportes</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                            <li class="nav-item"><a href="../../reportes/inventario.html" class="nav-link">Inventario</a></li>
+                            <li class="nav-item"><a href="../../reportes/financieros.html" class="nav-link">Financiero</a></li>
+                            <li class="nav-item"><a href="../../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')">
+                            <span>️ Configuración</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../../configuracion/general.html" class="nav-link">General</a></li>
+                            <li class="nav-item"><a href="../../configuracion/empresa.html" class="nav-link">Empresa</a></li>
+                            <li class="nav-item"><a href="../../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../configuracion/perfil.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span>Perfil</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="page-header">
+                <h2 class="page-title">Notificaciones y Alertas</h2>
+                <p class="page-subtitle">Centro de notificaciones del sistema</p>
+            </header>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">⚠️ Alertas de Stock Bajo</h3>
+                    <span class="badge badge-warning" id="alert-count">0 alertas</span>
+                </div>
+                <ul class="activity-list" id="stock-alerts">
+                    <li class="activity-item">
+                        <div class="activity-icon"></div>
+                        <div class="activity-content">
+                            <div class="activity-title">Sin alertas de stock</div>
+                            <div class="activity-time">Todos los productos tienen stock suficiente</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🔔 Actividad Reciente</h3>
+                </div>
+                <ul class="activity-list" id="recent-activity">
+                    <li class="activity-item">
+                        <div class="activity-icon"></div>
+                        <div class="activity-content">
+                            <div class="activity-title">Sistema inicializado</div>
+                            <div class="activity-time">Sin actividad reciente</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📅 Recordatorios</h3>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-state-icon">📌</div>
+                    <p class="empty-state-text">No hay recordatorios pendientes</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../../js/datos.js"></script>
+    <script src="../../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarNotificaciones();
+        });
+        function cargarNotificaciones() {
+            var productosStockBajo = getLowStock();
+            var facturas = getInvoices();
+            // Alertas de stock
+            var alertsContainer = document.getElementById('stock-alerts');
+            document.getElementById('alert-count').textContent = productosStockBajo.length + ' alertas';
+            if (productosStockBajo.length === 0) {
+                alertsContainer.innerHTML = '<li class="activity-item"><div class="activity-icon"></div><div class="activity-content"><div class="activity-title">Sin alertas de stock</div><div class="activity-time">Todos los productos tienen stock suficiente</div></div></li>';
+            } else {
+                var html = '';
+                for (var i = 0; i < productosStockBajo.length; i++) {
+                    var p = productosStockBajo[i];
+                    html += '<li class="activity-item">';
+                    html += '<div class="activity-icon">⚠️</div>';
+                    html += '<div class="activity-content">';
+                    html += '<div class="activity-title">Stock bajo: ' + p.nombre + '</div>';
+                    html += '<div class="activity-time">Quedan ' + p.cantidad + ' unidades</div>';
+                    html += '</div></li>';
+                }
+                alertsContainer.innerHTML = html;
+            }
+            // Actividad reciente
+            var activityContainer = document.getElementById('recent-activity');
+            if (facturas.length === 0) {
+                activityContainer.innerHTML = '<li class="activity-item"><div class="activity-icon"></div><div class="activity-content"><div class="activity-title">Sistema inicializado</div><div class="activity-time">Sin actividad reciente</div></div></li>';
+            } else {
+                var html = '';
+                var recentInvoices = facturas.slice(-5).reverse();
+                for (var i = 0; i < recentInvoices.length; i++) {
+                    var f = recentInvoices[i];
+                    html += '<li class="activity-item">';
+                    html += '<div class="activity-icon"></div>';
+                    html += '<div class="activity-content">';
+                    html += '<div class="activity-title">Factura #' + f.id + ' - ' + f.cliente + '</div>';
+                    html += '<div class="activity-time">' + formatDate(f.fecha) + '</div>';
+                    html += '</div></li>';
+                }
+                activityContainer.innerHTML = html;
+            }
+        }
+    </script>
+</body>
+</html>

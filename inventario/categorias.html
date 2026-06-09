@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorías | Sistema de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1> OptiStock</h1>
+                <p>Sistema de Gestión</p>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-section" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
+                            <span> Dashboard</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a>
+                            </li>
+                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
+                                    class="nav-link">Notificaciones</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section active" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')">
+                            <span> Inventario</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
+                            <li class="nav-item"><a href="../inventario/categorias.html"
+                                    class="nav-link active">Categorías</a></li>
+                            <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')">
+                            <span> Facturación</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
+                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a>
+                            </li>
+                            <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
+                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')">
+                            <span> Reportes</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a></li>
+                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
+                            <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')">
+                            <span>️ Configuración</span>
+                            <span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
+                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
+                            <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../configuracion/perfil.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span>Perfil</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="page-header">
+                <h2 class="page-title">Gestión de Categorías</h2>
+                <p class="page-subtitle">Organiza tus productos por categoría</p>
+            </header>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"> Categorías de Productos</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Productos</th>
+                                <th>Stock Total</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table">
+                            <tr>
+                                <td colspan="4" class="text-center">Cargando Categorías...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/datos.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', cargarCategorías);
+        function cargarCategorías() {
+            var productos = getProducts();
+            var Categorías = {};
+            for (var i = 0; i < productos.length; i++) {
+                var p = productos[i];
+                if (!Categorías[p.categoria]) {
+                    Categorías[p.categoria] = { count: 0, stock: 0, value: 0 };
+                }
+                Categorías[p.categoria].count++;
+                Categorías[p.categoria].stock += p.cantidad;
+                Categorías[p.categoria].value += p.precio * p.cantidad;
+            }
+            var tbody = document.getElementById('categories-table');
+            var html = '';
+            for (var cat in Categorías) {
+                html += '<tr>';
+                html += '<td><span class="badge badge-info">' + cat + '</span></td>';
+                html += '<td>' + Categorías[cat].count + '</td>';
+                html += '<td>' + Categorías[cat].stock + '</td>';
+                html += '<td><strong>' + formatPrice(Categorías[cat].value) + '</strong></td>';
+                html += '</tr>';
+            }
+            tbody.innerHTML = html || '<tr><td colspan="4" class="text-center">No hay Categorías</td></tr>';
+        }
+    </script>
+</body>
+</html>
