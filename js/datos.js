@@ -1,28 +1,26 @@
-
 // ===== DATOS.JS =====
 /**
  * Core Data Management
- * Productos: API REST (Spring Boot /api/productos)
- * Facturas:  localStorage (sin cambios)
+ * Productos : API REST /api/productos
+ * Facturas  : API REST /api/facturas   ✅ migrado desde localStorage
+ * Clientes  : API REST /api/clientes   ✅ nuevo
  */
 
 const CONFIG = {
-    KEYS: { FACT: 'optistock_invoices', CONF: 'optistock_config' },
     IVA: 0.19,
     MIN_STOCK: 5,
     API_BASE: 'http://localhost:8080/api'
 };
 
-// ─── CACHE LOCAL DE PRODUCTOS (sincronizado con la API) ───────────────────────
-// El cache permite que las funciones síncronas (getProduct, getLowStock, getStats)
-// sigan funcionando mientras la UI usa loadProducts() al iniciar la página.
+// ─── CACHE LOCAL ──────────────────────────────────────────────────────────────
 let _productosCache = [];
+let _facturasCache  = [];
+let _clientesCache  = [];
 
-/**
- * Carga todos los productos desde la API y actualiza el cache.
- * Llamar esta función al inicio de cada página que usa productos.
- * Devuelve una Promise<Array>.
- */
+// ═══════════════════════════════════════════════════════════════════════════════
+// PRODUCTOS
+// ═══════════════════════════════════════════════════════════════════════════════
+
 async function loadProducts() {
     try {
         const res = await fetch(`${CONFIG.API_BASE}/productos`);
@@ -35,37 +33,19 @@ async function loadProducts() {
     }
 }
 
-// === Products (API REST) ===
+const getProducts    = ()    => _productosCache;
+const getProduct     = (id)  => _productosCache.find(p => p.id === id);
+const getLowStock    = ()    => _productosCache.filter(p => (p.cantidad ?? 0) <= CONFIG.MIN_STOCK);
 
-/**
- * Devuelve el cache local (síncrono).
- * Usar solo después de haber llamado loadProducts().
- */
-const getProducts = () => _productosCache;
-
-/**
- * Busca un producto por id en el cache local (síncrono).
- */
-const getProduct = (id) => _productosCache.find(p => p.id === id);
-
-/**
- * Productos con cantidad <= MIN_STOCK (síncrono).
- */
-const getLowStock = () => _productosCache.filter(p => p.cantidad <= CONFIG.MIN_STOCK);
-
-/**
- * Agrega un producto vía API.
- * dto: { nombre, precio, cantidad, categoria, descripcion }
- * Devuelve Promise<producto>.
- */
 const addProduct = async (dto) => {
     const res = await fetch(`${CONFIG.API_BASE}/productos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            nombre: dto.nombre,
-            precio: dto.precio,
-            categoria: dto.categoria,
+            nombre:      dto.nombre,
+            precio:      dto.precio,
+            cantidad:    dto.cantidad,
+            categoria:   dto.categoria,
             descripcion: dto.descripcion
         })
     });
@@ -75,18 +55,15 @@ const addProduct = async (dto) => {
     return nuevo;
 };
 
-/**
- * Actualiza un producto vía API.
- * Devuelve Promise<producto>.
- */
 const updateProduct = async (id, data) => {
     const res = await fetch(`${CONFIG.API_BASE}/productos/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            nombre: data.nombre,
-            precio: data.precio,
-            categoria: data.categoria,
+            nombre:      data.nombre,
+            precio:      data.precio,
+            cantidad:    data.cantidad,
+            categoria:   data.categoria,
             descripcion: data.descripcion
         })
     });
@@ -97,56 +74,124 @@ const updateProduct = async (id, data) => {
     return actualizado;
 };
 
-/**
- * Elimina un producto vía API.
- * Devuelve Promise<void>.
- */
 const deleteProduct = async (id) => {
-    const res = await fetch(`${CONFIG.API_BASE}/productos/${id}`, {
-        method: 'DELETE'
-    });
+    const res = await fetch(`${CONFIG.API_BASE}/productos/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Error al eliminar producto');
     _productosCache = _productosCache.filter(p => p.id !== id);
 };
 
-// === Invoices (localStorage — sin cambios) ===
-const getInvoices = () => JSON.parse(localStorage.getItem(CONFIG.KEYS.FACT) || '[]');
-const saveInvoices = (data) => localStorage.setItem(CONFIG.KEYS.FACT, JSON.stringify(data));
-const getInvoice = (id) => getInvoices().find(f => f.id === id);
+// ═══════════════════════════════════════════════════════════════════════════════
+// CLIENTES  (API REST)
+// ═══════════════════════════════════════════════════════════════════════════════
 
-const createInvoice = (inv) => {
-    const list = getInvoices();
-    inv.id = list.length ? Math.max(...list.map(i => i.id)) + 1 : 1;
-    inv.fecha = new Date().toISOString();
-    inv.subtotal = inv.items.reduce((s, i) => s + (i.precio * i.cantidad), 0);
-    inv.iva = inv.subtotal * CONFIG.IVA;
-    inv.total = inv.subtotal + inv.iva;
-    list.push(inv);
-    saveInvoices(list);
-    return inv;
-};
-
-// === Stats ===
-const getStats = () => {
-    const prod = getProducts();
-    const inv = getInvoices();
-    return {
-        totalProductos: prod.reduce((s, p) => s + (p.cantidad || 0), 0),
-        totalFacturas: inv.length,
-        ingresosTotal: inv.reduce((s, f) => s + f.total, 0),
-        productosStockBajo: getLowStock().length,
-        countProductos: prod.length
-    };
-};
-
-// === Utils ===
-const formatPrice = (p) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(p);
-const formatDate = (d) => new Date(d).toLocaleDateString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
-
-// === Initialize ===
-// Facturas: asegurar localStorage inicializado
-if (!localStorage.getItem(CONFIG.KEYS.FACT)) {
-    saveInvoices([]);
+async function loadClientes() {
+    try {
+        const res = await fetch(`${CONFIG.API_BASE}/clientes`);
+        if (!res.ok) throw new Error('Error al cargar clientes');
+        _clientesCache = await res.json();
+        return _clientesCache;
+    } catch (e) {
+        console.error('[datos.js] loadClientes:', e);
+        return _clientesCache;
+    }
 }
-// Productos: cargar desde API al arrancar
-loadProducts();
+
+const getClientes = ()    => _clientesCache;
+const getCliente  = (id)  => _clientesCache.find(c => c.idCliente === id);
+
+const addCliente = async (dto) => {
+    const res = await fetch(`${CONFIG.API_BASE}/clientes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dto)
+    });
+    if (!res.ok) throw new Error('Error al crear cliente');
+    const nuevo = await res.json();
+    _clientesCache.push(nuevo);
+    return nuevo;
+};
+
+const updateCliente = async (id, data) => {
+    const res = await fetch(`${CONFIG.API_BASE}/clientes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Error al actualizar cliente');
+    const actualizado = await res.json();
+    const idx = _clientesCache.findIndex(c => c.idCliente === id);
+    if (idx > -1) _clientesCache[idx] = actualizado;
+    return actualizado;
+};
+
+const deleteCliente = async (id) => {
+    const res = await fetch(`${CONFIG.API_BASE}/clientes/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Error al eliminar cliente');
+    _clientesCache = _clientesCache.filter(c => c.idCliente !== id);
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FACTURAS  (API REST — migrado desde localStorage)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function loadInvoices() {
+    try {
+        const res = await fetch(`${CONFIG.API_BASE}/facturas`);
+        if (!res.ok) throw new Error('Error al cargar facturas');
+        _facturasCache = await res.json();
+        return _facturasCache;
+    } catch (e) {
+        console.error('[datos.js] loadInvoices:', e);
+        return _facturasCache;
+    }
+}
+
+const getInvoices = () => _facturasCache;
+const getInvoice  = (id) => _facturasCache.find(f => f.id === id);
+
+const createInvoice = async (inv) => {
+    const payload = {
+        cliente:   inv.cliente,
+        documento: inv.documento || '0000000000',
+        email:     inv.email     || '',
+        telefono:  inv.telefono  || '',
+        items: inv.items.map(i => ({
+            productoId: i.productoId,
+            cantidad:   i.cantidad
+        }))
+    };
+    const res = await fetch(`${CONFIG.API_BASE}/facturas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+        const err = await res.text();
+        throw new Error('Error al crear factura: ' + err);
+    }
+    const nueva = await res.json();
+    _facturasCache.unshift(nueva);
+    return nueva;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const getStats = () => ({
+    totalProductos:    _productosCache.length,
+    totalFacturas:     _facturasCache.length,
+    ingresosTotal:     _facturasCache.reduce((s, f) => s + (parseFloat(f.total) || 0), 0),
+    productosStockBajo: getLowStock().length,
+    countProductos:    _productosCache.length
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const formatPrice = (p) =>
+    new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(p);
+
+const formatDate = (d) =>
+    new Date(d).toLocaleDateString('es-CO', { dateStyle: 'medium' });

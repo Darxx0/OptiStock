@@ -46,6 +46,7 @@ public class ProductoService {
         p.setDescripcion(dto.getDescripcion());
         p.setPrecioUnitario(dto.getPrecio());
         p.setCategoria(categoria);
+        p.setCantidad(dto.getCantidad() != null ? dto.getCantidad() : 0);
         return ProductoDTO.fromEntity(productoRepository.save(p));
     }
 
@@ -62,6 +63,9 @@ public class ProductoService {
         if (dto.getCategoria() != null || dto.getIdCategoria() != null) {
             p.setCategoria(resolveCategoria(dto));
         }
+        if (dto.getCantidad() != null)
+            p.setCantidad(dto.getCantidad());
+
         return ProductoDTO.fromEntity(productoRepository.save(p));
     }
 

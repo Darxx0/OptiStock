@@ -17,6 +17,9 @@ public class Producto {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
+    @Column(name = "cantidad", nullable = false)
+    private Integer cantidad = 0;
+
     @Column(name = "descripcion", length = 200)
     private String descripcion;
 
@@ -79,5 +82,13 @@ public class Producto {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }
