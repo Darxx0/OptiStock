@@ -6,11 +6,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     highlightActiveLink();
-
-    // Auto-init dashboard if on index page
-    if (document.getElementById('stat-productos')) {
-        initDashboard();
-    }
 });
 
 // ===== DASHBOARD CONTROLLER =====

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -113,7 +113,7 @@
                     <!-- Configuración -->
                     <li class="nav-section" id="section-settings">
                         <button class="nav-section-title" onclick="toggleSection('section-settings')">
-                            <span>️ Configuración</span>
+                            <span>⚙️ Configuración</span>
                             <span class="nav-section-icon">▶</span>
                         </button>
                         <ul class="nav-submenu">
@@ -131,7 +131,7 @@
                     <!-- Perfil -->
                     <li class="nav-item">
                         <a href="../../configuracion/perfil.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                            <span class="nav-icon">👤</span>
                             <span>Perfil</span>
                         </a>
                     </li>
@@ -157,7 +157,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Productos Vendidos</span>
-                        <span class="stat-icon"></span>
+                        <span class="stat-icon">📦</span>
                     </div>
                     <div class="stat-value" id="productos-vendidos">0</div>
                     <div class="stat-change">Este mes</div>
@@ -165,7 +165,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Clientes Activos</span>
-                        <span class="stat-icon"></span>
+                        <span class="stat-icon">👤</span>
                     </div>
                     <div class="stat-value" id="clientes-activos">0</div>
                     <div class="stat-change">Clientes únicos</div>
@@ -173,7 +173,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Ticket Promedio</span>
-                        <span class="stat-icon"></span>
+                        <span class="stat-icon">💵</span>
                     </div>
                     <div class="stat-value" id="ticket-promedio">$0</div>
                     <div class="stat-change">Por factura</div>
@@ -182,7 +182,7 @@
             <!-- Gráficos y Análisis -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> Ventas por Categoría</h3>
+                    <h3 class="card-title">📊 Ventas por Categoría</h3>
                 </div>
                 <div class="table-container">
                     <table>
@@ -231,7 +231,8 @@
     <script src="../../js/datos.js"></script>
     <script src="../../js/script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', async function () {
+            await loadProducts();
             cargarAnalytics();
         });
         function cargarAnalytics() {

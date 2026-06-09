@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -23,10 +23,8 @@
                         <ul class="nav-submenu">
                             <li class="nav-item"><a href="../../Index.html" class="nav-link">Vista General</a></li>
                             <li class="nav-item"><a href="../../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
-                            <li class="nav-item"><a href="../../paginas/dashboard/reportes-rapidos.html" class="nav-link active">Reportes
-                                    Rápidos</a></li>
-                            <li class="nav-item"><a href="../../paginas/dashboard/notificaciones.html"
-                                    class="nav-link">Notificaciones</a></li>
+                            <li class="nav-item"><a href="../../paginas/dashboard/reportes-rapidos.html" class="nav-link active">Reportes Rápidos</a></li>
+                            <li class="nav-item"><a href="../../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a></li>
                         </ul>
                     </li>
                     <li class="nav-section" id="section-inventory">
@@ -36,12 +34,9 @@
                         </button>
                         <ul class="nav-submenu">
                             <li class="nav-item"><a href="../../inventario/inventario.html" class="nav-link">Productos</a></li>
-                            <li class="nav-item"><a href="../../inventario/categorias.html" class="nav-link">Categorías</a>
-                            </li>
-                            <li class="nav-item"><a href="../../inventario/proveedores.html" class="nav-link">Proveedores</a>
-                            </li>
-                            <li class="nav-item"><a href="../../inventario/transferencias.html" class="nav-link">Transferencias</a>
-                            </li>
+                            <li class="nav-item"><a href="../../inventario/categorias.html" class="nav-link">Categorías</a></li>
+                            <li class="nav-item"><a href="../../inventario/proveedores.html" class="nav-link">Proveedores</a></li>
+                            <li class="nav-item"><a href="../../inventario/transferencias.html" class="nav-link">Transferencias</a></li>
                             <li class="nav-item"><a href="../../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
                             <li class="nav-item"><a href="../../inventario/historial.html" class="nav-link">Historial</a></li>
                         </ul>
@@ -53,8 +48,7 @@
                         </button>
                         <ul class="nav-submenu">
                             <li class="nav-item"><a href="../../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
-                            <li class="nav-item"><a href="../../facturacion/facturas.html" class="nav-link">Todas las Facturas</a>
-                            </li>
+                            <li class="nav-item"><a href="../../facturacion/facturas.html" class="nav-link">Todas las Facturas</a></li>
                             <li class="nav-item"><a href="../../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
                             <li class="nav-item"><a href="../../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
                             <li class="nav-item"><a href="../../facturacion/clientes.html" class="nav-link">Clientes</a></li>
@@ -74,7 +68,7 @@
                     </li>
                     <li class="nav-section" id="section-settings">
                         <button class="nav-section-title" onclick="toggleSection('section-settings')">
-                            <span>️ Configuración</span>
+                            <span>⚙️ Configuración</span>
                             <span class="nav-section-icon">▶</span>
                         </button>
                         <ul class="nav-submenu">
@@ -85,7 +79,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="../../configuracion/perfil.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                            <span class="nav-icon">👤</span>
                             <span>Perfil</span>
                         </a>
                     </li>
@@ -128,7 +122,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> Resumen de Inventario</h3>
+                    <h3 class="card-title">📋 Resumen de Inventario</h3>
                 </div>
                 <div class="stats-grid">
                     <div>
@@ -141,8 +135,7 @@
                     </div>
                     <div>
                         <p style="color: var(--color-texto-claro); margin-bottom: 0.5rem;">Stock Bajo</p>
-                        <p style="font-size: 1.5rem; font-weight: 700; color: var(--color-advertencia);"
-                            id="stock-bajo">0</p>
+                        <p style="font-size: 1.5rem; font-weight: 700; color: var(--color-advertencia);" id="stock-bajo">0</p>
                     </div>
                     <div>
                         <p style="color: var(--color-texto-claro); margin-bottom: 0.5rem;">Categorías</p>
@@ -165,7 +158,8 @@
     <script src="../../js/datos.js"></script>
     <script src="../../js/script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', async function () {
+            await loadProducts();
             cargarReportesRápidos();
         });
         function cargarReportesRápidos() {
