@@ -18,14 +18,14 @@ public class ProductoService {
     private final CategoriaRepository categoriaRepository;
 
     public ProductoService(ProductoRepository productoRepository,
-                           CategoriaRepository categoriaRepository) {
+            CategoriaRepository categoriaRepository) {
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
     }
 
     @Transactional(readOnly = true)
     public List<ProductoDTO> findAll() {
-        return productoRepository.findAll()
+        return productoRepository.findByActivoTrue()
                 .stream()
                 .map(ProductoDTO::fromEntity)
                 .collect(Collectors.toList());
@@ -53,9 +53,12 @@ public class ProductoService {
         Producto p = productoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Producto no encontrado: " + id));
-        if (dto.getNombre() != null) p.setNombre(dto.getNombre());
-        if (dto.getDescripcion() != null) p.setDescripcion(dto.getDescripcion());
-        if (dto.getPrecio() != null) p.setPrecioUnitario(dto.getPrecio());
+        if (dto.getNombre() != null)
+            p.setNombre(dto.getNombre());
+        if (dto.getDescripcion() != null)
+            p.setDescripcion(dto.getDescripcion());
+        if (dto.getPrecio() != null)
+            p.setPrecioUnitario(dto.getPrecio());
         if (dto.getCategoria() != null || dto.getIdCategoria() != null) {
             p.setCategoria(resolveCategoria(dto));
         }
@@ -63,11 +66,12 @@ public class ProductoService {
     }
 
     public void delete(Integer id) {
-        if (!productoRepository.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Producto no encontrado: " + id);
-        }
-        productoRepository.deleteById(id);
+        Producto p = productoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Producto no encontrado: " + id));
+
+        p.setActivo(false);
+        productoRepository.save(p);
     }
 
     // Resuelve categoria por idCategoria o por nombre (crea si no existe)
