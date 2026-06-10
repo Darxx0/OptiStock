@@ -1,312 +1,388 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proveedores | Sistema de Inventario</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h1> OptiStock</h1>
-            <p>Sistema de Gestión</p>
-        </div>
-        <nav>
-            <ul class="nav-menu">
-                <li class="nav-section" id="section-dashboard">
-                    <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
-                        <span> Dashboard</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
-                        <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
-                        <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a></li>
-                        <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section active" id="section-inventory">
-                    <button class="nav-section-title" onclick="toggleSection('section-inventory')">
-                        <span> Inventario</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
-                        <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a></li>
-                        <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link active">Proveedores</a></li>
-                        <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a></li>
-                        <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
-                        <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section" id="section-billing">
-                    <button class="nav-section-title" onclick="toggleSection('section-billing')">
-                        <span> Facturación</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
-                        <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a></li>
-                        <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
-                        <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
-                        <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section" id="section-reports">
-                    <button class="nav-section-title" onclick="toggleSection('section-reports')">
-                        <span> Reportes</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
-                        <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a></li>
-                        <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
-                        <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section" id="section-settings">
-                    <button class="nav-section-title" onclick="toggleSection('section-settings')">
-                        <span>⚙️ Configuración</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
-                        <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
-                        <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="../configuracion/perfil.html" class="nav-link">
-                        <span class="nav-icon">👤</span><span>Perfil</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-        <header class="page-header">
-            <div>
-                <h2 class="page-title">Gestión de Proveedores</h2>
-                <p class="page-subtitle">Administra tus contactos y proveedores de productos</p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1> OptiStock</h1>
+                <p>Sistema de Gestión</p>
             </div>
-            <button class="btn btn-primary" onclick="abrirModalProveedor()">+ Nuevo Proveedor</button>
-        </header>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-section" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
+                            <span> Dashboard</span><span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html"
+                                    class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html"
+                                    class="nav-link">Reportes Rápidos</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
+                                    class="nav-link">Notificaciones</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section active" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')">
+                            <span> Inventario</span><span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/proveedores.html"
+                                    class="nav-link active">Proveedores</a></li>
+                            <li class="nav-item"><a href="../inventario/transferencias.html"
+                                    class="nav-link">Transferencias</a></li>
+                            <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')">
+                            <span> Facturación</span><span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva
+                                    Factura</a></li>
+                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las
+                                    Facturas</a></li>
+                            <li class="nav-item"><a href="../facturacion/pendientes.html"
+                                    class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
+                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')">
+                            <span> Reportes</span><span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/personalizados.html"
+                                    class="nav-link">Personalizados</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')">
+                            <span>⚙️ Configuración</span><span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/impuestos.html"
+                                    class="nav-link">Impuestos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../configuracion/perfil.html" class="nav-link">
+                            <span class="nav-icon">👤</span><span>Perfil</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-        <!-- Buscador -->
-        <div class="card" style="margin-bottom: 1rem;">
-            <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
-                <input type="text" id="buscar-proveedor" class="form-control" placeholder="🔍 Buscar por nombre, NIT o ciudad..." style="flex:1; min-width:200px;" oninput="filtrarProveedores()">
-                <select id="filtro-estado" class="form-control" style="width:160px;" onchange="filtrarProveedores()">
-                    <option value="">Todos los estados</option>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
-                </select>
-            </div>
-        </div>
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h2 class="page-title">Gestión de Proveedores</h2>
+                    <p class="page-subtitle">Administra tus contactos y proveedores de productos</p>
+                </div>
+                <button class="btn btn-primary" onclick="abrirModalProveedor()">+ Nuevo Proveedor</button>
+            </header>
 
-        <!-- Tabla -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">🏢 Lista de Proveedores</h3>
-                <span id="contador-proveedores" class="badge badge-info">0 registros</span>
-            </div>
-            <div class="table-container">
-                <table id="tabla-proveedores">
-                    <thead>
-                        <tr>
-                            <th>Empresa</th>
-                            <th>NIT</th>
-                            <th>Contacto</th>
-                            <th>Teléfono</th>
-                            <th>Ciudad</th>
-                            <th>Categoría</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="proveedores-tbody">
-                        <tr><td colspan="8" class="text-center">Cargando proveedores...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-</div>
-
-<!-- MODAL Proveedor -->
-<div id="modal-proveedor" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
-    <div class="card" style="width:560px; max-width:95vw; max-height:90vh; overflow-y:auto; margin:0;">
-        <div class="card-header">
-            <h3 class="card-title" id="modal-proveedor-titulo">Nuevo Proveedor</h3>
-            <button onclick="cerrarModalProveedor()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--color-texto-claro);">✕</button>
-        </div>
-        <div style="padding: 1rem 0;">
-            <input type="hidden" id="prov-id">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">Nombre de la Empresa *</label>
-                    <input type="text" id="prov-nombre" class="form-control" placeholder="Ej: Distribuidora Nacional S.A.S" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">NIT *</label>
-                    <input type="text" id="prov-nit" class="form-control" placeholder="Ej: 900123456-7" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Categoría de Productos</label>
-                    <input type="text" id="prov-categoria" class="form-control" placeholder="Ej: Electrónica, Alimentos...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Nombre del Contacto</label>
-                    <input type="text" id="prov-contacto" class="form-control" placeholder="Nombre del representante">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Teléfono *</label>
-                    <input type="tel" id="prov-telefono" class="form-control" placeholder="Ej: 601 234 5678" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="prov-email" class="form-control" placeholder="ventas@empresa.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ciudad</label>
-                    <input type="text" id="prov-ciudad" class="form-control" placeholder="Ej: Bogotá">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <select id="prov-estado" class="form-control">
+            <!-- Buscador -->
+            <div class="card" style="margin-bottom: 1rem;">
+                <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                    <input type="text" id="buscar-proveedor" class="form-control"
+                        placeholder="🔍 Buscar por nombre, NIT o ciudad..." style="flex:1; min-width:200px;"
+                        oninput="filtrarProveedores()">
+                    <select id="filtro-estado" class="form-control" style="width:160px;"
+                        onchange="filtrarProveedores()">
+                        <option value="">Todos los estados</option>
                         <option value="Activo">Activo</option>
                         <option value="Inactivo">Inactivo</option>
                     </select>
                 </div>
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">Dirección</label>
-                    <input type="text" id="prov-direccion" class="form-control" placeholder="Dirección completa">
+            </div>
+
+            <!-- Tabla -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🏢 Lista de Proveedores</h3>
+                    <span id="contador-proveedores" class="badge badge-info">0 registros</span>
                 </div>
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">Notas</label>
-                    <textarea id="prov-notas" class="form-control" rows="2" placeholder="Condiciones de pago, observaciones..."></textarea>
+                <div class="table-container">
+                    <table id="tabla-proveedores">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Razón Social</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Tipo Correo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="proveedores-tbody">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    Cargando proveedores...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem;">
-                <button class="btn btn-secondary" onclick="cerrarModalProveedor()">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarProveedor()">Guardar Proveedor</button>
+        </main>
+    </div>
+
+    <!-- MODAL Proveedor -->
+    <div id="modal-proveedor"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+        <div class="card" style="width:560px; max-width:95vw; max-height:90vh; overflow-y:auto; margin:0;">
+            <div class="card-header">
+                <h3 class="card-title" id="modal-proveedor-titulo">Nuevo Proveedor</h3>
+                <button onclick="cerrarModalProveedor()"
+                    style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--color-texto-claro);">✕</button>
+            </div>
+            <div style="padding: 1rem 0;">
+                <input type="hidden" id="prov-id">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="form-group" style="grid-column:1/-1;">
+                        <label class="form-label">Razón Social *</label>
+                        <input type="text" id="prov-razon-social" class="form-control"
+                            placeholder="Ej: Distribuidora Nacional S.A.S" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono *</label>
+                        <input type="tel" id="prov-telefono" class="form-control" placeholder="Ej: 601 234 5678"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="prov-correo" class="form-control" placeholder="ventas@empresa.com">
+                    </div>
+                    <div class="form-group" style="grid-column:1/-1;">
+                        <label class="form-label">Tipo Correo</label>
+                        <input type="text" id="prov-tipo-correo" class="form-control"
+                            placeholder="Corporativo, Personal, Ventas">
+                    </div>
+                </div>
+                <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem;">
+                    <button class="btn btn-secondary" onclick="cerrarModalProveedor()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardarProveedor()">Guardar Proveedor</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="../js/datos.js"></script>
-<script src="../js/script.js"></script>
-<script>
-const LS_KEY = 'optistock_proveedores';
+    <script src="../js/datos.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        const API_PROVEEDORES = CONFIG.API_BASE + '/proveedores';
 
-function getProveedores() {
-    try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
-}
-function saveProveedores(data) {
-    localStorage.setItem(LS_KEY, JSON.stringify(data));
-}
+        function renderTabla(lista) {
+            const tbody = document.getElementById('proveedores-tbody');
+            document.getElementById('contador-proveedores').textContent = lista.length + ' registros';
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="padding:2rem; color:var(--color-texto-claro);">No se encontraron proveedores</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(p => `
+                <tr>
+                    <td><strong>${p.razonSocial}</strong></td>
+                    <td>${p.correo || '-'}</td>
+                    <td>${p.telefono || '-'}</td>
+                    <td>${p.tipoCorreo || '-'}</td>
+                    <td>
+                        <button class="btn btn-secondary"
+                            style="padding:0.25rem 0.6rem;font-size:0.8rem;"
+                            onclick="editarProveedor(${p.idProveedor})">
+                            ✏️ Editar
+                        </button>
+                        <button class="btn"
+                            style="padding:0.25rem 0.6rem;font-size:0.8rem;background:var(--color-error);color:white;"
+                            onclick="eliminarProveedor(${p.idProveedor})">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-function renderTabla(lista) {
-    const tbody = document.getElementById('proveedores-tbody');
-    document.getElementById('contador-proveedores').textContent = lista.length + ' registros';
-    if (!lista.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="padding:2rem; color:var(--color-texto-claro);">No se encontraron proveedores</td></tr>';
-        return;
-    }
-    tbody.innerHTML = lista.map(p => `
-        <tr>
-            <td><strong>${p.nombre}</strong></td>
-            <td>${p.nit || '-'}</td>
-            <td>${p.contacto || '-'}</td>
-            <td>${p.telefono}</td>
-            <td>${p.ciudad || '-'}</td>
-            <td>${p.categoria ? `<span class="badge badge-info">${p.categoria}</span>` : '-'}</td>
-            <td><span class="badge ${p.estado === 'Activo' ? 'badge-success' : 'badge-warning'}">${p.estado}</span></td>
-            <td>
-                <button class="btn btn-secondary" style="padding:0.25rem 0.6rem; font-size:0.8rem;" onclick="editarProveedor(${p.id})">✏️ Editar</button>
-                <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.8rem; background:var(--color-error); color:#fff; border:none; border-radius:var(--radio-borde); cursor:pointer;" onclick="eliminarProveedor(${p.id})">🗑️</button>
-            </td>
-        </tr>
-    `).join('');
-}
+        function filtrarProveedores() {
+            cargarProveedores();
+        }
 
-function filtrarProveedores() {
-    const term = document.getElementById('buscar-proveedor').value.toLowerCase();
-    const estado = document.getElementById('filtro-estado').value;
-    let lista = getProveedores();
-    if (term) lista = lista.filter(p => [p.nombre, p.nit, p.ciudad, p.contacto].join(' ').toLowerCase().includes(term));
-    if (estado) lista = lista.filter(p => p.estado === estado);
-    renderTabla(lista);
-}
+        async function abrirModalProveedor(id = null) {
 
-function abrirModalProveedor(id = null) {
-    document.getElementById('prov-id').value = '';
-    ['nombre','nit','categoria','contacto','telefono','email','ciudad','direccion','notas'].forEach(f => document.getElementById('prov-' + f).value = '');
-    document.getElementById('prov-estado').value = 'Activo';
-    document.getElementById('modal-proveedor-titulo').textContent = 'Nuevo Proveedor';
-    if (id !== null) {
-        const p = getProveedores().find(x => x.id === id);
-        if (!p) return;
-        document.getElementById('modal-proveedor-titulo').textContent = 'Editar Proveedor';
-        document.getElementById('prov-id').value = p.id;
-        ['nombre','nit','categoria','contacto','telefono','email','ciudad','estado','direccion','notas'].forEach(f => {
-            const el = document.getElementById('prov-' + f);
-            if (el) el.value = p[f] || '';
+            document.getElementById('prov-id').value = '';
+            document.getElementById('prov-razon-social').value = '';
+            document.getElementById('prov-correo').value = '';
+            document.getElementById('prov-telefono').value = '';
+            document.getElementById('prov-tipo-correo').value = '';
+
+            document.getElementById('modal-proveedor-titulo').textContent =
+                'Nuevo Proveedor';
+
+            if (id) {
+
+                const r = await fetch(`${API_PROVEEDORES}/${id}`);
+                const p = await r.json();
+
+                document.getElementById('modal-proveedor-titulo').textContent =
+                    'Editar Proveedor';
+
+                document.getElementById('prov-id').value = p.idProveedor;
+
+                document.getElementById('prov-razon-social').value =
+                    p.razonSocial || '';
+
+                document.getElementById('prov-correo').value =
+                    p.correo || '';
+
+                document.getElementById('prov-telefono').value =
+                    p.telefono || '';
+
+                document.getElementById('prov-tipo-correo').value =
+                    p.tipoCorreo || '';
+            }
+
+            document.getElementById('modal-proveedor').style.display =
+                'flex';
+        }
+
+        function editarProveedor(id) { abrirModalProveedor(id); }
+
+        function cerrarModalProveedor() {
+            document.getElementById('modal-proveedor').style.display = 'none';
+        }
+
+        async function guardarProveedor() {
+
+            const id =
+                document.getElementById('prov-id').value;
+
+            const body = {
+                razonSocial:
+                    document.getElementById('prov-razon-social').value.trim(),
+
+                correo:
+                    document.getElementById('prov-correo').value.trim(),
+
+                telefono:
+                    document.getElementById('prov-telefono').value.trim(),
+
+                tipoCorreo:
+                    document.getElementById('prov-tipo-correo').value.trim()
+            };
+
+            if (!body.razonSocial) {
+                showNotification(
+                    'La razón social es obligatoria',
+                    'warning'
+                );
+                return;
+            }
+
+            const url =
+                id
+                    ? `${API_PROVEEDORES}/${id}`
+                    : API_PROVEEDORES;
+
+            const method =
+                id
+                    ? 'PUT'
+                    : 'POST';
+
+            const r = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!r.ok) {
+                showNotification(
+                    'Error al guardar',
+                    'error'
+                );
+                return;
+            }
+
+            cerrarModalProveedor();
+
+            await cargarProveedores();
+
+            showNotification(
+                id
+                    ? 'Proveedor actualizado'
+                    : 'Proveedor creado'
+            );
+        }
+
+        async function eliminarProveedor(id) {
+
+            if (!confirm('¿Eliminar proveedor?'))
+                return;
+
+            const r = await fetch(
+                `${API_PROVEEDORES}/${id}`,
+                {
+                    method: 'DELETE'
+                }
+            );
+
+            if (!r.ok) {
+                showNotification(
+                    'Error al eliminar',
+                    'error'
+                );
+                return;
+            }
+
+            await cargarProveedores();
+
+            showNotification(
+                'Proveedor eliminado',
+                'warning'
+            );
+        }
+
+        async function cargarProveedores() {
+
+            const r = await fetch(API_PROVEEDORES);
+
+            const lista = await r.json();
+
+            renderTabla(lista);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarProveedores();
         });
-    }
-    document.getElementById('modal-proveedor').style.display = 'flex';
-}
-
-function editarProveedor(id) { abrirModalProveedor(id); }
-
-function cerrarModalProveedor() {
-    document.getElementById('modal-proveedor').style.display = 'none';
-}
-
-function guardarProveedor() {
-    const nombre = document.getElementById('prov-nombre').value.trim();
-    const telefono = document.getElementById('prov-telefono').value.trim();
-    const nit = document.getElementById('prov-nit').value.trim();
-    if (!nombre || !telefono || !nit) {
-        showNotification('Completa los campos obligatorios (*)','warning');
-        return;
-    }
-    const lista = getProveedores();
-    const idVal = document.getElementById('prov-id').value;
-    const prov = {
-        id: idVal ? parseInt(idVal) : Date.now(),
-        nombre, nit,
-        categoria: document.getElementById('prov-categoria').value.trim(),
-        contacto: document.getElementById('prov-contacto').value.trim(),
-        telefono,
-        email: document.getElementById('prov-email').value.trim(),
-        ciudad: document.getElementById('prov-ciudad').value.trim(),
-        estado: document.getElementById('prov-estado').value,
-        direccion: document.getElementById('prov-direccion').value.trim(),
-        notas: document.getElementById('prov-notas').value.trim(),
-        fechaRegistro: idVal ? (lista.find(x => x.id === parseInt(idVal))?.fechaRegistro || new Date().toISOString()) : new Date().toISOString()
-    };
-    if (idVal) {
-        const idx = lista.findIndex(x => x.id === parseInt(idVal));
-        if (idx > -1) lista[idx] = prov;
-    } else {
-        lista.push(prov);
-    }
-    saveProveedores(lista);
-    cerrarModalProveedor();
-    filtrarProveedores();
-    showNotification(idVal ? 'Proveedor actualizado' : 'Proveedor creado correctamente');
-}
-
-function eliminarProveedor(id) {
-    if (!confirm('¿Eliminar este proveedor?')) return;
-    saveProveedores(getProveedores().filter(p => p.id !== id));
-    filtrarProveedores();
-    showNotification('Proveedor eliminado', 'warning');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    filtrarProveedores();
-});
-</script>
+    </script>
 </body>
+
 </html>

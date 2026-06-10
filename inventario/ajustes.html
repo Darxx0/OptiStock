@@ -1,371 +1,341 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajustes de Inventario | Sistema de Inventario</title>
+    <title>Ajustes de Inventario | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h1> OptiStock</h1>
-            <p>Sistema de Gestión</p>
-        </div>
-        <nav>
-            <ul class="nav-menu">
-                <li class="nav-section" id="section-dashboard">
-                    <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
-                        <span> Dashboard</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
-                        <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
-                        <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a></li>
-                        <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section active" id="section-inventory">
-                    <button class="nav-section-title" onclick="toggleSection('section-inventory')">
-                        <span> Inventario</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
-                        <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a></li>
-                        <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a></li>
-                        <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a></li>
-                        <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link active">Ajustes</a></li>
-                        <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section" id="section-billing">
-                    <button class="nav-section-title" onclick="toggleSection('section-billing')">
-                        <span> Facturación</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
-                        <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a></li>
-                        <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
-                        <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
-                        <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section" id="section-reports">
-                    <button class="nav-section-title" onclick="toggleSection('section-reports')">
-                        <span> Reportes</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
-                        <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a></li>
-                        <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
-                        <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
-                    </ul>
-                </li>
-                <li class="nav-section" id="section-settings">
-                    <button class="nav-section-title" onclick="toggleSection('section-settings')">
-                        <span>⚙️ Configuración</span><span class="nav-section-icon">▶</span>
-                    </button>
-                    <ul class="nav-submenu">
-                        <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
-                        <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
-                        <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="../configuracion/perfil.html" class="nav-link">
-                        <span class="nav-icon">👤</span><span>Perfil</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-        <header class="page-header">
-            <div>
-                <h2 class="page-title">Ajustes de Inventario</h2>
-                <p class="page-subtitle">Registra correcciones por daños, pérdidas o discrepancias de stock</p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1> OptiStock</h1>
+                <p>Sistema de Gestión</p>
             </div>
-            <button class="btn btn-primary" onclick="abrirModalAjuste()">+ Nuevo Ajuste</button>
-        </header>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-section" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')"><span>
+                                Dashboard</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html"
+                                    class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html"
+                                    class="nav-link">Reportes Rápidos</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
+                                    class="nav-link">Notificaciones</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section active" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')"><span>
+                                Inventario</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/proveedores.html"
+                                    class="nav-link">Proveedores</a></li>
+                            <li class="nav-item"><a href="../inventario/transferencias.html"
+                                    class="nav-link">Transferencias</a></li>
+                            <li class="nav-item"><a href="../inventario/ajustes.html"
+                                    class="nav-link active">Ajustes</a></li>
+                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')"><span>
+                                Facturación</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva
+                                    Factura</a></li>
+                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las
+                                    Facturas</a></li>
+                            <li class="nav-item"><a href="../facturacion/pendientes.html"
+                                    class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
+                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')"><span>
+                                Reportes</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/personalizados.html"
+                                    class="nav-link">Personalizados</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')"><span>⚙️
+                                Configuración</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/impuestos.html"
+                                    class="nav-link">Impuestos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span
+                                class="nav-icon">👤</span><span>Perfil</span></a></li>
+                </ul>
+            </nav>
+        </aside>
 
-        <!-- Formulario rápido -->
-        <div class="card" style="margin-bottom:1rem;">
-            <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
-                <input type="text" id="buscar-ajuste" class="form-control" placeholder="🔍 Buscar por producto o motivo..." style="flex:1; min-width:200px;" oninput="filtrarAjustes()">
-                <select id="filtro-tipo" class="form-control" style="width:160px;" onchange="filtrarAjustes()">
-                    <option value="">Todos los tipos</option>
-                    <option value="Entrada">Entrada</option>
-                    <option value="Salida">Salida</option>
-                </select>
-                <select id="filtro-motivo-select" class="form-control" style="width:180px;" onchange="filtrarAjustes()">
-                    <option value="">Todos los motivos</option>
-                    <option value="Daño">Daño</option>
-                    <option value="Pérdida">Pérdida</option>
-                    <option value="Corrección">Corrección de conteo</option>
-                    <option value="Vencimiento">Vencimiento</option>
-                    <option value="Devolución">Devolución proveedor</option>
-                    <option value="Donación">Donación</option>
-                    <option value="Otro">Otro</option>
-                </select>
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h2 class="page-title">Ajustes de Inventario</h2>
+                    <p class="page-subtitle">Registra correcciones por daños, pérdidas o discrepancias de stock</p>
+                </div>
+                <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo Ajuste</button>
+            </header>
+
+            <!-- Filtros -->
+            <div class="card" style="margin-bottom:1rem;">
+                <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+                    <input type="text" id="buscar" class="form-control"
+                        placeholder="🔍 Buscar por producto o referencia..." style="flex:1;min-width:200px;"
+                        oninput="filtrar()">
+                    <select id="filtro-tipo" class="form-control" style="width:180px;" onchange="filtrar()">
+                        <option value="">Todos los tipos</option>
+                        <option value="Ajuste-Entrada">Entrada (sumar stock)</option>
+                        <option value="Ajuste-Salida">Salida (restar stock)</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <!-- Tabla -->
-        <div class="card">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📝 Registro de Ajustes</h3>
+                    <span id="contador" class="badge badge-info">0 registros</span>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                                <th>Costo Unit.</th>
+                                <th>Referencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <tr>
+                                <td colspan="6" class="text-center">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modal"
+        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+        <div class="card" style="width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;margin:0;">
             <div class="card-header">
-                <h3 class="card-title">📝 Registro de Ajustes</h3>
-                <span id="contador-ajustes" class="badge badge-info">0 registros</span>
+                <h3 class="card-title">Registrar Ajuste de Inventario</h3>
+                <button onclick="cerrarModal()"
+                    style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--color-texto-claro);">✕</button>
             </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Producto</th>
-                            <th>Tipo</th>
-                            <th>Cantidad</th>
-                            <th>Motivo</th>
-                            <th>Responsable</th>
-                            <th>Observaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ajustes-tbody">
-                        <tr><td colspan="7" class="text-center">Cargando ajustes...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-</div>
-
-<!-- MODAL Ajuste -->
-<div id="modal-ajuste" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
-    <div class="card" style="width:520px; max-width:95vw; max-height:90vh; overflow-y:auto; margin:0;">
-        <div class="card-header">
-            <h3 class="card-title">Registrar Ajuste de Inventario</h3>
-            <button onclick="cerrarModalAjuste()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--color-texto-claro);">✕</button>
-        </div>
-        <div style="padding:1rem 0;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">Producto *</label>
-                    <select id="ajuste-producto" class="form-control" required>
-                        <option value="">Selecciona un producto...</option>
-                    </select>
+            <div style="padding:1rem 0;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="form-group" style="grid-column:1/-1;">
+                        <label class="form-label">Producto *</label>
+                        <select id="aj-producto" class="form-control" required onchange="actualizarStock()">
+                            <option value="">Selecciona un producto...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock actual</label>
+                        <input type="number" id="aj-stock-actual" class="form-control" readonly
+                            style="background:var(--color-gris-claro);">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo *</label>
+                        <select id="aj-tipo" class="form-control" required onchange="calcular()">
+                            <option value="Ajuste-Salida">Salida (restar stock)</option>
+                            <option value="Ajuste-Entrada">Entrada (sumar stock)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cantidad *</label>
+                        <input type="number" id="aj-cantidad" class="form-control" min="1" placeholder="Ej: 5" required
+                            oninput="calcular()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock resultante</label>
+                        <input type="number" id="aj-stock-nuevo" class="form-control" readonly
+                            style="background:var(--color-gris-claro);">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Motivo / Referencia *</label>
+                        <select id="aj-motivo" class="form-control" required>
+                            <option value="">Selecciona un motivo...</option>
+                            <option value="Daño">Daño / Producto defectuoso</option>
+                            <option value="Pérdida">Pérdida / Robo</option>
+                            <option value="Corrección de conteo">Corrección de conteo físico</option>
+                            <option value="Vencimiento">Vencimiento de producto</option>
+                            <option value="Devolución proveedor">Devolución a proveedor</option>
+                            <option value="Donación">Donación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Responsable</label>
+                        <input type="text" id="aj-responsable" class="form-control"
+                            placeholder="Nombre del responsable">
+                    </div>
+                    <div class="form-group" style="grid-column:1/-1;">
+                        <label class="form-label">Observaciones</label>
+                        <textarea id="aj-obs" class="form-control" rows="2"
+                            placeholder="Descripción detallada..."></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Stock Actual</label>
-                    <input type="number" id="ajuste-stock-actual" class="form-control" readonly style="background:var(--color-gris-claro);">
+                <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1rem;">
+                    <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardar()">Registrar Ajuste</button>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Tipo de Ajuste *</label>
-                    <select id="ajuste-tipo" class="form-control" required>
-                        <option value="Salida">Salida (reducir stock)</option>
-                        <option value="Entrada">Entrada (agregar stock)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Cantidad *</label>
-                    <input type="number" id="ajuste-cantidad" class="form-control" min="1" placeholder="Ej: 5" required oninput="calcularNuevoStock()">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Stock Resultante</label>
-                    <input type="number" id="ajuste-stock-nuevo" class="form-control" readonly style="background:var(--color-gris-claro);">
-                </div>
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">Motivo *</label>
-                    <select id="ajuste-motivo" class="form-control" required>
-                        <option value="">Selecciona un motivo...</option>
-                        <option value="Daño">Daño / Producto defectuoso</option>
-                        <option value="Pérdida">Pérdida / Robo</option>
-                        <option value="Corrección">Corrección de conteo físico</option>
-                        <option value="Vencimiento">Vencimiento de producto</option>
-                        <option value="Devolución">Devolución a proveedor</option>
-                        <option value="Donación">Donación</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Responsable</label>
-                    <input type="text" id="ajuste-responsable" class="form-control" placeholder="Nombre del responsable">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Fecha</label>
-                    <input type="date" id="ajuste-fecha" class="form-control">
-                </div>
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">Observaciones</label>
-                    <textarea id="ajuste-observaciones" class="form-control" rows="2" placeholder="Descripción detallada del ajuste..."></textarea>
-                </div>
-            </div>
-            <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem;">
-                <button class="btn btn-secondary" onclick="cerrarModalAjuste()">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarAjuste()">Registrar Ajuste</button>
             </div>
         </div>
     </div>
-</div>
 
-<script src="../js/datos.js"></script>
-<script src="../js/script.js"></script>
-<script>
-const LS_AJUSTES = 'optistock_ajustes';
+    <script src="../js/datos.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        const API_MOV = CONFIG.API_BASE + '/movimientos';
+        let _movimientos = [];
 
-function getAjustes() {
-    try { return JSON.parse(localStorage.getItem(LS_AJUSTES)) || []; } catch { return []; }
-}
-function saveAjustes(data) { localStorage.setItem(LS_AJUSTES, JSON.stringify(data)); }
+        async function cargar() {
+            try {
+                // Cargar movimientos tipo Ajuste desde la API
+                const r = await fetch(API_MOV);
+                const todos = await r.json();
+                _movimientos = todos.filter(m => m.tipoMovimiento && m.tipoMovimiento.startsWith('Ajuste'));
+                filtrar();
+            } catch {
+                document.getElementById('tbody').innerHTML = '<tr><td colspan="6" class="text-center" style="color:var(--color-error);">Error al conectar con el servidor</td></tr>';
+            }
+        }
 
-function registrarEnHistorial(entry) {
-    try {
-        const h = JSON.parse(localStorage.getItem('optistock_historial')) || [];
-        h.unshift(entry);
-        localStorage.setItem('optistock_historial', JSON.stringify(h));
-    } catch {}
-}
+        function filtrar() {
+            const term = document.getElementById('buscar').value.toLowerCase();
+            const tipo = document.getElementById('filtro-tipo').value;
+            let lista = _movimientos;
+            if (term) lista = lista.filter(m => (m.productoNombre + ' ' + (m.referencia || '')).toLowerCase().includes(term));
+            if (tipo) lista = lista.filter(m => m.tipoMovimiento === tipo);
+            document.getElementById('contador').textContent = lista.length + ' registros';
+            const tbody = document.getElementById('tbody');
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">No hay ajustes registrados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(m => {
+                const esEntrada = m.tipoMovimiento === 'Ajuste-Entrada';
+                return `<tr>
+            <td>${formatDate(m.fecha)}</td>
+            <td><strong>${m.productoNombre}</strong></td>
+            <td><span class="badge ${esEntrada ? 'badge-success' : 'badge-warning'}">${esEntrada ? '↑ Entrada' : '↓ Salida'}</span></td>
+            <td>${esEntrada ? '+' : '-'}${m.cantidad}</td>
+            <td>${m.costoUnitario ? formatPrice(m.costoUnitario) : '—'}</td>
+            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${m.referencia || ''}">${m.referencia || '—'}</td>
+        </tr>`;
+            }).join('');
+        }
 
-function renderAjustes(lista) {
-    const tbody = document.getElementById('ajustes-tbody');
-    document.getElementById('contador-ajustes').textContent = lista.length + ' registros';
-    if (!lista.length) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem; color:var(--color-texto-claro);">No hay ajustes registrados</td></tr>';
-        return;
-    }
-    tbody.innerHTML = lista.map(a => `
-        <tr>
-            <td>${formatDate(a.fecha)}</td>
-            <td><strong>${a.productoNombre}</strong></td>
-            <td><span class="badge ${a.tipo === 'Entrada' ? 'badge-success' : 'badge-warning'}">${a.tipo === 'Entrada' ? '↑ ' : '↓ '}${a.tipo}</span></td>
-            <td>${a.tipo === 'Salida' ? '-' : '+'}${a.cantidad}</td>
-            <td>${a.motivo}</td>
-            <td>${a.responsable || '-'}</td>
-            <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${a.observaciones || ''}">${a.observaciones || '-'}</td>
-        </tr>
-    `).join('');
-}
+        async function abrirModal() {
+            await loadProducts();
+            const productos = getProducts();
+            const sel = document.getElementById('aj-producto');
+            sel.innerHTML = '<option value="">Selecciona un producto...</option>' +
+                productos.map(p => `<option value="${p.id}" data-stock="${p.cantidad}" data-precio="${p.precio}">${p.nombre} (Stock: ${p.cantidad})</option>`).join('');
+            ['cantidad', 'stock-actual', 'stock-nuevo'].forEach(f => document.getElementById('aj-' + f).value = '');
+            document.getElementById('aj-tipo').value = 'Ajuste-Salida';
+            document.getElementById('aj-motivo').value = '';
+            document.getElementById('aj-responsable').value = '';
+            document.getElementById('aj-obs').value = '';
+            document.getElementById('modal').style.display = 'flex';
+        }
 
-function filtrarAjustes() {
-    const term = document.getElementById('buscar-ajuste').value.toLowerCase();
-    const tipo = document.getElementById('filtro-tipo').value;
-    const motivo = document.getElementById('filtro-motivo-select').value;
-    let lista = getAjustes();
-    if (term) lista = lista.filter(a => (a.productoNombre + ' ' + a.motivo + ' ' + a.responsable).toLowerCase().includes(term));
-    if (tipo) lista = lista.filter(a => a.tipo === tipo);
-    if (motivo) lista = lista.filter(a => a.motivo === motivo);
-    renderAjustes(lista);
-}
+        function actualizarStock() {
+            const sel = document.getElementById('aj-producto');
+            const opt = sel.options[sel.selectedIndex];
+            document.getElementById('aj-stock-actual').value = opt.dataset.stock || '';
+            calcular();
+        }
 
-async function abrirModalAjuste() {
-    await loadProducts();
-    const productos = getProducts();
-    const sel = document.getElementById('ajuste-producto');
-    sel.innerHTML = '<option value="">Selecciona un producto...</option>' +
-        productos.map(p => `<option value="${p.id}" data-stock="${p.cantidad}">${p.nombre} (Stock: ${p.cantidad})</option>`).join('');
-    sel.onchange = () => {
-        const opt = sel.options[sel.selectedIndex];
-        const stock = opt.dataset.stock || '';
-        document.getElementById('ajuste-stock-actual').value = stock;
-        calcularNuevoStock();
-    };
-    document.getElementById('ajuste-cantidad').value = '';
-    document.getElementById('ajuste-stock-actual').value = '';
-    document.getElementById('ajuste-stock-nuevo').value = '';
-    document.getElementById('ajuste-motivo').value = '';
-    document.getElementById('ajuste-responsable').value = '';
-    document.getElementById('ajuste-observaciones').value = '';
-    document.getElementById('ajuste-fecha').value = new Date().toISOString().split('T')[0];
-    document.getElementById('modal-ajuste').style.display = 'flex';
-}
+        function calcular() {
+            const actual = parseInt(document.getElementById('aj-stock-actual').value) || 0;
+            const cant = parseInt(document.getElementById('aj-cantidad').value) || 0;
+            const esEntrada = document.getElementById('aj-tipo').value === 'Ajuste-Entrada';
+            const nuevo = esEntrada ? actual + cant : actual - cant;
+            const el = document.getElementById('aj-stock-nuevo');
+            el.value = nuevo;
+            el.style.color = nuevo < 0 ? 'var(--color-error)' : '';
+        }
 
-function cerrarModalAjuste() {
-    document.getElementById('modal-ajuste').style.display = 'none';
-}
+        function cerrarModal() { document.getElementById('modal').style.display = 'none'; }
 
-function calcularNuevoStock() {
-    const actual = parseInt(document.getElementById('ajuste-stock-actual').value) || 0;
-    const cant = parseInt(document.getElementById('ajuste-cantidad').value) || 0;
-    const tipo = document.getElementById('ajuste-tipo').value;
-    const nuevo = tipo === 'Entrada' ? actual + cant : actual - cant;
-    document.getElementById('ajuste-stock-nuevo').value = nuevo;
-    document.getElementById('ajuste-stock-nuevo').style.color = nuevo < 0 ? 'var(--color-error)' : '';
-}
+        async function guardar() {
+            const sel = document.getElementById('aj-producto');
+            const productoId = parseInt(sel.value);
+            const cantidad = parseInt(document.getElementById('aj-cantidad').value);
+            const tipoMovimiento = document.getElementById('aj-tipo').value;
+            const motivo = document.getElementById('aj-motivo').value;
+            const stockActual = parseInt(document.getElementById('aj-stock-actual').value) || 0;
 
-document.addEventListener('change', e => {
-    if (e.target.id === 'ajuste-tipo') calcularNuevoStock();
-});
+            if (!productoId || !cantidad || !motivo) {
+                showNotification('Completa los campos obligatorios', 'warning'); return;
+            }
+            if (tipoMovimiento === 'Ajuste-Salida' && cantidad > stockActual) {
+                showNotification('La cantidad supera el stock disponible', 'error'); return;
+            }
 
-async function guardarAjuste() {
-    const prodSel = document.getElementById('ajuste-producto');
-    const prodId = parseInt(prodSel.value);
-    const cantidad = parseInt(document.getElementById('ajuste-cantidad').value);
-    const motivo = document.getElementById('ajuste-motivo').value;
-    const tipo = document.getElementById('ajuste-tipo').value;
-    const stockActual = parseInt(document.getElementById('ajuste-stock-actual').value) || 0;
+            const opt = sel.options[sel.selectedIndex];
+            const body = {
+                productoId,
+                cantidad,
+                tipoMovimiento,
+                referencia: motivo,
+                responsable: document.getElementById('aj-responsable').value.trim(),
+                observaciones: document.getElementById('aj-obs').value.trim(),
+                costoUnitario: parseFloat(opt.dataset.precio) || null
+            };
 
-    if (!prodId || !cantidad || !motivo) {
-        showNotification('Completa los campos obligatorios (*)','warning');
-        return;
-    }
-    if (tipo === 'Salida' && cantidad > stockActual) {
-        showNotification('La cantidad supera el stock disponible','error');
-        return;
-    }
+            try {
+                const r = await fetch(`${API_MOV}/ajuste`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!r.ok) {
+                    const err = await r.text();
+                    showNotification('Error: ' + err, 'error'); return;
+                }
+                cerrarModal();
+                await cargar();
+                showNotification('Ajuste registrado y stock actualizado');
+            } catch { showNotification('Error al conectar con el servidor', 'error'); }
+        }
 
-    const productoNombre = prodSel.options[prodSel.selectedIndex].text.split(' (')[0];
-    const stockNuevo = tipo === 'Entrada' ? stockActual + cantidad : stockActual - cantidad;
-
-    // Actualizar stock en el backend
-    try {
-        const prod = getProduct(prodId);
-        await updateProduct(prodId, { ...prod, cantidad: stockNuevo });
-    } catch (e) {
-        showNotification('Error al actualizar el stock en el servidor', 'error');
-        return;
-    }
-
-    const ajuste = {
-        id: Date.now(),
-        fecha: document.getElementById('ajuste-fecha').value || new Date().toISOString(),
-        productoId: prodId,
-        productoNombre,
-        tipo,
-        cantidad,
-        stockAntes: stockActual,
-        stockDespues: stockNuevo,
-        motivo,
-        responsable: document.getElementById('ajuste-responsable').value.trim(),
-        observaciones: document.getElementById('ajuste-observaciones').value.trim()
-    };
-
-    const lista = getAjustes();
-    lista.unshift(ajuste);
-    saveAjustes(lista);
-
-    registrarEnHistorial({
-        id: ajuste.id,
-        fecha: ajuste.fecha,
-        tipo: 'Ajuste',
-        subTipo: tipo,
-        productoId: prodId,
-        productoNombre,
-        cantidad,
-        stockAntes: stockActual,
-        stockDespues: stockNuevo,
-        motivo,
-        responsable: ajuste.responsable,
-        observaciones: ajuste.observaciones
-    });
-
-    cerrarModalAjuste();
-    filtrarAjustes();
-    showNotification('Ajuste registrado y stock actualizado correctamente');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    filtrarAjustes();
-});
-</script>
+        document.addEventListener('DOMContentLoaded', cargar);
+    </script>
 </body>
+
 </html>
