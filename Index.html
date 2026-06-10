@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <title>Dashboard | Sistema de Inventario</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
   <div class="app-container">
     <aside class="sidebar">
@@ -238,10 +240,13 @@
   <script>
     document.addEventListener('DOMContentLoaded', async function () {
       await loadProducts();
+      await loadInvoices();
+
       if (document.getElementById('stat-productos')) {
         initDashboard();
       }
     });
   </script>
 </body>
+
 </html>

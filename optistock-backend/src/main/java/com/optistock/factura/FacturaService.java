@@ -46,7 +46,7 @@ public class FacturaService {
         return mapToDTO(factura);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public FacturaDTO crearFactura(FacturaDTO dto) {
         // 1. Manejar Cliente
         Cliente cliente = clienteRepository.findByNumeroDocumento(dto.getDocumento())

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <title>Analytics | Sistema de Inventario</title>
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -31,10 +33,12 @@
                                 <a href="../../paginas/dashboard/analiticas.html" class="nav-link active">Analíticas</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a>
+                                <a href="../../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes
+                                    Rápidos</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a>
+                                <a href="../../paginas/dashboard/notificaciones.html"
+                                    class="nav-link">Notificaciones</a>
                             </li>
                         </ul>
                     </li>
@@ -232,9 +236,14 @@
     <script src="../../js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
+            // ¡ESTO ES LO QUE FALTABA!
             await loadProducts();
+            await loadInvoices();
+
+            // Ahora que ambos datos están en el caché, podemos procesar
             cargarAnalytics();
         });
+
         function cargarAnalytics() {
             var facturas = getInvoices();
             var productos = getProducts();
@@ -327,4 +336,5 @@
         }
     </script>
 </body>
+
 </html>

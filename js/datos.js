@@ -14,8 +14,8 @@ const CONFIG = {
 
 // ─── CACHE LOCAL ──────────────────────────────────────────────────────────────
 let _productosCache = [];
-let _facturasCache  = [];
-let _clientesCache  = [];
+let _facturasCache = [];
+let _clientesCache = [];
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PRODUCTOS
@@ -33,19 +33,19 @@ async function loadProducts() {
     }
 }
 
-const getProducts    = ()    => _productosCache;
-const getProduct     = (id)  => _productosCache.find(p => p.id === id);
-const getLowStock    = ()    => _productosCache.filter(p => (p.cantidad ?? 0) <= CONFIG.MIN_STOCK);
+const getProducts = () => _productosCache;
+const getProduct = (id) => _productosCache.find(p => p.id === id);
+const getLowStock = () => _productosCache.filter(p => (p.cantidad ?? 0) <= CONFIG.MIN_STOCK);
 
 const addProduct = async (dto) => {
     const res = await fetch(`${CONFIG.API_BASE}/productos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            nombre:      dto.nombre,
-            precio:      dto.precio,
-            cantidad:    dto.cantidad,
-            categoria:   dto.categoria,
+            nombre: dto.nombre,
+            precio: dto.precio,
+            cantidad: dto.cantidad,
+            categoria: dto.categoria,
             descripcion: dto.descripcion
         })
     });
@@ -60,10 +60,10 @@ const updateProduct = async (id, data) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            nombre:      data.nombre,
-            precio:      data.precio,
-            cantidad:    data.cantidad,
-            categoria:   data.categoria,
+            nombre: data.nombre,
+            precio: data.precio,
+            cantidad: data.cantidad,
+            categoria: data.categoria,
             descripcion: data.descripcion
         })
     });
@@ -96,8 +96,8 @@ async function loadClientes() {
     }
 }
 
-const getClientes = ()    => _clientesCache;
-const getCliente  = (id)  => _clientesCache.find(c => c.idCliente === id);
+const getClientes = () => _clientesCache;
+const getCliente = (id) => _clientesCache.find(c => c.idCliente === id);
 
 const addCliente = async (dto) => {
     const res = await fetch(`${CONFIG.API_BASE}/clientes`, {
@@ -147,30 +147,36 @@ async function loadInvoices() {
 }
 
 const getInvoices = () => _facturasCache;
-const getInvoice  = (id) => _facturasCache.find(f => f.id === id);
+const getInvoice = (id) => _facturasCache.find(f => f.id === id);
 
 const createInvoice = async (inv) => {
     const payload = {
-        cliente:   inv.cliente,
+        cliente: inv.cliente,
         documento: inv.documento || '0000000000',
-        email:     inv.email     || '',
-        telefono:  inv.telefono  || '',
+        email: inv.email || '',
+        telefono: inv.telefono || '',
         items: inv.items.map(i => ({
             productoId: i.productoId,
-            cantidad:   i.cantidad
+            cantidad: i.cantidad
         }))
     };
+
     const res = await fetch(`${CONFIG.API_BASE}/facturas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });
+
     if (!res.ok) {
         const err = await res.text();
         throw new Error('Error al crear factura: ' + err);
     }
+
     const nueva = await res.json();
     _facturasCache.unshift(nueva);
+
+    await loadProducts();
+
     return nueva;
 };
 
@@ -179,11 +185,11 @@ const createInvoice = async (inv) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const getStats = () => ({
-    totalProductos:    _productosCache.length,
-    totalFacturas:     _facturasCache.length,
-    ingresosTotal:     _facturasCache.reduce((s, f) => s + (parseFloat(f.total) || 0), 0),
+    totalProductos: _productosCache.length,
+    totalFacturas: _facturasCache.length,
+    ingresosTotal: _facturasCache.reduce((s, f) => s + (parseFloat(f.total) || 0), 0),
     productosStockBajo: getLowStock().length,
-    countProductos:    _productosCache.length
+    countProductos: _productosCache.length
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
