@@ -81,17 +81,28 @@ function initNavigation() {
     const currentPage = window.location.pathname.split('/').pop();
     document.querySelectorAll('.nav-section').forEach(section => {
         const links = section.querySelectorAll('.nav-link');
+        let shouldActivate = false;
+
         links.forEach(link => {
             const href = link.getAttribute('href');
             if (href === currentPage || href.endsWith('/' + currentPage)) {
-                section.classList.add('active');
+                shouldActivate = true;
+                link.classList.add('active');
             }
         });
+
+        // Solo agregar active si no ya tiene la clase desde HTML
+        if (shouldActivate && !section.classList.contains('active')) {
+            section.classList.add('active');
+        }
     });
 }
 
 function toggleSection(id) {
-    document.getElementById(id)?.classList.toggle('active');
+    const section = document.getElementById(id);
+    if (section) {
+        section.classList.toggle('active');
+    }
 }
 
 function highlightActiveLink() {

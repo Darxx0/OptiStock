@@ -35,9 +35,6 @@ const PERMISOS_ROL = {
 /**
  * Devuelve el objeto de sesión activo o null.
  * Estructura: { id, nombre, apellido, login, rol, idRol }
- *
- * PUNTO DE EXTENSIÓN: cuando se implemente JWT, reemplazar el cuerpo
- * de esta función por la decodificación del token almacenado.
  */
 function getSession() {
     try {
@@ -62,8 +59,6 @@ function setSession(usuarioDTO) {
 
 function cerrarSesion() {
     localStorage.removeItem('optistock_session');
-    // Cuando exista login.html: window.location.href = '../login.html';
-    // Por ahora vuelve al dashboard
     window.location.href = '../Index.html';
 }
 
@@ -71,15 +66,10 @@ function cerrarSesion() {
 
 /**
  * Llama esto al inicio de cada página protegida.
- * Si no hay sesión, redirige al login (cuando exista).
- * Devuelve el objeto de sesión para uso inmediato.
  */
 function requireAuth() {
     const s = getSession();
     if (!s) {
-        // Ruta preparada para cuando se implemente login:
-        // window.location.href = '../login.html';
-        // Por ahora: crear sesión de demo con rol ADMIN
         return setSession({
             idUsuario: 1, nombre: 'Administrador', apellido: 'Sistema',
             usuarioLogin: 'admin', nombreRol: 'ADMIN', idRol: 1
@@ -105,9 +95,7 @@ function esAdmin() {
 // ─── UI helpers ──────────────────────────────────────────────────────────────
 
 /**
- * Inyecta en el sidebar el nombre y rol del usuario activo,
- * y agrega el botón de cerrar sesión.
- * Llamar después de requireAuth() en cada página.
+ * Inyecta en el sidebar el nombre y rol del usuario activo.
  */
 function renderUserBadge() {
     const s = getSession();
@@ -118,13 +106,11 @@ function renderUserBadge() {
     if (header && !document.getElementById('user-badge')) {
         const badge = document.createElement('div');
         badge.id = 'user-badge';
-        badge.style.cssText = 'margin-top:.75rem;padding:.5rem .75rem;background:rgba(255,255,255,.1);border-radius:8px;font-size:.78rem;';
+        // CAMBIO: Fondo oscuro sólido (#1e293b) para que contraste con el texto blanco
+        badge.style.cssText = 'margin-top:.75rem;padding:.5rem .75rem;background:#1e293b;border-radius:8px;font-size:.78rem;box-shadow: 0 2px 4px rgba(0,0,0,0.1);';
         badge.innerHTML = `
             <div style="font-weight:600;color:#fff;">${s.nombre} ${s.apellido}</div>
-            <div style="color:rgba(255,255,255,.7);margin-top:2px;">${s.rol}</div>
-            <button onclick="cerrarSesion()" style="margin-top:.5rem;width:100%;padding:.3rem;background:rgba(255,255,255,.15);border:none;border-radius:5px;color:#fff;cursor:pointer;font-size:.75rem;">
-                🚪 Cerrar sesión
-            </button>`;
+            <div style="color:#94a3b8;margin-top:2px;">${s.rol}</div>`;
         header.appendChild(badge);
     }
 

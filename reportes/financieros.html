@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,308 +8,373 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
+
 <body>
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header"><h1> OptiStock</h1><p>Sistema de Gestión</p></div>
-        <nav><ul class="nav-menu">
-            <li class="nav-section" id="section-dashboard">
-                <button class="nav-section-title" onclick="toggleSection('section-dashboard')"><span> Dashboard</span><span class="nav-section-icon">▶</span></button>
-                <ul class="nav-submenu">
-                    <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
-                    <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
-                    <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a></li>
-                    <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a></li>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1> OptiStock</h1>
+                <p>Sistema de Gestión</p>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-section" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')"><span>
+                                Dashboard</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html"
+                                    class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html"
+                                    class="nav-link">Reportes Rápidos</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
+                                    class="nav-link">Notificaciones</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')"><span>
+                                Inventario</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
+                            </li>
+                            <li class="nav-item"><a href="../inventario/proveedores.html"
+                                    class="nav-link">Proveedores</a></li>
+                            <li class="nav-item"><a href="../inventario/transferencias.html"
+                                    class="nav-link">Transferencias</a></li>
+                            <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')"><span>
+                                Facturación</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva
+                                    Factura</a></li>
+                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las
+                                    Facturas</a></li>
+                            <li class="nav-item"><a href="../facturacion/pendientes.html"
+                                    class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section active" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')"><span>
+                                Reportes</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                            <li class="nav-item"><a href="../reportes/reportes-inventario.html"
+                                    class="nav-link">Inventario</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/financieros.html"
+                                    class="nav-link active">Financiero</a></li>
+                            <li class="nav-item"><a href="../reportes/personalizados.html"
+                                    class="nav-link">Personalizados</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')"><span>⚙️
+                                Configuración</span><span class="nav-section-icon">▶</span></button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/impuestos.html"
+                                    class="nav-link">Impuestos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span
+                                class="nav-icon">👤</span><span>Perfil</span></a></li>
                 </ul>
-            </li>
-            <li class="nav-section" id="section-inventory">
-                <button class="nav-section-title" onclick="toggleSection('section-inventory')"><span> Inventario</span><span class="nav-section-icon">▶</span></button>
-                <ul class="nav-submenu">
-                    <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
-                    <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a></li>
-                    <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a></li>
-                    <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a></li>
-                    <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
-                    <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
-                </ul>
-            </li>
-            <li class="nav-section" id="section-billing">
-                <button class="nav-section-title" onclick="toggleSection('section-billing')"><span> Facturación</span><span class="nav-section-icon">▶</span></button>
-                <ul class="nav-submenu">
-                    <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
-                    <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a></li>
-                    <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
-                    <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
-                </ul>
-            </li>
-            <li class="nav-section active" id="section-reports">
-                <button class="nav-section-title" onclick="toggleSection('section-reports')"><span> Reportes</span><span class="nav-section-icon">▶</span></button>
-                <ul class="nav-submenu">
-                    <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
-                    <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a></li>
-                    <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link active">Financiero</a></li>
-                    <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
-                </ul>
-            </li>
-            <li class="nav-section" id="section-settings">
-                <button class="nav-section-title" onclick="toggleSection('section-settings')"><span>⚙️ Configuración</span><span class="nav-section-icon">▶</span></button>
-                <ul class="nav-submenu">
-                    <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
-                    <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
-                    <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
-                </ul>
-            </li>
-            <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span class="nav-icon">👤</span><span>Perfil</span></a></li>
-        </ul></nav>
-    </aside>
+            </nav>
+        </aside>
 
-    <main class="main-content">
-        <header class="page-header">
-            <div>
-                <h2 class="page-title">Reporte Financiero</h2>
-                <p class="page-subtitle">Ingresos, IVA recaudado y estado de cartera</p>
-            </div>
-            <div style="display:flex;gap:.75rem;align-items:center;">
-                <select id="filtro-periodo" class="form-control" style="width:160px;" onchange="aplicarFiltro()">
-                    <option value="30" selected>Últimos 30 días</option>
-                    <option value="90">Últimos 90 días</option>
-                    <option value="365">Este año</option>
-                    <option value="0">Todo</option>
-                </select>
-                <button class="btn btn-secondary" onclick="exportarCSV()">⬇ CSV</button>
-            </div>
-        </header>
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h2 class="page-title">Reporte Financiero</h2>
+                    <p class="page-subtitle">Ingresos, IVA recaudado y estado de cartera</p>
+                </div>
+                <div style="display:flex;gap:.75rem;align-items:center;">
+                    <select id="filtro-periodo" class="form-control" style="width:160px;" onchange="aplicarFiltro()">
+                        <option value="30" selected>Últimos 30 días</option>
+                        <option value="90">Últimos 90 días</option>
+                        <option value="365">Este año</option>
+                        <option value="0">Todo</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="exportarCSV()">⬇ CSV</button>
+                </div>
+            </header>
 
-        <!-- KPIs fila 1 -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1rem;">
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-ingresos">$0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Ingresos brutos</div>
-            </div>
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--color-info);" id="kpi-subtotal">$0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Subtotal (sin IVA)</div>
-            </div>
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--color-advertencia);" id="kpi-iva">$0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">IVA recaudado (19%)</div>
-            </div>
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--color-error);" id="kpi-cartera">$0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Cartera pendiente</div>
-            </div>
-        </div>
-
-        <!-- KPIs fila 2 -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-valor-inv">$0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Valor inventario actual</div>
-            </div>
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.8rem;font-weight:700;color:var(--color-primario);" id="kpi-num-fact">0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Facturas en período</div>
-            </div>
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--color-primario);" id="kpi-ticket">$0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Ticket promedio</div>
-            </div>
-            <div class="card" style="text-align:center;padding:1rem;">
-                <div style="font-size:1.8rem;font-weight:700;color:var(--color-advertencia);" id="kpi-pend-count">0</div>
-                <div style="font-size:.82rem;color:var(--color-texto-claro);">Facturas pendientes</div>
-            </div>
-        </div>
-
-        <!-- Gráfico ingresos vs pendientes mensual -->
-        <div class="card" style="margin-bottom:1.5rem;">
-            <div class="card-header"><h3 class="card-title"> Ingresos vs Cartera por Mes</h3></div>
-            <div style="position:relative;height:280px;padding:.5rem;">
-                <canvas id="chart-ing-pend"></canvas>
-            </div>
-        </div>
-
-        <!-- Composición: subtotal vs IVA -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
-            <div class="card">
-                <div class="card-header"><h3 class="card-title">🥧 Composición de Ingresos</h3></div>
-                <div style="position:relative;height:220px;padding:.5rem;">
-                    <canvas id="chart-composicion"></canvas>
+            <!-- KPIs fila 1 -->
+            <div
+                style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1rem;">
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-ingresos">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Ingresos brutos</div>
+                </div>
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-info);" id="kpi-subtotal">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Subtotal (sin IVA)</div>
+                </div>
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-advertencia);" id="kpi-iva">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">IVA recaudado (19%)</div>
+                </div>
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-error);" id="kpi-cartera">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Cartera pendiente</div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header"><h3 class="card-title"> Estado de Cartera</h3></div>
-                <div style="position:relative;height:220px;padding:.5rem;">
-                    <canvas id="chart-cartera"></canvas>
+
+            <!-- KPIs fila 2 -->
+            <div
+                style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-valor-inv">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Valor inventario actual</div>
+                </div>
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-primario);" id="kpi-num-fact">0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Facturas en período</div>
+                </div>
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-primario);" id="kpi-ticket">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Ticket promedio</div>
+                </div>
+                <div class="card" style="text-align:center;padding:1rem;">
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-advertencia);" id="kpi-pend-count">0
+                    </div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Facturas pendientes</div>
                 </div>
             </div>
-        </div>
 
-        <!-- Tabla resumen mensual -->
-        <div class="card">
-            <div class="card-header"><h3 class="card-title">📅 Resumen Mensual</h3></div>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>Mes</th><th>Facturas</th><th>Subtotal</th><th>IVA</th><th>Total</th></tr></thead>
-                    <tbody id="tbody-mensual"><tr><td colspan="5" class="text-center">Cargando...</td></tr></tbody>
-                </table>
+            <!-- Gráfico ingresos vs pendientes mensual -->
+            <div class="card" style="margin-bottom:1.5rem;">
+                <div class="card-header">
+                    <h3 class="card-title"> Ingresos vs Cartera por Mes</h3>
+                </div>
+                <div style="position:relative;height:280px;padding:.5rem;">
+                    <canvas id="chart-ing-pend"></canvas>
+                </div>
             </div>
-        </div>
-    </main>
-</div>
 
-<script src="../js/datos.js"></script>
-<script src="../js/script.js"></script>
-<script>
-let _facturas = [], _productos = [], _pendientes = [];
-let chartIngPend, chartComp, chartCartera;
-const COLORES = ['#6366f1','#22c55e','#f59e0b','#ef4444','#3b82f6','#a855f7'];
-const API_PAGOS = CONFIG.API_BASE + '/pagos';
+            <!-- Composición: subtotal vs IVA -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🥧 Composición de Ingresos</h3>
+                    </div>
+                    <div style="position:relative;height:220px;padding:.5rem;">
+                        <canvas id="chart-composicion"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"> Estado de Cartera</h3>
+                    </div>
+                    <div style="position:relative;height:220px;padding:.5rem;">
+                        <canvas id="chart-cartera"></canvas>
+                    </div>
+                </div>
+            </div>
 
-async function cargar() {
-    await Promise.all([loadInvoices(), loadProducts()]);
-    _facturas = getInvoices();
-    _productos = getProducts();
-    try {
-        const r = await fetch(`${API_PAGOS}/pendientes`);
-        _pendientes = r.ok ? await r.json() : [];
-    } catch { _pendientes = []; }
-    aplicarFiltro();
-}
+            <!-- Tabla resumen mensual -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📅 Resumen Mensual</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mes</th>
+                                <th>Facturas</th>
+                                <th>Subtotal</th>
+                                <th>IVA</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-mensual">
+                            <tr>
+                                <td colspan="5" class="text-center">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 
-function filtrarPorPeriodo(lista) {
-    const dias = parseInt(document.getElementById('filtro-periodo').value);
-    if (dias === 0) return lista;
-    const ahora = new Date();
-    return lista.filter(f => (ahora - new Date(f.fecha)) / 86400000 <= dias);
-}
+    <script src="../js/datos.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        let _facturas = [], _productos = [], _pendientes = [];
+        let chartIngPend, chartComp, chartCartera;
+        const COLORES = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#a855f7'];
+        const API_PAGOS = CONFIG.API_BASE + '/pagos';
 
-function aplicarFiltro() {
-    const lista = filtrarPorPeriodo(_facturas);
-    renderKPIs(lista);
-    renderChartIngPend(lista);
-    renderChartComposicion(lista);
-    renderChartCartera(lista);
-    renderTablaMensual(lista);
-}
+        async function cargar() {
+            await Promise.all([loadInvoices(), loadProducts()]);
+            _facturas = getInvoices();
+            _productos = getProducts();
+            try {
+                const r = await fetch(`${API_PAGOS}/pendientes`);
+                _pendientes = r.ok ? await r.json() : [];
+            } catch { _pendientes = []; }
+            aplicarFiltro();
+        }
 
-function renderKPIs(lista) {
-    const total = lista.reduce((s,f) => s + parseFloat(f.total||0), 0);
-    const sub = lista.reduce((s,f) => s + parseFloat(f.subtotal||0), 0);
-    const iva = lista.reduce((s,f) => s + parseFloat(f.iva||0), 0);
-    const cartera = _pendientes.reduce((s,f) => s + parseFloat(f.total||0), 0);
-    const valInv = _productos.reduce((s,p) => s + parseFloat(p.precio||0)*(p.cantidad||0), 0);
-    document.getElementById('kpi-ingresos').textContent = formatPrice(total);
-    document.getElementById('kpi-subtotal').textContent = formatPrice(sub);
-    document.getElementById('kpi-iva').textContent = formatPrice(iva);
-    document.getElementById('kpi-cartera').textContent = formatPrice(cartera);
-    document.getElementById('kpi-valor-inv').textContent = formatPrice(valInv);
-    document.getElementById('kpi-num-fact').textContent = lista.length;
-    document.getElementById('kpi-ticket').textContent = formatPrice(lista.length ? total/lista.length : 0);
-    document.getElementById('kpi-pend-count').textContent = _pendientes.length;
-}
+        function filtrarPorPeriodo(lista) {
+            const dias = parseInt(document.getElementById('filtro-periodo').value);
+            if (dias === 0) return lista;
+            const ahora = new Date();
+            return lista.filter(f => (ahora - new Date(f.fecha)) / 86400000 <= dias);
+        }
 
-function agruparMes(lista) {
-    const mapa = {};
-    lista.forEach(f => {
-        const d = new Date(f.fecha);
-        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-        if (!mapa[key]) mapa[key] = { sub:0, iva:0, total:0, count:0 };
-        mapa[key].sub += parseFloat(f.subtotal||0);
-        mapa[key].iva += parseFloat(f.iva||0);
-        mapa[key].total += parseFloat(f.total||0);
-        mapa[key].count++;
-    });
-    return mapa;
-}
+        function aplicarFiltro() {
+            const lista = filtrarPorPeriodo(_facturas);
+            renderKPIs(lista);
+            renderChartIngPend(lista);
+            renderChartComposicion(lista);
+            renderChartCartera(lista);
+            renderTablaMensual(lista);
+        }
 
-function renderChartIngPend(lista) {
-    const mapa = agruparMes(lista);
-    const pendMapa = agruparMes(_pendientes);
-    const keys = [...new Set([...Object.keys(mapa), ...Object.keys(pendMapa)])].sort().slice(-12);
-    const labels = keys.map(k => { const [y,m]=k.split('-'); return new Date(y,m-1).toLocaleDateString('es-CO',{month:'short',year:'2-digit'}); });
+        function renderKPIs(lista) {
+            const total = lista.reduce((s, f) => s + parseFloat(f.total || 0), 0);
+            const sub = lista.reduce((s, f) => s + parseFloat(f.subtotal || 0), 0);
+            const iva = lista.reduce((s, f) => s + parseFloat(f.iva || 0), 0);
+            const cartera = _pendientes.reduce((s, f) => s + parseFloat(f.total || 0), 0);
+            const valInv = _productos.reduce((s, p) => s + parseFloat(p.precio || 0) * (p.cantidad || 0), 0);
+            document.getElementById('kpi-ingresos').textContent = formatPrice(total);
+            document.getElementById('kpi-subtotal').textContent = formatPrice(sub);
+            document.getElementById('kpi-iva').textContent = formatPrice(iva);
+            document.getElementById('kpi-cartera').textContent = formatPrice(cartera);
+            document.getElementById('kpi-valor-inv').textContent = formatPrice(valInv);
+            document.getElementById('kpi-num-fact').textContent = lista.length;
+            document.getElementById('kpi-ticket').textContent = formatPrice(lista.length ? total / lista.length : 0);
+            document.getElementById('kpi-pend-count').textContent = _pendientes.length;
+        }
 
-    if (chartIngPend) chartIngPend.destroy();
-    chartIngPend = new Chart(document.getElementById('chart-ing-pend'), {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                { label: 'Ingresos cobrados', data: keys.map(k=>(mapa[k]?.total||0)-(pendMapa[k]?.total||0)), backgroundColor: '#22c55e80', borderColor: '#22c55e', borderWidth:2, borderRadius:6 },
-                { label: 'Pendiente', data: keys.map(k=>pendMapa[k]?.total||0), backgroundColor: '#ef444480', borderColor: '#ef4444', borderWidth:2, borderRadius:6 }
-            ]
-        },
-        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top' } },
-            scales: { x:{stacked:true}, y:{ stacked:true, ticks:{ callback: v=>'$'+(v/1000000).toFixed(1)+'M' } } } }
-    });
-}
+        function agruparMes(lista) {
+            const mapa = {};
+            lista.forEach(f => {
+                const d = new Date(f.fecha);
+                const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                if (!mapa[key]) mapa[key] = { sub: 0, iva: 0, total: 0, count: 0 };
+                mapa[key].sub += parseFloat(f.subtotal || 0);
+                mapa[key].iva += parseFloat(f.iva || 0);
+                mapa[key].total += parseFloat(f.total || 0);
+                mapa[key].count++;
+            });
+            return mapa;
+        }
 
-function renderChartComposicion(lista) {
-    const sub = lista.reduce((s,f)=>s+parseFloat(f.subtotal||0),0);
-    const iva = lista.reduce((s,f)=>s+parseFloat(f.iva||0),0);
-    if (chartComp) chartComp.destroy();
-    chartComp = new Chart(document.getElementById('chart-composicion'), {
-        type: 'doughnut',
-        data: { labels:['Subtotal (sin IVA)','IVA 19%'], datasets:[{ data:[sub,iva], backgroundColor:['#6366f1','#f59e0b'], borderWidth:2 }] },
-        options: { responsive:true, maintainAspectRatio:false,
-            plugins:{ legend:{ position:'bottom' },
-                tooltip:{ callbacks:{ label: ctx => ' '+formatPrice(ctx.parsed) } } } }
-    });
-}
+        function renderChartIngPend(lista) {
+            const mapa = agruparMes(lista);
+            const pendMapa = agruparMes(_pendientes);
+            const keys = [...new Set([...Object.keys(mapa), ...Object.keys(pendMapa)])].sort().slice(-12);
+            const labels = keys.map(k => { const [y, m] = k.split('-'); return new Date(y, m - 1).toLocaleDateString('es-CO', { month: 'short', year: '2-digit' }); });
 
-function renderChartCartera(lista) {
-    const totalFact = lista.reduce((s,f)=>s+parseFloat(f.total||0),0);
-    const cartera = _pendientes.reduce((s,f)=>s+parseFloat(f.total||0),0);
-    const cobrado = totalFact - Math.min(cartera, totalFact);
-    if (chartCartera) chartCartera.destroy();
-    chartCartera = new Chart(document.getElementById('chart-cartera'), {
-        type: 'doughnut',
-        data: { labels:['Cobrado','Pendiente'], datasets:[{ data:[cobrado<0?0:cobrado, cartera], backgroundColor:['#22c55e','#ef4444'], borderWidth:2 }] },
-        options: { responsive:true, maintainAspectRatio:false,
-            plugins:{ legend:{ position:'bottom' },
-                tooltip:{ callbacks:{ label: ctx => ' '+formatPrice(ctx.parsed) } } } }
-    });
-}
+            if (chartIngPend) chartIngPend.destroy();
+            chartIngPend = new Chart(document.getElementById('chart-ing-pend'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Ingresos cobrados', data: keys.map(k => (mapa[k]?.total || 0) - (pendMapa[k]?.total || 0)), backgroundColor: '#22c55e80', borderColor: '#22c55e', borderWidth: 2, borderRadius: 6 },
+                        { label: 'Pendiente', data: keys.map(k => pendMapa[k]?.total || 0), backgroundColor: '#ef444480', borderColor: '#ef4444', borderWidth: 2, borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } },
+                    scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => '$' + (v / 1000000).toFixed(1) + 'M' } } }
+                }
+            });
+        }
 
-function renderTablaMensual(lista) {
-    const mapa = agruparMes(lista);
-    const keys = Object.keys(mapa).sort().reverse();
-    const tbody = document.getElementById('tbody-mensual');
-    if (!keys.length) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">Sin datos en el período</td></tr>';
-        return;
-    }
-    tbody.innerHTML = keys.map(k => {
-        const [y,m] = k.split('-');
-        const label = new Date(y,m-1).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
-        const d = mapa[k];
-        return `<tr>
+        function renderChartComposicion(lista) {
+            const sub = lista.reduce((s, f) => s + parseFloat(f.subtotal || 0), 0);
+            const iva = lista.reduce((s, f) => s + parseFloat(f.iva || 0), 0);
+            if (chartComp) chartComp.destroy();
+            chartComp = new Chart(document.getElementById('chart-composicion'), {
+                type: 'doughnut',
+                data: { labels: ['Subtotal (sin IVA)', 'IVA 19%'], datasets: [{ data: [sub, iva], backgroundColor: ['#6366f1', '#f59e0b'], borderWidth: 2 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: ctx => ' ' + formatPrice(ctx.parsed) } }
+                    }
+                }
+            });
+        }
+
+        function renderChartCartera(lista) {
+            const totalFact = lista.reduce((s, f) => s + parseFloat(f.total || 0), 0);
+            const cartera = _pendientes.reduce((s, f) => s + parseFloat(f.total || 0), 0);
+            const cobrado = totalFact - Math.min(cartera, totalFact);
+            if (chartCartera) chartCartera.destroy();
+            chartCartera = new Chart(document.getElementById('chart-cartera'), {
+                type: 'doughnut',
+                data: { labels: ['Cobrado', 'Pendiente'], datasets: [{ data: [cobrado < 0 ? 0 : cobrado, cartera], backgroundColor: ['#22c55e', '#ef4444'], borderWidth: 2 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: ctx => ' ' + formatPrice(ctx.parsed) } }
+                    }
+                }
+            });
+        }
+
+        function renderTablaMensual(lista) {
+            const mapa = agruparMes(lista);
+            const keys = Object.keys(mapa).sort().reverse();
+            const tbody = document.getElementById('tbody-mensual');
+            if (!keys.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">Sin datos en el período</td></tr>';
+                return;
+            }
+            tbody.innerHTML = keys.map(k => {
+                const [y, m] = k.split('-');
+                const label = new Date(y, m - 1).toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
+                const d = mapa[k];
+                return `<tr>
             <td><strong>${label}</strong></td>
             <td>${d.count}</td>
             <td>${formatPrice(d.sub)}</td>
             <td>${formatPrice(d.iva)}</td>
             <td><strong>${formatPrice(d.total)}</strong></td>
         </tr>`;
-    }).join('');
-}
+            }).join('');
+        }
 
-function exportarCSV() {
-    const lista = filtrarPorPeriodo(_facturas);
-    const mapa = agruparMes(lista);
-    const keys = Object.keys(mapa).sort().reverse();
-    const headers = ['Mes','Facturas','Subtotal','IVA','Total'];
-    const rows = keys.map(k => {
-        const [y,m] = k.split('-');
-        const label = new Date(y,m-1).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
-        const d = mapa[k];
-        return [label, d.count, d.sub.toFixed(2), d.iva.toFixed(2), d.total.toFixed(2)].map(v=>`"${v}"`).join(',');
-    });
-    const blob = new Blob(['\uFEFF'+[headers.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `reporte_financiero_${new Date().toISOString().split('T')[0]}.csv`; a.click();
-    showNotification('Reporte financiero exportado');
-}
+        function exportarCSV() {
+            const lista = filtrarPorPeriodo(_facturas);
+            const mapa = agruparMes(lista);
+            const keys = Object.keys(mapa).sort().reverse();
+            const headers = ['Mes', 'Facturas', 'Subtotal', 'IVA', 'Total'];
+            const rows = keys.map(k => {
+                const [y, m] = k.split('-');
+                const label = new Date(y, m - 1).toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
+                const d = mapa[k];
+                return [label, d.count, d.sub.toFixed(2), d.iva.toFixed(2), d.total.toFixed(2)].map(v => `"${v}"`).join(',');
+            });
+            const blob = new Blob(['\uFEFF' + [headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `reporte_financiero_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+            showNotification('Reporte financiero exportado');
+        }
 
-document.addEventListener('DOMContentLoaded', cargar);
-</script>
+        document.addEventListener('DOMContentLoaded', cargar);
+    </script>
 </body>
+
 </html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Ventas | OptiStock</title>
+    <title>Reporte de Inventario | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
@@ -66,10 +66,9 @@
                         <button class="nav-section-title" onclick="toggleSection('section-reports')"><span>
                                 Reportes</span><span class="nav-section-icon">▶</span></button>
                         <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link active">Ventas</a>
-                            </li>
+                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
                             <li class="nav-item"><a href="../reportes/reportes-inventario.html"
-                                    class="nav-link">Inventario</a></li>
+                                    class="nav-link active">Inventario</a></li>
                             <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a>
                             </li>
                             <li class="nav-item"><a href="../reportes/personalizados.html"
@@ -97,16 +96,15 @@
         <main class="main-content">
             <header class="page-header">
                 <div>
-                    <h2 class="page-title">Reporte de Ventas</h2>
-                    <p class="page-subtitle">Análisis de facturación por período</p>
+                    <h2 class="page-title">Reporte de Inventario</h2>
+                    <p class="page-subtitle">Estado actual del stock y valoración del inventario</p>
                 </div>
-                <div style="display:flex;gap:.75rem;align-items:center;">
-                    <select id="filtro-periodo" class="form-control" style="width:160px;" onchange="aplicarFiltro()">
-                        <option value="7">Últimos 7 días</option>
-                        <option value="30" selected>Últimos 30 días</option>
-                        <option value="90">Últimos 90 días</option>
-                        <option value="365">Este año</option>
-                        <option value="0">Todo</option>
+                <div style="display:flex;gap:.75rem;">
+                    <select id="filtro-estado" class="form-control" style="width:160px;" onchange="filtrar()">
+                        <option value="">Todos</option>
+                        <option value="ok">Stock normal</option>
+                        <option value="bajo">Stock bajo</option>
+                        <option value="sin">Sin stock</option>
                     </select>
                     <button class="btn btn-secondary" onclick="exportarCSV()">⬇ CSV</button>
                 </div>
@@ -116,75 +114,69 @@
             <div
                 style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
                 <div class="card" style="text-align:center;padding:1rem;">
-                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-primario);" id="kpi-facturas">0</div>
-                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Facturas emitidas</div>
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-primario);" id="kpi-total-prod">0
+                    </div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Total productos</div>
                 </div>
                 <div class="card" style="text-align:center;padding:1rem;">
-                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-ingresos">$0</div>
-                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Ingresos totales</div>
+                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-valor">$0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Valor total inventario</div>
                 </div>
                 <div class="card" style="text-align:center;padding:1rem;">
-                    <div style="font-size:1.3rem;font-weight:700;color:var(--color-info);" id="kpi-promedio">$0</div>
-                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Promedio / factura</div>
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-advertencia);" id="kpi-bajo">0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Stock bajo (≤5)</div>
                 </div>
                 <div class="card" style="text-align:center;padding:1rem;">
-                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-advertencia);" id="kpi-items">0</div>
-                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Unidades vendidas</div>
+                    <div style="font-size:1.8rem;font-weight:700;color:var(--color-error);" id="kpi-sin">0</div>
+                    <div style="font-size:.82rem;color:var(--color-texto-claro);">Sin stock</div>
                 </div>
             </div>
 
-            <!-- Gráfico ventas por día -->
-            <div class="card" style="margin-bottom:1.5rem;">
-                <div class="card-header">
-                    <h3 class="card-title"> Ventas por Día</h3>
-                </div>
-                <div style="position:relative;height:260px;padding:.5rem;">
-                    <canvas id="chart-ventas-dia"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico top productos -->
+            <!-- Gráficos -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> Top Productos Vendidos</h3>
+                        <h3 class="card-title"> Stock por Categoría</h3>
                     </div>
                     <div style="position:relative;height:240px;padding:.5rem;">
-                        <canvas id="chart-top-productos"></canvas>
+                        <canvas id="chart-cat"></canvas>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">👥 Top Clientes</h3>
+                        <h3 class="card-title">💰 Valor por Categoría</h3>
                     </div>
                     <div style="position:relative;height:240px;padding:.5rem;">
-                        <canvas id="chart-top-clientes"></canvas>
+                        <canvas id="chart-valor-cat"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Tabla detalle -->
+            <!-- Tabla productos -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">📋 Detalle de Facturas</h3>
-                    <span id="contador" class="badge badge-info">0 registros</span>
+                    <h3 class="card-title">📦 Detalle de Productos</h3>
+                    <span id="contador" class="badge badge-info">0 productos</span>
+                </div>
+                <div style="padding:.5rem 0;">
+                    <input type="text" id="buscar" class="form-control" placeholder="🔍 Buscar producto o categoría..."
+                        oninput="filtrar()" style="max-width:360px;">
                 </div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th># Factura</th>
-                                <th>Fecha</th>
-                                <th>Cliente</th>
-                                <th>Items</th>
-                                <th>Subtotal</th>
-                                <th>IVA</th>
-                                <th>Total</th>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Precio Unit.</th>
+                                <th>Valor Total</th>
                             </tr>
                         </thead>
                         <tbody id="tbody">
                             <tr>
-                                <td colspan="7" class="text-center">Cargando...</td>
+                                <td colspan="6" class="text-center">Cargando...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -196,99 +188,49 @@
     <script src="../js/datos.js"></script>
     <script src="../js/script.js"></script>
     <script>
-        let _facturas = [];
-        let chartDia, chartProd, chartClientes;
-
+        let _productos = [];
+        let chartCat, chartVal;
         const COLORES = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#a855f7', '#14b8a6', '#f97316'];
 
         async function cargar() {
-            await loadInvoices();
-            _facturas = getInvoices();
-            aplicarFiltro();
+            await loadProducts();
+            _productos = getProducts();
+            renderKPIs();
+            renderCharts();
+            filtrar();
         }
 
-        function aplicarFiltro() {
-            const dias = parseInt(document.getElementById('filtro-periodo').value);
-            const ahora = new Date();
-            const lista = dias === 0 ? _facturas : _facturas.filter(f => {
-                const d = new Date(f.fecha);
-                return (ahora - d) / 86400000 <= dias;
+        function renderKPIs() {
+            const valor = _productos.reduce((s, p) => s + (parseFloat(p.precio || 0) * (p.cantidad || 0)), 0);
+            const bajo = _productos.filter(p => p.cantidad > 0 && p.cantidad <= CONFIG.MIN_STOCK).length;
+            const sin = _productos.filter(p => (p.cantidad || 0) === 0).length;
+            document.getElementById('kpi-total-prod').textContent = _productos.length;
+            document.getElementById('kpi-valor').textContent = formatPrice(valor);
+            document.getElementById('kpi-bajo').textContent = bajo;
+            document.getElementById('kpi-sin').textContent = sin;
+        }
+
+        function renderCharts() {
+            // Agrupar por categoría
+            const catStock = {}, catValor = {};
+            _productos.forEach(p => {
+                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || 'Sin categoría';
+                catStock[cat] = (catStock[cat] || 0) + (p.cantidad || 0);
+                catValor[cat] = (catValor[cat] || 0) + (parseFloat(p.precio || 0) * (p.cantidad || 0));
             });
-            renderKPIs(lista);
-            renderTabla(lista);
-            renderChartDia(lista);
-            renderChartProductos(lista);
-            renderChartClientes(lista);
-        }
+            const labels = Object.keys(catStock);
 
-        function renderKPIs(lista) {
-            const total = lista.reduce((s, f) => s + parseFloat(f.total || 0), 0);
-            const items = lista.reduce((s, f) => s + (f.items || []).reduce((si, i) => si + (i.cantidad || 0), 0), 0);
-            document.getElementById('kpi-facturas').textContent = lista.length;
-            document.getElementById('kpi-ingresos').textContent = formatPrice(total);
-            document.getElementById('kpi-promedio').textContent = formatPrice(lista.length ? total / lista.length : 0);
-            document.getElementById('kpi-items').textContent = items;
-        }
-
-        function renderTabla(lista) {
-            document.getElementById('contador').textContent = lista.length + ' registros';
-            const tbody = document.getElementById('tbody');
-            if (!lista.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">Sin facturas en el período seleccionado</td></tr>';
-                return;
-            }
-            tbody.innerHTML = [...lista].sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).map(f => `
-        <tr>
-            <td><strong>#${f.id}</strong></td>
-            <td>${formatDate(f.fecha)}</td>
-            <td>${f.cliente}</td>
-            <td>${(f.items || []).length}</td>
-            <td>${formatPrice(f.subtotal || 0)}</td>
-            <td>${formatPrice(f.iva || 0)}</td>
-            <td><strong>${formatPrice(f.total || 0)}</strong></td>
-        </tr>`).join('');
-        }
-
-        function agruparPorDia(lista) {
-            const mapa = {};
-            lista.forEach(f => {
-                const key = new Date(f.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit' });
-                mapa[key] = (mapa[key] || 0) + parseFloat(f.total || 0);
-            });
-            const keys = Object.keys(mapa).slice(-14);
-            return { labels: keys, data: keys.map(k => mapa[k]) };
-        }
-
-        function renderChartDia(lista) {
-            const { labels, data } = agruparPorDia(lista);
-            if (chartDia) chartDia.destroy();
-            chartDia = new Chart(document.getElementById('chart-ventas-dia'), {
+            if (chartCat) chartCat.destroy();
+            chartCat = new Chart(document.getElementById('chart-cat'), {
                 type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{ label: 'Ventas (COP)', data, backgroundColor: '#6366f180', borderColor: '#6366f1', borderWidth: 2, borderRadius: 6 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k' } } }
-                }
+                data: { labels, datasets: [{ label: 'Unidades', data: labels.map(k => catStock[k]), backgroundColor: COLORES, borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
-        }
 
-        function renderChartProductos(lista) {
-            const mapa = {};
-            lista.forEach(f => (f.items || []).forEach(i => {
-                const k = i.nombre || `#${i.productoId}`;
-                mapa[k] = (mapa[k] || 0) + (i.cantidad || 0);
-            }));
-            const sorted = Object.entries(mapa).sort((a, b) => b[1] - a[1]).slice(0, 6);
-            if (chartProd) chartProd.destroy();
-            chartProd = new Chart(document.getElementById('chart-top-productos'), {
+            if (chartVal) chartVal.destroy();
+            chartVal = new Chart(document.getElementById('chart-valor-cat'), {
                 type: 'doughnut',
-                data: {
-                    labels: sorted.map(e => e[0]),
-                    datasets: [{ data: sorted.map(e => e[1]), backgroundColor: COLORES }]
-                },
+                data: { labels, datasets: [{ data: labels.map(k => catValor[k]), backgroundColor: COLORES }] },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } }
@@ -296,35 +238,57 @@
             });
         }
 
-        function renderChartClientes(lista) {
-            const mapa = {};
-            lista.forEach(f => { mapa[f.cliente] = (mapa[f.cliente] || 0) + parseFloat(f.total || 0); });
-            const sorted = Object.entries(mapa).sort((a, b) => b[1] - a[1]).slice(0, 6);
-            if (chartClientes) chartClientes.destroy();
-            chartClientes = new Chart(document.getElementById('chart-top-clientes'), {
-                type: 'bar',
-                data: {
-                    labels: sorted.map(e => e[0]),
-                    datasets: [{ label: 'Total comprado', data: sorted.map(e => e[1]), backgroundColor: COLORES }]
-                },
-                options: {
-                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k' } } }
-                }
+        function estadoStock(cant) {
+            if (cant === 0) return { texto: 'Sin stock', clase: 'badge-error' };
+            if (cant <= CONFIG.MIN_STOCK) return { texto: 'Stock bajo', clase: 'badge-warning' };
+            return { texto: 'Normal', clase: 'badge-success' };
+        }
+
+        function filtrar() {
+            const term = document.getElementById('buscar').value.toLowerCase();
+            const estado = document.getElementById('filtro-estado').value;
+            let lista = _productos;
+            if (term) lista = lista.filter(p => {
+                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '';
+                return (p.nombre + ' ' + cat).toLowerCase().includes(term);
             });
+            if (estado === 'ok') lista = lista.filter(p => p.cantidad > CONFIG.MIN_STOCK);
+            else if (estado === 'bajo') lista = lista.filter(p => p.cantidad > 0 && p.cantidad <= CONFIG.MIN_STOCK);
+            else if (estado === 'sin') lista = lista.filter(p => (p.cantidad || 0) === 0);
+
+            document.getElementById('contador').textContent = lista.length + ' productos';
+            const tbody = document.getElementById('tbody');
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">No se encontraron productos</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(p => {
+                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '—';
+                const cant = p.cantidad || 0;
+                const { texto, clase } = estadoStock(cant);
+                const valorTotal = parseFloat(p.precio || 0) * cant;
+                return `<tr>
+            <td><strong>${p.nombre}</strong></td>
+            <td>${cat}</td>
+            <td style="font-weight:600;">${cant}</td>
+            <td><span class="badge ${clase}">${texto}</span></td>
+            <td>${formatPrice(p.precio || 0)}</td>
+            <td>${formatPrice(valorTotal)}</td>
+        </tr>`;
+            }).join('');
         }
 
         function exportarCSV() {
-            const dias = parseInt(document.getElementById('filtro-periodo').value);
-            const ahora = new Date();
-            const lista = dias === 0 ? _facturas : _facturas.filter(f => (ahora - new Date(f.fecha)) / 86400000 <= dias);
-            const headers = ['# Factura', 'Fecha', 'Cliente', 'Documento', 'Subtotal', 'IVA', 'Total'];
-            const rows = lista.map(f => [f.id, new Date(f.fecha).toLocaleString('es-CO'), f.cliente, f.documento || '',
-            f.subtotal || 0, f.iva || 0, f.total || 0].map(v => `"${v}"`).join(','));
+            const headers = ['Producto', 'Categoría', 'Stock', 'Estado', 'Precio Unitario', 'Valor Total'];
+            const rows = _productos.map(p => {
+                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '';
+                const cant = p.cantidad || 0;
+                const { texto } = estadoStock(cant);
+                return [p.nombre, cat, cant, texto, p.precio || 0, parseFloat(p.precio || 0) * cant].map(v => `"${v}"`).join(',');
+            });
             const blob = new Blob(['\uFEFF' + [headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
             const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = `reporte_ventas_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+            a.download = `reporte_inventario_${new Date().toISOString().split('T')[0]}.csv`; a.click();
             showNotification('Reporte exportado');
         }
 
