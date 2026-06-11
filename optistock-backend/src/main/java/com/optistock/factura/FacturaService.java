@@ -35,7 +35,7 @@ public class FacturaService {
     @Transactional(readOnly = true)
     public List<FacturaDTO> listarFacturas() {
         return facturaRepository.findAll().stream()
-                .map(this::mapToDTO)
+                .map(this::mapToDTOPublic)
                 .collect(Collectors.toList());
     }
 
@@ -43,7 +43,7 @@ public class FacturaService {
     public FacturaDTO obtenerFactura(Long id) {
         Factura factura = facturaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
-        return mapToDTO(factura);
+        return mapToDTOPublic(factura);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -107,10 +107,10 @@ public class FacturaService {
             facturaGuardada.getDetalles().add(detalle);
         }
 
-        return mapToDTO(facturaGuardada);
+        return mapToDTOPublic(facturaGuardada);
     }
 
-    private FacturaDTO mapToDTO(Factura factura) {
+    public FacturaDTO mapToDTOPublic(Factura factura) {
         FacturaDTO dto = new FacturaDTO();
         dto.setId(factura.getIdFactura());
 

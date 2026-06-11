@@ -1,101 +1,245 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Inventario | Sistema</title>
+    <title>Reporte de Inventario | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1> OptiStock</h1>
-                <p>Sistema de Gestión</p>
-            </div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-section" id="section-dashboard"><button class="nav-section-title"
-                            onclick="toggleSection('section-dashboard')"><span> Dashboard</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
-                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
-                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a>
-                            </li>
-                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
-                                    class="nav-link">Notificaciones</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-inventory"><button class="nav-section-title"
-                            onclick="toggleSection('section-inventory')"><span> Inventario</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
-                            <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
-                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-billing"><button class="nav-section-title"
-                            onclick="toggleSection('section-billing')"><span> Facturación</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
-                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a>
-                            </li>
-                            <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
-                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
-                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section active" id="section-reports"><button class="nav-section-title"
-                            onclick="toggleSection('section-reports')"><span> Reportes</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
-                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link active">Inventario</a>
-                            </li>
-                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
-                            <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-settings"><button class="nav-section-title"
-                            onclick="toggleSection('section-settings')"><span>️ Configuración</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
-                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
-                            <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span
-                                class="nav-icon"></span><span>Perfil</span></a></li>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header"><h1> OptiStock</h1><p>Sistema de Gestión</p></div>
+        <nav><ul class="nav-menu">
+            <li class="nav-section" id="section-dashboard">
+                <button class="nav-section-title" onclick="toggleSection('section-dashboard')"><span> Dashboard</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                    <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
+                    <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a></li>
+                    <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a></li>
                 </ul>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <header class="page-header">
+            </li>
+            <li class="nav-section" id="section-inventory">
+                <button class="nav-section-title" onclick="toggleSection('section-inventory')"><span> Inventario</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
+                    <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a></li>
+                    <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a></li>
+                    <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a></li>
+                    <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                    <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
+                </ul>
+            </li>
+            <li class="nav-section" id="section-billing">
+                <button class="nav-section-title" onclick="toggleSection('section-billing')"><span> Facturación</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
+                    <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a></li>
+                    <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
+                    <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
+                </ul>
+            </li>
+            <li class="nav-section active" id="section-reports">
+                <button class="nav-section-title" onclick="toggleSection('section-reports')"><span> Reportes</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
+                    <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link active">Inventario</a></li>
+                    <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
+                    <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
+                </ul>
+            </li>
+            <li class="nav-section" id="section-settings">
+                <button class="nav-section-title" onclick="toggleSection('section-settings')"><span>⚙️ Configuración</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
+                    <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
+                    <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span class="nav-icon">👤</span><span>Perfil</span></a></li>
+        </ul></nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
                 <h2 class="page-title">Reporte de Inventario</h2>
-                <p class="page-subtitle">Análisis de stock y valoración</p>
-            </header>
+                <p class="page-subtitle">Estado actual del stock y valoración del inventario</p>
+            </div>
+            <div style="display:flex;gap:.75rem;">
+                <select id="filtro-estado" class="form-control" style="width:160px;" onchange="filtrar()">
+                    <option value="">Todos</option>
+                    <option value="ok">Stock normal</option>
+                    <option value="bajo">Stock bajo</option>
+                    <option value="sin">Sin stock</option>
+                </select>
+                <button class="btn btn-secondary" onclick="exportarCSV()">⬇ CSV</button>
+            </div>
+        </header>
+
+        <!-- KPIs -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.8rem;font-weight:700;color:var(--color-primario);" id="kpi-total-prod">0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Total productos</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-valor">$0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Valor total inventario</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.8rem;font-weight:700;color:var(--color-advertencia);" id="kpi-bajo">0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Stock bajo (≤5)</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.8rem;font-weight:700;color:var(--color-error);" id="kpi-sin">0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Sin stock</div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"> Análisis de Inventario</h3>
-                </div>
-                <div class="empty-state">
-                    <div class="empty-state-icon"></div>
-                    <p class="empty-state-text">Próximamente: Reportes de inventario</p>
+                <div class="card-header"><h3 class="card-title"> Stock por Categoría</h3></div>
+                <div style="position:relative;height:240px;padding:.5rem;">
+                    <canvas id="chart-cat"></canvas>
                 </div>
             </div>
-        </main>
-    </div>
-    <script src="../js/datos.js"></script>
-    <script src="../js/script.js"></script>
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">💰 Valor por Categoría</h3></div>
+                <div style="position:relative;height:240px;padding:.5rem;">
+                    <canvas id="chart-valor-cat"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla productos -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">📦 Detalle de Productos</h3>
+                <span id="contador" class="badge badge-info">0 productos</span>
+            </div>
+            <div style="padding:.5rem 0;">
+                <input type="text" id="buscar" class="form-control" placeholder="🔍 Buscar producto o categoría..." oninput="filtrar()" style="max-width:360px;">
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Producto</th><th>Categoría</th><th>Stock</th><th>Estado</th><th>Precio Unit.</th><th>Valor Total</th></tr></thead>
+                    <tbody id="tbody"><tr><td colspan="6" class="text-center">Cargando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/datos.js"></script>
+<script src="../js/script.js"></script>
+<script>
+let _productos = [];
+let chartCat, chartVal;
+const COLORES = ['#6366f1','#22c55e','#f59e0b','#ef4444','#3b82f6','#a855f7','#14b8a6','#f97316'];
+
+async function cargar() {
+    await loadProducts();
+    _productos = getProducts();
+    renderKPIs();
+    renderCharts();
+    filtrar();
+}
+
+function renderKPIs() {
+    const valor = _productos.reduce((s,p) => s + (parseFloat(p.precio||0) * (p.cantidad||0)), 0);
+    const bajo = _productos.filter(p => p.cantidad > 0 && p.cantidad <= CONFIG.MIN_STOCK).length;
+    const sin = _productos.filter(p => (p.cantidad||0) === 0).length;
+    document.getElementById('kpi-total-prod').textContent = _productos.length;
+    document.getElementById('kpi-valor').textContent = formatPrice(valor);
+    document.getElementById('kpi-bajo').textContent = bajo;
+    document.getElementById('kpi-sin').textContent = sin;
+}
+
+function renderCharts() {
+    // Agrupar por categoría
+    const catStock = {}, catValor = {};
+    _productos.forEach(p => {
+        const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || 'Sin categoría';
+        catStock[cat] = (catStock[cat] || 0) + (p.cantidad || 0);
+        catValor[cat] = (catValor[cat] || 0) + (parseFloat(p.precio||0) * (p.cantidad||0));
+    });
+    const labels = Object.keys(catStock);
+
+    if (chartCat) chartCat.destroy();
+    chartCat = new Chart(document.getElementById('chart-cat'), {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Unidades', data: labels.map(k=>catStock[k]), backgroundColor: COLORES, borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+
+    if (chartVal) chartVal.destroy();
+    chartVal = new Chart(document.getElementById('chart-valor-cat'), {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data: labels.map(k=>catValor[k]), backgroundColor: COLORES }] },
+        options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } } }
+    });
+}
+
+function estadoStock(cant) {
+    if (cant === 0) return { texto: 'Sin stock', clase: 'badge-error' };
+    if (cant <= CONFIG.MIN_STOCK) return { texto: 'Stock bajo', clase: 'badge-warning' };
+    return { texto: 'Normal', clase: 'badge-success' };
+}
+
+function filtrar() {
+    const term = document.getElementById('buscar').value.toLowerCase();
+    const estado = document.getElementById('filtro-estado').value;
+    let lista = _productos;
+    if (term) lista = lista.filter(p => {
+        const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '';
+        return (p.nombre + ' ' + cat).toLowerCase().includes(term);
+    });
+    if (estado === 'ok') lista = lista.filter(p => p.cantidad > CONFIG.MIN_STOCK);
+    else if (estado === 'bajo') lista = lista.filter(p => p.cantidad > 0 && p.cantidad <= CONFIG.MIN_STOCK);
+    else if (estado === 'sin') lista = lista.filter(p => (p.cantidad||0) === 0);
+
+    document.getElementById('contador').textContent = lista.length + ' productos';
+    const tbody = document.getElementById('tbody');
+    if (!lista.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">No se encontraron productos</td></tr>';
+        return;
+    }
+    tbody.innerHTML = lista.map(p => {
+        const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '—';
+        const cant = p.cantidad || 0;
+        const { texto, clase } = estadoStock(cant);
+        const valorTotal = parseFloat(p.precio||0) * cant;
+        return `<tr>
+            <td><strong>${p.nombre}</strong></td>
+            <td>${cat}</td>
+            <td style="font-weight:600;">${cant}</td>
+            <td><span class="badge ${clase}">${texto}</span></td>
+            <td>${formatPrice(p.precio||0)}</td>
+            <td>${formatPrice(valorTotal)}</td>
+        </tr>`;
+    }).join('');
+}
+
+function exportarCSV() {
+    const headers = ['Producto','Categoría','Stock','Estado','Precio Unitario','Valor Total'];
+    const rows = _productos.map(p => {
+        const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '';
+        const cant = p.cantidad || 0;
+        const { texto } = estadoStock(cant);
+        return [p.nombre, cat, cant, texto, p.precio||0, parseFloat(p.precio||0)*cant].map(v=>`"${v}"`).join(',');
+    });
+    const blob = new Blob(['\uFEFF'+[headers.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `reporte_inventario_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+    showNotification('Reporte exportado');
+}
+
+document.addEventListener('DOMContentLoaded', cargar);
+</script>
 </body>
 </html>

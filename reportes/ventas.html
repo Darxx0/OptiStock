@@ -1,117 +1,275 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Ventas | Sistema</title>
+    <title>Reporte de Ventas | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1> OptiStock</h1>
-                <p>Sistema de Gestión</p>
-            </div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-section" id="section-dashboard"><button class="nav-section-title"
-                            onclick="toggleSection('section-dashboard')"><span> Dashboard</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
-                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html"
-                                    class="nav-link">Analíticas</a></li>
-                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html"
-                                    class="nav-link">Reportes Rápidos</a>
-                            </li>
-                            <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
-                                    class="nav-link">Notificaciones</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-inventory"><button class="nav-section-title"
-                            onclick="toggleSection('section-inventory')"><span> Inventario</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/proveedores.html"
-                                    class="nav-link">Proveedores</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/transferencias.html"
-                                    class="nav-link">Transferencias</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
-                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-billing"><button class="nav-section-title"
-                            onclick="toggleSection('section-billing')"><span> Facturación</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva
-                                    Factura</a></li>
-                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las
-                                    Facturas</a>
-                            </li>
-                            <li class="nav-item"><a href="../facturacion/pendientes.html"
-                                    class="nav-link">Pendientes</a></li>
-                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
-                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-section active" id="section-reports"><button class="nav-section-title"
-                            onclick="toggleSection('section-reports')"><span> Reportes</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link active">Ventas</a>
-                            </li>
-                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a>
-                            </li>
-                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a>
-                            </li>
-                            <li class="nav-item"><a href="../reportes/personalizados.html"
-                                    class="nav-link">Personalizados</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-settings"><button class="nav-section-title"
-                            onclick="toggleSection('section-settings')"><span>️ Configuración</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a>
-                            </li>
-                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a>
-                            </li>
-                            <li class="nav-item"><a href="../configuracion/impuestos.html"
-                                    class="nav-link">Impuestos</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span
-                                class="nav-icon"></span><span>Perfil</span></a></li>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header"><h1> OptiStock</h1><p>Sistema de Gestión</p></div>
+        <nav><ul class="nav-menu">
+            <li class="nav-section" id="section-dashboard">
+                <button class="nav-section-title" onclick="toggleSection('section-dashboard')"><span> Dashboard</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
+                    <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
+                    <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a></li>
+                    <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html" class="nav-link">Notificaciones</a></li>
                 </ul>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <header class="page-header">
+            </li>
+            <li class="nav-section" id="section-inventory">
+                <button class="nav-section-title" onclick="toggleSection('section-inventory')"><span> Inventario</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
+                    <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a></li>
+                    <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a></li>
+                    <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a></li>
+                    <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
+                    <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
+                </ul>
+            </li>
+            <li class="nav-section" id="section-billing">
+                <button class="nav-section-title" onclick="toggleSection('section-billing')"><span> Facturación</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
+                    <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a></li>
+                    <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
+                    <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
+                </ul>
+            </li>
+            <li class="nav-section active" id="section-reports">
+                <button class="nav-section-title" onclick="toggleSection('section-reports')"><span> Reportes</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link active">Ventas</a></li>
+                    <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a></li>
+                    <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
+                    <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
+                </ul>
+            </li>
+            <li class="nav-section" id="section-settings">
+                <button class="nav-section-title" onclick="toggleSection('section-settings')"><span>⚙️ Configuración</span><span class="nav-section-icon">▶</span></button>
+                <ul class="nav-submenu">
+                    <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
+                    <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
+                    <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link">Impuestos</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span class="nav-icon">👤</span><span>Perfil</span></a></li>
+        </ul></nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
                 <h2 class="page-title">Reporte de Ventas</h2>
-                <p class="page-subtitle">Análisis de ventas por Período</p>
-            </header>
+                <p class="page-subtitle">Análisis de facturación por período</p>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:center;">
+                <select id="filtro-periodo" class="form-control" style="width:160px;" onchange="aplicarFiltro()">
+                    <option value="7">Últimos 7 días</option>
+                    <option value="30" selected>Últimos 30 días</option>
+                    <option value="90">Últimos 90 días</option>
+                    <option value="365">Este año</option>
+                    <option value="0">Todo</option>
+                </select>
+                <button class="btn btn-secondary" onclick="exportarCSV()">⬇ CSV</button>
+            </div>
+        </header>
+
+        <!-- KPIs -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.8rem;font-weight:700;color:var(--color-primario);" id="kpi-facturas">0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Facturas emitidas</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--color-exito);" id="kpi-ingresos">$0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Ingresos totales</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--color-info);" id="kpi-promedio">$0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Promedio / factura</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1rem;">
+                <div style="font-size:1.8rem;font-weight:700;color:var(--color-advertencia);" id="kpi-items">0</div>
+                <div style="font-size:.82rem;color:var(--color-texto-claro);">Unidades vendidas</div>
+            </div>
+        </div>
+
+        <!-- Gráfico ventas por día -->
+        <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-header"><h3 class="card-title"> Ventas por Día</h3></div>
+            <div style="position:relative;height:260px;padding:.5rem;">
+                <canvas id="chart-ventas-dia"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico top productos -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"> Análisis de Ventas</h3>
-                </div>
-                <div class="empty-state">
-                    <div class="empty-state-icon"></div>
-                    <p class="empty-state-text">Próximamente: Reportes de ventas</p>
+                <div class="card-header"><h3 class="card-title"> Top Productos Vendidos</h3></div>
+                <div style="position:relative;height:240px;padding:.5rem;">
+                    <canvas id="chart-top-productos"></canvas>
                 </div>
             </div>
-        </main>
-    </div>
-    <script src="../js/datos.js"></script>
-    <script src="../js/script.js"></script>
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">👥 Top Clientes</h3></div>
+                <div style="position:relative;height:240px;padding:.5rem;">
+                    <canvas id="chart-top-clientes"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla detalle -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">📋 Detalle de Facturas</h3>
+                <span id="contador" class="badge badge-info">0 registros</span>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th># Factura</th><th>Fecha</th><th>Cliente</th><th>Items</th><th>Subtotal</th><th>IVA</th><th>Total</th></tr></thead>
+                    <tbody id="tbody"><tr><td colspan="7" class="text-center">Cargando...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/datos.js"></script>
+<script src="../js/script.js"></script>
+<script>
+let _facturas = [];
+let chartDia, chartProd, chartClientes;
+
+const COLORES = ['#6366f1','#22c55e','#f59e0b','#ef4444','#3b82f6','#a855f7','#14b8a6','#f97316'];
+
+async function cargar() {
+    await loadInvoices();
+    _facturas = getInvoices();
+    aplicarFiltro();
+}
+
+function aplicarFiltro() {
+    const dias = parseInt(document.getElementById('filtro-periodo').value);
+    const ahora = new Date();
+    const lista = dias === 0 ? _facturas : _facturas.filter(f => {
+        const d = new Date(f.fecha);
+        return (ahora - d) / 86400000 <= dias;
+    });
+    renderKPIs(lista);
+    renderTabla(lista);
+    renderChartDia(lista);
+    renderChartProductos(lista);
+    renderChartClientes(lista);
+}
+
+function renderKPIs(lista) {
+    const total = lista.reduce((s, f) => s + parseFloat(f.total || 0), 0);
+    const items = lista.reduce((s, f) => s + (f.items || []).reduce((si, i) => si + (i.cantidad || 0), 0), 0);
+    document.getElementById('kpi-facturas').textContent = lista.length;
+    document.getElementById('kpi-ingresos').textContent = formatPrice(total);
+    document.getElementById('kpi-promedio').textContent = formatPrice(lista.length ? total / lista.length : 0);
+    document.getElementById('kpi-items').textContent = items;
+}
+
+function renderTabla(lista) {
+    document.getElementById('contador').textContent = lista.length + ' registros';
+    const tbody = document.getElementById('tbody');
+    if (!lista.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem;color:var(--color-texto-claro);">Sin facturas en el período seleccionado</td></tr>';
+        return;
+    }
+    tbody.innerHTML = [...lista].sort((a,b) => new Date(b.fecha)-new Date(a.fecha)).map(f => `
+        <tr>
+            <td><strong>#${f.id}</strong></td>
+            <td>${formatDate(f.fecha)}</td>
+            <td>${f.cliente}</td>
+            <td>${(f.items||[]).length}</td>
+            <td>${formatPrice(f.subtotal||0)}</td>
+            <td>${formatPrice(f.iva||0)}</td>
+            <td><strong>${formatPrice(f.total||0)}</strong></td>
+        </tr>`).join('');
+}
+
+function agruparPorDia(lista) {
+    const mapa = {};
+    lista.forEach(f => {
+        const key = new Date(f.fecha).toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit'});
+        mapa[key] = (mapa[key] || 0) + parseFloat(f.total || 0);
+    });
+    const keys = Object.keys(mapa).slice(-14);
+    return { labels: keys, data: keys.map(k => mapa[k]) };
+}
+
+function renderChartDia(lista) {
+    const { labels, data } = agruparPorDia(lista);
+    if (chartDia) chartDia.destroy();
+    chartDia = new Chart(document.getElementById('chart-ventas-dia'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{ label: 'Ventas (COP)', data, backgroundColor: '#6366f180', borderColor: '#6366f1', borderWidth: 2, borderRadius: 6 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+            scales: { y: { ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k' } } } }
+    });
+}
+
+function renderChartProductos(lista) {
+    const mapa = {};
+    lista.forEach(f => (f.items||[]).forEach(i => {
+        const k = i.nombre || `#${i.productoId}`;
+        mapa[k] = (mapa[k] || 0) + (i.cantidad || 0);
+    }));
+    const sorted = Object.entries(mapa).sort((a,b) => b[1]-a[1]).slice(0,6);
+    if (chartProd) chartProd.destroy();
+    chartProd = new Chart(document.getElementById('chart-top-productos'), {
+        type: 'doughnut',
+        data: {
+            labels: sorted.map(e=>e[0]),
+            datasets: [{ data: sorted.map(e=>e[1]), backgroundColor: COLORES }]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } } }
+    });
+}
+
+function renderChartClientes(lista) {
+    const mapa = {};
+    lista.forEach(f => { mapa[f.cliente] = (mapa[f.cliente] || 0) + parseFloat(f.total || 0); });
+    const sorted = Object.entries(mapa).sort((a,b) => b[1]-a[1]).slice(0,6);
+    if (chartClientes) chartClientes.destroy();
+    chartClientes = new Chart(document.getElementById('chart-top-clientes'), {
+        type: 'bar',
+        data: {
+            labels: sorted.map(e=>e[0]),
+            datasets: [{ label: 'Total comprado', data: sorted.map(e=>e[1]), backgroundColor: COLORES }]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k' } } } }
+    });
+}
+
+function exportarCSV() {
+    const dias = parseInt(document.getElementById('filtro-periodo').value);
+    const ahora = new Date();
+    const lista = dias === 0 ? _facturas : _facturas.filter(f => (ahora - new Date(f.fecha)) / 86400000 <= dias);
+    const headers = ['# Factura','Fecha','Cliente','Documento','Subtotal','IVA','Total'];
+    const rows = lista.map(f => [f.id, new Date(f.fecha).toLocaleString('es-CO'), f.cliente, f.documento||'',
+        f.subtotal||0, f.iva||0, f.total||0].map(v=>`"${v}"`).join(','));
+    const blob = new Blob(['\uFEFF'+[headers.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `reporte_ventas_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+    showNotification('Reporte exportado');
+}
+
+document.addEventListener('DOMContentLoaded', cargar);
+</script>
 </body>
 </html>
