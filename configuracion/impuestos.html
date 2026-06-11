@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración de Impuestos | Sistema</title>
+    <title>Configuración de Impuestos | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
     <div class="app-container">
         <aside class="sidebar">
@@ -15,87 +17,323 @@
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <li class="nav-section" id="section-dashboard"><button class="nav-section-title"
-                            onclick="toggleSection('section-dashboard')"><span> Dashboard</span><span
-                                class="nav-section-icon">▶</span></button>
+                    <li class="nav-section" id="section-dashboard">
+                        <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
+                            <span> Dashboard</span><span class="nav-section-icon">▶</span>
+                        </button>
                         <ul class="nav-submenu">
                             <li class="nav-item"><a href="../Index.html" class="nav-link">Vista General</a></li>
-                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html" class="nav-link">Analíticas</a></li>
-                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html" class="nav-link">Reportes Rápidos</a>
-                            </li>
+                            <li class="nav-item"><a href="../paginas/dashboard/analiticas.html"
+                                    class="nav-link">Analíticas</a></li>
+                            <li class="nav-item"><a href="../paginas/dashboard/reportes-rapidos.html"
+                                    class="nav-link">Reportes Rápidos</a></li>
                             <li class="nav-item"><a href="../paginas/dashboard/notificaciones.html"
                                     class="nav-link">Notificaciones</a></li>
                         </ul>
                     </li>
-                    <li class="nav-section" id="section-inventory"><button class="nav-section-title"
-                            onclick="toggleSection('section-inventory')"><span> Inventario</span><span
-                                class="nav-section-icon">▶</span></button>
+                    <li class="nav-section" id="section-inventory">
+                        <button class="nav-section-title" onclick="toggleSection('section-inventory')">
+                            <span> Inventario</span><span class="nav-section-icon">▶</span>
+                        </button>
                         <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a></li>
+                            <li class="nav-item"><a href="../inventario/inventario.html" class="nav-link">Productos</a>
+                            </li>
                             <li class="nav-item"><a href="../inventario/categorias.html" class="nav-link">Categorías</a>
                             </li>
-                            <li class="nav-item"><a href="../inventario/proveedores.html" class="nav-link">Proveedores</a>
-                            </li>
-                            <li class="nav-item"><a href="../inventario/transferencias.html" class="nav-link">Transferencias</a>
-                            </li>
+                            <li class="nav-item"><a href="../inventario/proveedores.html"
+                                    class="nav-link">Proveedores</a></li>
+                            <li class="nav-item"><a href="../inventario/transferencias.html"
+                                    class="nav-link">Transferencias</a></li>
                             <li class="nav-item"><a href="../inventario/ajustes.html" class="nav-link">Ajustes</a></li>
-                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section" id="section-billing"><button class="nav-section-title"
-                            onclick="toggleSection('section-billing')"><span> Facturación</span><span
-                                class="nav-section-icon">▶</span></button>
-                        <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva Factura</a></li>
-                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las Facturas</a>
+                            <li class="nav-item"><a href="../inventario/historial.html" class="nav-link">Historial</a>
                             </li>
-                            <li class="nav-item"><a href="../facturacion/pendientes.html" class="nav-link">Pendientes</a></li>
-                            <li class="nav-item"><a href="../facturacion/pagadas.html" class="nav-link">Pagadas</a></li>
-                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a></li>
                         </ul>
                     </li>
-                    <li class="nav-section" id="section-reports"><button class="nav-section-title"
-                            onclick="toggleSection('section-reports')"><span> Reportes</span><span
-                                class="nav-section-icon">▶</span></button>
+                    <li class="nav-section" id="section-billing">
+                        <button class="nav-section-title" onclick="toggleSection('section-billing')">
+                            <span> Facturación</span><span class="nav-section-icon">▶</span>
+                        </button>
+                        <ul class="nav-submenu">
+                            <li class="nav-item"><a href="../facturacion/nueva-factura.html" class="nav-link">Nueva
+                                    Factura</a></li>
+                            <li class="nav-item"><a href="../facturacion/facturas.html" class="nav-link">Todas las
+                                    Facturas</a></li>
+                            <li class="nav-item"><a href="../facturacion/pendientes.html"
+                                    class="nav-link">Pendientes</a></li>
+                            <li class="nav-item"><a href="../facturacion/clientes.html" class="nav-link">Clientes</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-section" id="section-reports">
+                        <button class="nav-section-title" onclick="toggleSection('section-reports')">
+                            <span> Reportes</span><span class="nav-section-icon">▶</span>
+                        </button>
                         <ul class="nav-submenu">
                             <li class="nav-item"><a href="../reportes/ventas.html" class="nav-link">Ventas</a></li>
-                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a></li>
-                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a></li>
-                            <li class="nav-item"><a href="../reportes/personalizados.html" class="nav-link">Personalizados</a></li>
+                            <li class="nav-item"><a href="../reportes/inventario.html" class="nav-link">Inventario</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/financieros.html" class="nav-link">Financiero</a>
+                            </li>
+                            <li class="nav-item"><a href="../reportes/personalizados.html"
+                                    class="nav-link">Personalizados</a></li>
                         </ul>
                     </li>
-                    <li class="nav-section active" id="section-settings"><button class="nav-section-title"
-                            onclick="toggleSection('section-settings')"><span>️ Configuración</span><span
-                                class="nav-section-icon">▶</span></button>
+                    <li class="nav-section active" id="section-settings">
+                        <button class="nav-section-title" onclick="toggleSection('section-settings')">
+                            <span>⚙️ Configuración</span><span class="nav-section-icon">▶</span>
+                        </button>
                         <ul class="nav-submenu">
-                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a></li>
-                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a></li>
-                            <li class="nav-item"><a href="../configuracion/impuestos.html" class="nav-link active">Impuestos</a>
+                            <li class="nav-item"><a href="../configuracion/general.html" class="nav-link">General</a>
                             </li>
+                            <li class="nav-item"><a href="../configuracion/empresa.html" class="nav-link">Empresa</a>
+                            </li>
+                            <li class="nav-item"><a href="../configuracion/impuestos.html"
+                                    class="nav-link active">Impuestos</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a href="../configuracion/perfil.html" class="nav-link"><span
-                                class="nav-icon"></span><span>Perfil</span></a></li>
+                                class="nav-icon">👤</span><span>Perfil</span></a></li>
                 </ul>
             </nav>
         </aside>
         <main class="main-content">
             <header class="page-header">
-                <h2 class="page-title">Configuración de Impuestos</h2>
-                <p class="page-subtitle">Gestióna tasas de impuestos</p>
+                <div>
+                    <h2 class="page-title">⚖️ Tasas de Impuestos</h2>
+                    <p class="page-subtitle">Configuración fiscal aplicable a los productos de facturación y del
+                        inventario</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="guardarPreferenciaDefault()">💾 Guardar
+                        preferencia</button>
+                    <button class="btn btn-primary" onclick="abrirModalImpuesto()">+ Nueva Tasa</button>
+                </div>
             </header>
+
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <h3 class="card-title">⚙️ Reglas Fiscales Defectuosas</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: .5rem 0;">
+                    <div class="form-group">
+                        <label class="form-label">Impuesto Predeterminado para Nuevos Productos</label>
+                        <select id="cfg-impuesto-default" class="form-control">
+                            <option value="">Cargando opciones...</option>
+                        </select>
+                        <small style="color: var(--color-texto-claro);">Se asignará automáticamente al crear productos
+                            si no se especifica otro</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Manejo de Precios en el Inventario</label>
+                        <select id="cfg-tipo-calculo" class="form-control">
+                            <option value="EXCLUIDO">Los precios de lista NO incluyen impuesto (Se suma en factura)
+                            </option>
+                            <option value="INCLUIDO">Los precios de lista YA incluyen el impuesto (Se desglosa)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> Tasas de Impuestos</h3>
+                    <h3 class="card-title">📋 Tasas de Impuestos Registradas</h3>
                 </div>
-                <div class="empty-state">
-                    <div class="empty-state-icon"></div>
-                    <p class="empty-state-text">Próximamente: Configuración de impuestos</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre del Gravamen</th>
+                                <th>Tarifa / Porcentaje</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="impuestos-tbody">
+                            <tr>
+                                <td colspan="5" class="text-center">Cargando registros fiscales...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
+
+    <div id="modal-impuesto"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 400px; max-width: 95vw; margin: 0;">
+            <div class="card-header">
+                <h3 class="card-title" id="modal-title">Registrar Tasa</h3>
+                <button onclick="cerrarModalImpuesto()"
+                    style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--color-texto-claro);">✕</button>
+            </div>
+            <div style="padding: 1rem 0;">
+                <input type="hidden" id="imp-id">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Código Fiscal / Sigla *</label>
+                        <input type="text" id="imp-codigo" class="form-control" placeholder="Ej: IVA, ICO, E">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descripción del Impuesto *</label>
+                        <input type="text" id="imp-nombre" class="form-control" placeholder="Ej: IVA General 19%">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Porcentaje (%) *</label>
+                        <input type="number" id="imp-porcentaje" class="form-control" min="0" max="100" step="0.01"
+                            placeholder="19.00">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                    <button class="btn btn-secondary" onclick="cerrarModalImpuesto()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="guardarImpuesto()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/datos.js"></script>
+    <script src="../js/auth.js"></script>
     <script src="../js/script.js"></script>
+    <script>
+        const API_IMP = CONFIG.API_BASE + '/impuestos';
+        const LS_PREF = 'optistock_preferencias_fiscales';
+        let _impuestos = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Protección de sesión activa
+            requireAuth();
+            if (typeof renderUserBadge === 'function') renderUserBadge();
+
+            await cargarImpuestos();
+            cargarPreferenciasLocales();
+        });
+
+        // ── Carga y renderizado de la tabla desde la API (Spring Boot) ─────────────────
+        async function cargarImpuestos() {
+            try {
+                const r = await fetch(API_IMP);
+                _impuestos = r.ok ? await r.json() : [];
+                renderTablaImpuestos(_impuestos);
+                actualizarSelectDefault();
+            } catch {
+                document.getElementById('impuestos-tbody').innerHTML =
+                    '<tr><td colspan="5" class="text-center" style="color: var(--color-error);">No se pudo establecer conexión con el módulo fiscal del backend</td></tr>';
+            }
+        }
+
+        function renderTablaImpuestos(lista) {
+            const tbody = document.getElementById('impuestos-tbody');
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="color: var(--color-texto-claro); padding: 2rem;">No hay tasas impositivas configuradas</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map(i => `
+                <tr>
+                    <td><code>${i.codigo || '—'}</code></td>
+                    <td><strong>${i.nombre}</strong></td>
+                    <td>${i.porcentaje}%</td>
+                    <td><span class="badge badge-success">Activo</span></td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: .25rem .6rem; font-size: .8rem;" onclick="editarImpuesto(${i.idImpuesto})">✏️ Editar</button>
+                        <button class="btn" style="padding: .25rem .6rem; font-size: .8rem; background: var(--color-error); color: #fff; border: none; cursor: pointer; border-radius: var(--radio-borde);" onclick="eliminarImpuesto(${i.idImpuesto})">🗑️</button>
+                    </td>
+                </tr>`).join('');
+        }
+
+        // ── CRUD: Creación / Modificación de Tasas ──────────────────────────────────
+        function abrirModalImpuesto(id = null) {
+            ['imp-id', 'imp-codigo', 'imp-nombre', 'imp-porcentaje'].forEach(f => document.getElementById(f).value = '');
+            document.getElementById('modal-title').textContent = 'Registrar Tasa';
+
+            if (id !== null) {
+                const imp = _impuestos.find(x => x.idImpuesto === id);
+                if (imp) {
+                    document.getElementById('modal-title').textContent = 'Modificar Tasa Fiscal';
+                    document.getElementById('imp-id').value = imp.idImpuesto;
+                    document.getElementById('imp-codigo').value = imp.codigo || '';
+                    document.getElementById('imp-nombre').value = imp.nombre;
+                    document.getElementById('imp-porcentaje').value = imp.porcentaje;
+                }
+            }
+            document.getElementById('modal-impuesto').style.display = 'flex';
+            document.getElementById('imp-codigo').focus();
+        }
+
+        function editarImpuesto(id) { abrirModalImpuesto(id); }
+        function cerrarModalImpuesto() { document.getElementById('modal-impuesto').style.display = 'none'; }
+
+        async function guardarImpuesto() {
+            const id = document.getElementById('imp-id').value;
+            const codigo = document.getElementById('imp-codigo').value.trim().toUpperCase();
+            const nombre = document.getElementById('imp-nombre').value.trim();
+            const porcentaje = parseFloat(document.getElementById('imp-porcentaje').value);
+
+            if (!codigo || !nombre || isNaN(porcentaje)) {
+                if (typeof showNotification === 'function') showNotification('Por favor, complete todos los campos obligatorios', 'warning');
+                return;
+            }
+
+            const body = { codigo, nombre, porcentaje };
+
+            try {
+                const r = await fetch(id ? `${API_IMP}/${id}` : API_IMP, {
+                    method: id ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (!r.ok) throw new Error();
+
+                cerrarModalImpuesto();
+                await cargarImpuestos();
+                if (typeof showNotification === 'function') showNotification('Estructura tributaria actualizada');
+            } catch {
+                if (typeof showNotification === 'function') showNotification('Error al procesar la solicitud en el servidor', 'error');
+            }
+        }
+
+        async function eliminarImpuesto(id) {
+            if (!confirm('¿Está seguro de eliminar esta tasa? Los productos vinculados podrían presentar discrepancias en facturación.')) return;
+            try {
+                const r = await fetch(`${API_IMP}/${id}`, { method: 'DELETE' });
+                if (!r.ok) throw new Error();
+                await cargarImpuestos();
+                if (typeof showNotification === 'function') showNotification('Tasa removida del sistema', 'warning');
+            } catch {
+                if (typeof showNotification === 'function') showNotification('No se pudo eliminar el impuesto seleccionado', 'error');
+            }
+        }
+
+        // ── Gestión del LocalStorage para Preferencias de Factura ───────────────────
+        function actualizarSelectDefault() {
+            const sel = document.getElementById('cfg-impuesto-default');
+            if (!_impuestos.length) {
+                sel.innerHTML = '<option value="">Sin tasas registradas</option>';
+                return;
+            }
+            sel.innerHTML = _impuestos.map(i => `<option value="${i.idImpuesto}">${i.nombre} (${i.porcentaje}%)</option>`).join('');
+
+            const pref = JSON.parse(localStorage.getItem(LS_PREF) || '{}');
+            if (pref.idImpuestoDefault) sel.value = pref.idImpuestoDefault;
+        }
+
+        function cargarPreferenciasLocales() {
+            const pref = JSON.parse(localStorage.getItem(LS_PREF) || '{}');
+            if (pref.tipoCalculo) document.getElementById('cfg-tipo-calculo').value = pref.tipoCalculo;
+        }
+
+        function guardarPreferenciaDefault() {
+            const pref = {
+                idImpuestoDefault: document.getElementById('cfg-impuesto-default').value,
+                tipoCalculo: document.getElementById('cfg-tipo-calculo').value
+            };
+            localStorage.setItem(LS_PREF, JSON.stringify(pref));
+            if (typeof showNotification === 'function') showNotification('Preferencias de cálculo fiscal guardadas');
+        }
+    </script>
 </body>
+
 </html>
