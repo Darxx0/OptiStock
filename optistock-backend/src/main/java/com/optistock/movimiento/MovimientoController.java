@@ -4,18 +4,18 @@ import com.optistock.producto.Producto;
 import com.optistock.producto.ProductoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/movimientos")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/v1/movimientos") // 1. Unificación de la ruta base al estándar v1
+@CrossOrigin(origins = "${cors.allowed-origins}") // 2. CORS dinámico compatible con credentials=true
 public class MovimientoController {
 
     private final MovimientoRepository movRepo;
@@ -26,30 +26,33 @@ public class MovimientoController {
         this.productoRepo = productoRepo;
     }
 
-    /** GET /api/movimientos — historial completo ordenado por fecha desc */
+    /**
+     * * GET /api/v1/movimientos
+     */
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<MovimientoDTO>> getAll() {
         List<MovimientoDTO> lista = movRepo.findAllByOrderByFechaDesc()
                 .stream().map(this::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
 
-    /** GET /api/movimientos/producto/{id} — movimientos de un producto */
+    /**
+     * * GET /api/v1/movimientos/producto/{id}
+     */
     @GetMapping("/producto/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<MovimientoDTO>> getByProducto(@PathVariable Integer id) {
         return ResponseEntity.ok(
                 movRepo.findByProductoIdProducto(id).stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     /**
-     * POST /api/movimientos/ajuste
-     * Body: { productoId, cantidad,
-     * tipoMovimiento:"Ajuste-Entrada"|"Ajuste-Salida",
-     * referencia (motivo), responsable, observaciones }
-     * Actualiza stock del producto y persiste el movimiento.
+     * POST /api/v1/movimientos/ajuste
      */
     @PostMapping("/ajuste")
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')") // Restricción estricta de seguridad
     public ResponseEntity<MovimientoDTO> registrarAjuste(@RequestBody MovimientoDTO dto) {
         Producto producto = productoRepo.findById(dto.getProductoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
@@ -73,7 +76,7 @@ public class MovimientoController {
         mov.setCostoUnitario(
                 dto.getCostoUnitario() != null ? dto.getCostoUnitario() : producto.getPrecioUnitario());
         mov.setTipoMovimiento(dto.getTipoMovimiento());
-        // referencia = "motivo | responsable | observaciones"
+
         String ref = construirReferencia(dto.getReferencia(), dto.getResponsable(), dto.getObservaciones());
         mov.setReferencia(ref);
 
@@ -81,14 +84,11 @@ public class MovimientoController {
     }
 
     /**
-     * POST /api/movimientos/transferencia
-     * Body: { productoId, cantidad, referencia:"ORIGEN→DESTINO", responsable,
-     * observaciones }
-     * Descuenta stock (transferencia sale de la bodega origen) y registra
-     * movimiento.
+     * POST /api/v1/movimientos/transferencia
      */
     @PostMapping("/transferencia")
     @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
     public ResponseEntity<MovimientoDTO> registrarTransferencia(@RequestBody MovimientoDTO dto) {
         Producto producto = productoRepo.findById(dto.getProductoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
@@ -109,6 +109,7 @@ public class MovimientoController {
         mov.setCostoUnitario(
                 dto.getCostoUnitario() != null ? dto.getCostoUnitario() : producto.getPrecioUnitario());
         mov.setTipoMovimiento("Transferencia");
+
         String ref = construirReferencia(dto.getReferencia(), dto.getResponsable(), dto.getObservaciones());
         mov.setReferencia(ref);
 

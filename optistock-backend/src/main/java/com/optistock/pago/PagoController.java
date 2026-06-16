@@ -6,6 +6,7 @@ import com.optistock.factura.FacturaDTO;
 import com.optistock.factura.FacturaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,8 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/pagos")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/v1/pagos") // 1. Estandarización de la ruta base (v1)
+@CrossOrigin(origins = "${cors.allowed-origins}") // 2. Protección de CORS para el entorno
 public class PagoController {
 
     private final PagoRepository pagoRepo;
@@ -25,42 +26,52 @@ public class PagoController {
     private final FacturaService facturaService;
 
     public PagoController(PagoRepository pagoRepo,
-                          FacturaRepository facturaRepo,
-                          FacturaService facturaService) {
+            FacturaRepository facturaRepo,
+            FacturaService facturaService) {
         this.pagoRepo = pagoRepo;
         this.facturaRepo = facturaRepo;
         this.facturaService = facturaService;
     }
 
     /**
-     * GET /api/pagos/pendientes
-     * Devuelve las facturas que NO tienen ningún pago registrado.
+     * GET /api/v1/pagos/pendientes
      */
     @GetMapping("/pendientes")
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'CONTADOR')")
     public ResponseEntity<List<FacturaDTO>> getFacturasPendientes() {
         Set<Long> conPago = pagoRepo.findFacturasConPago();
         List<FacturaDTO> pendientes = facturaRepo.findAll().stream()
                 .filter(f -> !conPago.contains(f.getIdFactura()))
                 .map(facturaService::mapToDTOPublic)
                 .collect(Collectors.toList());
+
+        if (pendientes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.ok(pendientes);
     }
 
     /**
-     * POST /api/pagos
-     * Registra un pago para una factura (la marca como pagada).
+     * POST /api/v1/pagos
      * Body: { idFactura, tipo, monto }
      */
     @PostMapping
     @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
     public ResponseEntity<PagoDTO> registrarPago(@RequestBody PagoDTO dto) {
         Factura factura = facturaRepo.findById(dto.getIdFactura())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
 
+        // Validación de negocio adicional: Evitar montos negativos o en cero
+        if (dto.getMonto() == null || dto.getMonto().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El monto del pago debe ser mayor a cero");
+        }
+
         Pago pago = new Pago();
         pago.setFactura(factura);
-        pago.setTipo(dto.getTipo() != null ? dto.getTipo() : "Efectivo");
+        pago.setTipo(dto.getTipo() != null && !dto.getTipo().isBlank() ? dto.getTipo() : "Efectivo");
         pago.setMonto(dto.getMonto());
         pago.setFechaPago(LocalDateTime.now());
 
@@ -69,15 +80,22 @@ public class PagoController {
     }
 
     /**
-     * GET /api/pagos/factura/{id}
-     * Lista los pagos de una factura específica.
+     * GET /api/v1/pagos/factura/{id}
      */
     @GetMapping("/factura/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'CONTADOR')")
     public ResponseEntity<List<PagoDTO>> getPagosByFactura(@PathVariable Long id) {
+        List<Pago> pagos = pagoRepo.findByFacturaIdFactura(id);
+
+        if (pagos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.ok(
-            pagoRepo.findByFacturaIdFactura(id).stream().map(this::toDTO).collect(Collectors.toList())
-        );
+                pagos.stream().map(this::toDTO).collect(Collectors.toList()));
     }
+
+    // ── helpers ──────────────────────────────────────────────────────────────
 
     private PagoDTO toDTO(Pago p) {
         PagoDTO dto = new PagoDTO();

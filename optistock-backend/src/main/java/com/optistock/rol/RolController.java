@@ -1,12 +1,13 @@
 package com.optistock.rol;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/roles")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/v1/roles") // 1. Ruta base v1
+@CrossOrigin(origins = "${cors.allowed-origins}") // 2. CORS dinámico
 public class RolController {
 
     private final RolRepository repo;
@@ -15,8 +16,18 @@ public class RolController {
         this.repo = repo;
     }
 
+    /**
+     * GET /api/v1/roles
+     */
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Rol>> getAll() {
-        return ResponseEntity.ok(repo.findAll());
+        List<Rol> roles = repo.findAll();
+
+        if (roles.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(roles);
     }
 }

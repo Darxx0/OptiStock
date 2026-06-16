@@ -1,15 +1,17 @@
 package com.optistock.factura;
 
 import com.optistock.cliente.Cliente;
-import com.optistock.cliente.ClienteRepository;
+import com.optistock.cliente.ClienteRepository; // Usamos el repositorio directamente
 import com.optistock.producto.Producto;
 import com.optistock.producto.ProductoRepository;
+import com.optistock.security.UsuarioActualService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,17 +21,20 @@ public class FacturaService {
 
     private final FacturaRepository facturaRepository;
     private final DetalleFacturaRepository detalleFacturaRepository;
-    private final ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository; // Repositorio inyectado
     private final ProductoRepository productoRepository;
+    private final UsuarioActualService usuarioActualService;
 
     public FacturaService(FacturaRepository facturaRepository,
             DetalleFacturaRepository detalleFacturaRepository,
             ClienteRepository clienteRepository,
-            ProductoRepository productoRepository) {
+            ProductoRepository productoRepository,
+            UsuarioActualService usuarioActualService) {
         this.facturaRepository = facturaRepository;
         this.detalleFacturaRepository = detalleFacturaRepository;
         this.clienteRepository = clienteRepository;
         this.productoRepository = productoRepository;
+        this.usuarioActualService = usuarioActualService;
     }
 
     @Transactional(readOnly = true)
@@ -48,63 +53,54 @@ public class FacturaService {
 
     @Transactional(rollbackFor = Exception.class)
     public FacturaDTO crearFactura(FacturaDTO dto) {
-        // 1. Manejar Cliente
+        // 1. Lógica de cliente integrada (sin depender de un Service externo)
         Cliente cliente = clienteRepository.findByNumeroDocumento(dto.getDocumento())
                 .orElseGet(() -> {
-                    Cliente nuevoCliente = new Cliente();
-                    nuevoCliente.setNumeroDocumento(dto.getDocumento());
-                    nuevoCliente.setTipoDocumento("CC");
-
-                    // Separar nombre y apellido
+                    Cliente nuevo = new Cliente();
+                    nuevo.setNumeroDocumento(dto.getDocumento());
+                    nuevo.setTipoDocumento("CC");
                     String nombreCompleto = dto.getCliente() != null ? dto.getCliente().trim() : "Consumidor Final";
                     int espacioIndex = nombreCompleto.indexOf(" ");
                     if (espacioIndex > 0) {
-                        nuevoCliente.setNombre(nombreCompleto.substring(0, espacioIndex));
-                        nuevoCliente.setApellido(nombreCompleto.substring(espacioIndex + 1));
+                        nuevo.setNombre(nombreCompleto.substring(0, espacioIndex));
+                        nuevo.setApellido(nombreCompleto.substring(espacioIndex + 1));
                     } else {
-                        nuevoCliente.setNombre(nombreCompleto);
-                        nuevoCliente.setApellido(".");
+                        nuevo.setNombre(nombreCompleto);
+                        nuevo.setApellido(".");
                     }
-
-                    return clienteRepository.save(nuevoCliente);
+                    return clienteRepository.save(nuevo);
                 });
 
-        // 2. Crear cabecera de Factura
+        // 2. Crear cabecera con el usuario autenticado
         Factura factura = new Factura();
         factura.setCliente(cliente);
-        factura.setIdUsuario(1L);
+        factura.setIdUsuario(Long.valueOf(usuarioActualService.getIdUsuarioActual()));
         factura.setFecha(LocalDateTime.now());
         Factura facturaGuardada = facturaRepository.save(factura);
 
-        // 3. Crear Detalles
+        // 3. Procesar items
+        BigDecimal subtotalAcumulado = BigDecimal.ZERO;
         for (FacturaItemDTO itemDTO : dto.getItems()) {
             Producto producto = productoRepository.findById(itemDTO.getProductoId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Producto no encontrado: " + itemDTO.getProductoId()));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
+
+            if (itemDTO.getCantidad() <= 0 || producto.getCantidad() < itemDTO.getCantidad()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Stock insuficiente para: " + producto.getNombre());
+            }
+
+            producto.setCantidad(producto.getCantidad() - itemDTO.getCantidad());
+            productoRepository.save(producto);
 
             DetalleFactura detalle = new DetalleFactura();
             detalle.setFactura(facturaGuardada);
             detalle.setProducto(producto);
             detalle.setCantidad(itemDTO.getCantidad());
-
-            BigDecimal subtotal = producto.getPrecioUnitario().multiply(new BigDecimal(itemDTO.getCantidad()));
-            detalle.setSubtotal(subtotal);
-
-            int stockActual = producto.getCantidad() != null ? producto.getCantidad() : 0;
-            if (itemDTO.getCantidad() <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "La cantidad debe ser mayor a 0");
-            }
-            if (stockActual <= 0 || itemDTO.getCantidad() > stockActual) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Stock insuficiente para: " + producto.getNombre() +
-                                " (disponible: " + stockActual + ")");
-            }
-            producto.setCantidad(stockActual - itemDTO.getCantidad());
-            productoRepository.save(producto);
+            BigDecimal subtotalItem = producto.getPrecioUnitario().multiply(new BigDecimal(itemDTO.getCantidad()));
+            detalle.setSubtotal(subtotalItem);
 
             detalleFacturaRepository.save(detalle);
-            facturaGuardada.getDetalles().add(detalle);
+            subtotalAcumulado = subtotalAcumulado.add(subtotalItem);
         }
 
         return mapToDTOPublic(facturaGuardada);
@@ -113,31 +109,19 @@ public class FacturaService {
     public FacturaDTO mapToDTOPublic(Factura factura) {
         FacturaDTO dto = new FacturaDTO();
         dto.setId(factura.getIdFactura());
-
         Cliente c = factura.getCliente();
-        String nombreCompleto = c.getNombre() + (c.getApellido().equals(".") ? "" : " " + c.getApellido());
-        dto.setCliente(nombreCompleto);
+        dto.setCliente(c.getNombre() + " " + c.getApellido());
         dto.setDocumento(c.getNumeroDocumento());
-
         dto.setFecha(factura.getFecha());
 
-        // No almacenamos email ni teléfono en la BD, se devuelven vacíos
-        dto.setEmail("");
-        dto.setTelefono("");
-
         BigDecimal subtotalGeneral = BigDecimal.ZERO;
-
         List<FacturaItemDTO> items = factura.getDetalles().stream().map(detalle -> {
             FacturaItemDTO itemDTO = new FacturaItemDTO();
             itemDTO.setProductoId(detalle.getProducto().getIdProducto());
             itemDTO.setNombre(detalle.getProducto().getNombre());
             itemDTO.setCantidad(detalle.getCantidad());
-
-            // Usar el precio unitario guardado en el subtotal en lugar de recalcularlo
-            BigDecimal precioCalc = detalle.getSubtotal().divide(new BigDecimal(detalle.getCantidad()), 2,
-                    java.math.RoundingMode.HALF_UP);
-            itemDTO.setPrecio(precioCalc);
-
+            itemDTO.setPrecio(
+                    detalle.getSubtotal().divide(new BigDecimal(detalle.getCantidad()), 2, RoundingMode.HALF_UP));
             return itemDTO;
         }).collect(Collectors.toList());
 
@@ -147,10 +131,8 @@ public class FacturaService {
 
         dto.setItems(items);
         dto.setSubtotal(subtotalGeneral);
-        // IVA es 19%
-        BigDecimal iva = subtotalGeneral.multiply(new BigDecimal("0.19"));
-        dto.setIva(iva);
-        dto.setTotal(subtotalGeneral.add(iva));
+        dto.setIva(subtotalGeneral.multiply(new BigDecimal("0.19")));
+        dto.setTotal(dto.getSubtotal().add(dto.getIva()));
 
         return dto;
     }
