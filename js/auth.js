@@ -2,13 +2,13 @@
  * auth.js — Módulo central de sesión y permisos de OptiStock
  *
  * Diseño escalable:
- *  - La sesión vive en localStorage['optistock_session'] como JSON.
- *  - getSession() es el único punto de lectura; cuando se implemente JWT
- *    solo se cambia esta función para decodificar el token.
- *  - Los permisos se declaran en PERMISOS_ROL: agregar un rol o un permiso
- *    nuevo solo requiere editar ese mapa.
- *  - requireAuth() / hasPermiso() se llaman desde cada página para proteger
- *    rutas — cuando llegue el login real, la redirección ya está cableada.
+ * - La sesión vive en localStorage['optistock_session'] como JSON.
+ * - getSession() es el único punto de lectura; cuando se implemente JWT
+ * solo se cambia esta función para decodificar el token.
+ * - Los permisos se declaran en PERMISOS_ROL: agregar un rol o un permiso
+ * nuevo solo requiere editar ese mapa.
+ * - requireAuth() / hasPermiso() se llaman desde cada página para proteger
+ * rutas — cuando llegue el login real, la redirección ya está cableada.
  */
 
 // ─── Mapa de permisos por rol ────────────────────────────────────────────────
@@ -45,12 +45,19 @@ function getSession() {
 }
 
 function setSession(usuarioDTO) {
+    // PARCHE DE COMPATIBILIDAD: Si el backend envía el rol con prefijo de Spring Security
+    // (ej. 'ROLE_ADMIN'), le removemos el 'ROLE_' para que el frontend siga reconociendo 'ADMIN'.
+    let rolLimpio = usuarioDTO.nombreRol || 'ADMIN';
+    if (typeof rolLimpio === 'string' && rolLimpio.startsWith('ROLE_')) {
+        rolLimpio = rolLimpio.replace('ROLE_', '');
+    }
+
     const sesion = {
         id: usuarioDTO.idUsuario,
         nombre: usuarioDTO.nombre,
         apellido: usuarioDTO.apellido,
         login: usuarioDTO.usuarioLogin,
-        rol: (usuarioDTO.nombreRol || 'ADMIN').toUpperCase(),
+        rol: rolLimpio.toUpperCase(), // Guardará 'ADMIN', 'VENDEDOR', etc.
         idRol: usuarioDTO.idRol
     };
     localStorage.setItem('optistock_session', JSON.stringify(sesion));
@@ -69,11 +76,14 @@ function cerrarSesion() {
  */
 function requireAuth() {
     const s = getSession();
-    if (!s) {
-        return setSession({
-            idUsuario: 1, nombre: 'Administrador', apellido: 'Sistema',
-            usuarioLogin: 'admin', nombreRol: 'ADMIN', idRol: 1
-        });
+    if (!s || !s.token) {
+        console.warn('[auth.js] requireAuth: No hay sesión activa o falta el token. Redirigiendo a login...');
+        const path = window.location.pathname;
+        const loginUrl = (path.endsWith('/') || path.endsWith('Index.html') || path.endsWith('index.html'))
+            ? 'paginas/login.html'
+            : '../paginas/login.html';
+        window.location.href = loginUrl;
+        return null;
     }
     return s;
 }

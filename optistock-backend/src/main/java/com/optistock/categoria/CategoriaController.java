@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/categorias") // 1. Ruta base unificada con versionado v1
-@CrossOrigin(origins = "${cors.allowed-origins}") // 2. CORS dinámico compatible con credentials=true
 public class CategoriaController {
 
     private final CategoriaRepository categoriaRepository;
@@ -47,7 +46,7 @@ public class CategoriaController {
      * POST /api/v1/categorias
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<Categoria> crearCategoria(@RequestBody Categoria categoria) {
         // Validación básica de negocio interna antes de guardar
         if (categoria.getNombre() == null || categoria.getNombre().isBlank()) {
@@ -62,7 +61,7 @@ public class CategoriaController {
      * PUT /api/v1/categorias/{id}
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Integer id,
             @RequestBody Categoria datosActualizados) {
         Categoria categoriaExistente = categoriaRepository.findById(id)
@@ -81,7 +80,7 @@ public class CategoriaController {
      * DELETE /api/v1/categorias/{id}
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> eliminarCategoria(@PathVariable Integer id) {
         categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada"));

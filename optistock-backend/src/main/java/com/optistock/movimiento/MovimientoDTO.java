@@ -1,24 +1,45 @@
 package com.optistock.movimiento;
 
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class MovimientoDTO {
+
     private Integer idMovimiento;
+
     private LocalDateTime fecha;
+
+    @NotNull(message = "El ID del producto es obligatorio")
     private Integer productoId;
+
     private String productoNombre;
+
+    @NotNull(message = "La cantidad es obligatoria")
+    @Positive(message = "La cantidad debe ser mayor a cero")
     private Integer cantidad;
+
+    @NotNull(message = "El costo unitario es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El costo debe ser mayor a cero")
     private BigDecimal costoUnitario;
+
+    @NotBlank(message = "El tipo de movimiento es obligatorio (ENTRADA/SALIDA)")
+    @Pattern(regexp = "^(ENTRADA|SALIDA)$", message = "El tipo de movimiento debe ser ENTRADA o SALIDA")
     private String tipoMovimiento;
+
+    @NotBlank(message = "La referencia es obligatoria")
     private String referencia;
-    // campos extra que vienen del frontend
+
+    @NotBlank(message = "El responsable es obligatorio")
     private String responsable;
+
+    @Size(max = 255, message = "Las observaciones no pueden exceder los 255 caracteres")
     private String observaciones;
 
     public MovimientoDTO() {
     }
 
+    // Getters y Setters
     public Integer getIdMovimiento() {
         return idMovimiento;
     }

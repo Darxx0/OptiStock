@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/clientes") // 1. Unificación al estándar de versión v1
-@CrossOrigin(origins = "${cors.allowed-origins}") // 2. Configuración dinámica de CORS para permitir credenciales
 public class ClienteController {
 
     private final ClienteRepository clienteRepository;
@@ -47,7 +46,7 @@ public class ClienteController {
      * POST /api/v1/clientes
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<Cliente> create(@RequestBody Cliente cliente) {
         if (cliente.getNombre() == null || cliente.getNombre().isBlank() ||
                 cliente.getNumeroDocumento() == null || cliente.getNumeroDocumento().isBlank()) {
@@ -63,7 +62,7 @@ public class ClienteController {
      * PUT /api/v1/clientes/{id}
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody Cliente datos) {
         Cliente clienteExistente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
@@ -85,7 +84,7 @@ public class ClienteController {
      * DELETE /api/v1/clientes/{id}
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!clienteRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");

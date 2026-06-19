@@ -1,24 +1,37 @@
 package com.optistock.producto;
 
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class ProductoDTO {
 
     private Integer id;
+
+    @NotBlank(message = "El nombre del producto es obligatorio")
+    @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
     private String nombre;
+
+    @NotNull(message = "El precio es obligatorio")
+    @DecimalMin(value = "0.01", message = "El precio debe ser mayor a cero")
     private BigDecimal precio;
+
     private String categoria;
+
+    @Size(max = 255, message = "La descripción no puede exceder los 255 caracteres")
     private String descripcion;
+
+    @NotNull(message = "El ID de la categoría es obligatorio")
     private Integer idCategoria;
+
+    @NotNull(message = "La cantidad inicial es obligatoria")
+    @Min(value = 0, message = "La cantidad no puede ser negativa")
     private Integer cantidad;
 
     public ProductoDTO() {
     }
 
-    // Convierte de entidad a DTO
     public static ProductoDTO fromEntity(Producto p) {
         ProductoDTO dto = new ProductoDTO();
-
         dto.id = p.getIdProducto();
         dto.nombre = p.getNombre();
         dto.precio = p.getPrecioUnitario();
@@ -32,12 +45,10 @@ public class ProductoDTO {
             dto.categoria = "";
             dto.idCategoria = null;
         }
-
         return dto;
     }
 
-    // Getters y Setters
-
+    // Getters y Setters...
     public Integer getId() {
         return id;
     }

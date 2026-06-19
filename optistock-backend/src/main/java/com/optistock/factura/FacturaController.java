@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/facturas")
-@CrossOrigin(origins = "${cors.allowed-origins}") // Mantiene la compatibilidad con tus puertos de CORS
 public class FacturaController {
 
     private final FacturaService facturaService;
@@ -24,7 +23,7 @@ public class FacturaController {
      * venta/factura.
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_VENDEDOR')")
     public ResponseEntity<FacturaDTO> crear(@RequestBody FacturaDTO dto) {
         FacturaDTO nuevaFactura = facturaService.crearFactura(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaFactura);
@@ -47,7 +46,7 @@ public class FacturaController {
      * CONTADOR.
      */
     @GetMapping("/reportes/financieros")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CONTADOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONTADOR')")
     public ResponseEntity<?> reporteFinanciero() {
         return ResponseEntity.ok("Servicio de reportes financieros activo (Próximamente)");
     }

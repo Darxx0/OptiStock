@@ -2,14 +2,70 @@
 /**
  * Core Data Management
  * Productos : API REST /api/productos
- * Facturas  : API REST /api/facturas   ✅ migrado desde localStorage
- * Clientes  : API REST /api/clientes   ✅ nuevo
+ * Facturas  : API REST /api/facturas   
+ * Clientes  : API REST /api/clientes  
  */
 
 const CONFIG = {
     IVA: 0.19,
     MIN_STOCK: 5,
-    API_BASE: 'http://localhost:8080/api'
+    API_BASE: 'http://localhost:8080/api/v1'
+};
+
+// Interceptor global de fetch para inyectar token JWT y corregir rutas
+const _originalFetch = window.fetch;
+window.fetch = async function (resource, options = {}) {
+    let url = resource;
+
+    // 1. Corregir endpoint antiguo /api/ sin versionar
+    if (typeof url === 'string' && url.includes('/api/') && !url.includes('/api/v1/')) {
+        url = url.replace('/api/', '/api/v1/');
+    }
+
+    // 2. Extraer token del objeto de sesión estructurado
+    let token = null;
+    let esUsuarioAdmin = false;
+    try {
+        const sesionObj = JSON.parse(localStorage.getItem('optistock_session'));
+        token = sesionObj ? sesionObj.token : null;
+        esUsuarioAdmin = sesionObj?.rol === 'ADMIN'; // Detectamos si eres admin
+    } catch (_) { }
+
+    // 3. Agregar cabeceras
+    const newOptions = { ...options };
+    newOptions.headers = { ...options.headers };
+
+    if (token && typeof url === 'string' && url.includes('/api/v1/')) {
+        newOptions.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    // 4. Realizar petición original
+    const response = await _originalFetch(url, newOptions);
+
+    // 5. Si devuelve 401/403, evaluar si expulsar o reportar el error en consola
+    if ((response.status === 401 || response.status === 403) &&
+        typeof url === 'string' &&
+        url.includes('/api/v1/') &&
+        !url.includes('/usuarios/login') &&
+        !url.includes('/usuarios/registro')) {
+
+        // MEJORA: Si eres ADMIN y te da 403, es un error de desarrollo o de permisos del backend.
+        // NO te expulsamos de golpe; te mostramos el error en consola para poder debuggearlo con F12.
+        if (response.status === 403 && esUsuarioAdmin) {
+            console.error(`[datos.js] Error 403 Forbidden detectado en la ruta: ${url}. Revisa los roles del Backend, no se cerrará la sesión para permitir el debugeo.`);
+            return response;
+        }
+
+        console.warn('[datos.js] Sesión inválida o expirada. Redirigiendo a login...');
+        localStorage.removeItem('optistock_session');
+        const path = window.location.pathname;
+        const loginUrl = (path.endsWith('/') || path.endsWith('Index.html') || path.endsWith('index.html'))
+            ? 'paginas/login.html'
+            : '../paginas/login.html';
+        window.location.href = loginUrl;
+    }
+
+    return response;
 };
 
 // ─── CACHE LOCAL ──────────────────────────────────────────────────────────────
@@ -38,21 +94,34 @@ const getProduct = (id) => _productosCache.find(p => p.id === id);
 const getLowStock = () => _productosCache.filter(p => (p.cantidad ?? 0) <= CONFIG.MIN_STOCK);
 
 const addProduct = async (dto) => {
+    // 1. Construimos el objeto tal cual como el DTO lo pide
+    const payload = {
+        nombre: dto.nombre,
+        precio: parseFloat(dto.precio),
+        cantidad: parseInt(dto.cantidad),
+        descripcion: dto.descripcion,
+        // Usamos el ID que viene del HTML
+        idCategoria: parseInt(dto.idCategoria)
+    };
+
+    console.log("JSON final enviado al servidor:", JSON.stringify(payload));
+
     const res = await fetch(`${CONFIG.API_BASE}/productos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            nombre: dto.nombre,
-            precio: dto.precio,
-            cantidad: dto.cantidad,
-            categoria: dto.categoria,
-            descripcion: dto.descripcion
-        })
+        body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error('Error al crear producto');
-    const nuevo = await res.json();
-    _productosCache.push(nuevo);
-    return nuevo;
+
+    // 2. Aquí está la clave: ¿Qué nos dice el servidor exactamente?
+    if (!res.ok) {
+        const errorDetalle = await res.text();
+        console.error("--- ERROR DEL SERVIDOR ---");
+        console.error("Estado:", res.status);
+        console.error("Cuerpo del error:", errorDetalle); // <--- ESTO ES LO QUE NECESITO
+        throw new Error('Error al crear: ' + errorDetalle);
+    }
+
+    return await res.json();
 };
 
 const updateProduct = async (id, data) => {

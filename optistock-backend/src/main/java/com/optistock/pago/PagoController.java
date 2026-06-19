@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/pagos") // 1. Estandarización de la ruta base (v1)
-@CrossOrigin(origins = "${cors.allowed-origins}") // 2. Protección de CORS para el entorno
 public class PagoController {
 
     private final PagoRepository pagoRepo;
@@ -38,7 +37,7 @@ public class PagoController {
      */
     @GetMapping("/pendientes")
     @Transactional(readOnly = true)
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'CONTADOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR', 'CONTADOR')")
     public ResponseEntity<List<FacturaDTO>> getFacturasPendientes() {
         Set<Long> conPago = pagoRepo.findFacturasConPago();
         List<FacturaDTO> pendientes = facturaRepo.findAll().stream()
@@ -59,7 +58,7 @@ public class PagoController {
      */
     @PostMapping
     @Transactional
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<PagoDTO> registrarPago(@RequestBody PagoDTO dto) {
         Factura factura = facturaRepo.findById(dto.getIdFactura())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
@@ -83,7 +82,7 @@ public class PagoController {
      * GET /api/v1/pagos/factura/{id}
      */
     @GetMapping("/factura/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'CONTADOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR', 'CONTADOR')")
     public ResponseEntity<List<PagoDTO>> getPagosByFactura(@PathVariable Long id) {
         List<Pago> pagos = pagoRepo.findByFacturaIdFactura(id);
 

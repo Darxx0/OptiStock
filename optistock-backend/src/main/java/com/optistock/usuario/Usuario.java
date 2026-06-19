@@ -25,12 +25,14 @@ public class Usuario {
     private String contrasena;
 
     /**
-     * Rol principal del usuario (FK a rol.id_rol).
-     * La tabla usuario_rol permite múltiples roles en el futuro,
-     * pero manejamos el rol principal aquí para simplificar el MVP.
+     * Rol principal del usuario (FK a rol.id_rol mapeado vía tabla intermedia).
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_rol")
+    @JoinTable(
+        name = "usuario_rol",
+        joinColumns = @JoinColumn(name = "id_usuario"),
+        inverseJoinColumns = @JoinColumn(name = "id_rol")
+    )
     private Rol rol;
 
     public Usuario() {

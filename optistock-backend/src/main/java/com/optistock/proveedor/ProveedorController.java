@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/proveedores") // 1. Estandarización de la ruta base a v1
-@CrossOrigin(origins = "${cors.allowed-origins}") // 2. CORS dinámico y seguro
+@RequestMapping("/api/v1/proveedores")
 public class ProveedorController {
 
     private final ProveedorRepository repo;
@@ -52,7 +51,7 @@ public class ProveedorController {
      * POST /api/v1/proveedores
      */
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<ProveedorDTO> create(@RequestBody ProveedorDTO dto) {
         // Validación básica de negocio
         if (dto.getRazonSocial() == null || dto.getRazonSocial().isBlank()) {
@@ -67,7 +66,7 @@ public class ProveedorController {
      * PUT /api/v1/proveedores/{id}
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<ProveedorDTO> update(@PathVariable Integer id, @RequestBody ProveedorDTO dto) {
         Proveedor p = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado"));
@@ -88,7 +87,7 @@ public class ProveedorController {
      * DELETE /api/v1/proveedores/{id}
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (!repo.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");

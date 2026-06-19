@@ -9,16 +9,18 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+/**
+ * Proveedor JWT stateless — genera y valida tokens usando JJWT 0.12.x.
+ */
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret:tu_clave_secreta_super_segura_de_minimo_32_caracteres}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration:86400000}") // 24 horas en ms
+    @Value("${jwt.expiration:86400000}")
     private int jwtExpirationMs;
 
-    // JJWT 0.12.x prefiere explícitamente SecretKey sobre Key genérico
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
@@ -30,39 +32,33 @@ public class JwtTokenProvider {
                 .claim("rol", rol)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey()) // El algoritmo se deduce automáticamente de la clave
+                .signWith(getSigningKey())
                 .compact();
     }
 
     public Integer getUserIdFromJwt(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload(); // .getBody() ahora es .getPayload()
-
-        return Integer.parseInt(claims.getSubject());
+        return Integer.parseInt(parseClaims(token).getSubject());
     }
 
     public String getRolFromJwt(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        return (String) claims.get("rol");
+        return (String) parseClaims(token).get("rol");
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser()
-                    .verifyWith(getSigningKey())
-                    .build()
-                    .parseSignedClaims(token);
+            parseClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /** Parseo centralizado — evita repetir la cadena parser/verify/parse. */
+    private Claims parseClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

@@ -231,10 +231,19 @@
     </main>
   </div>
   <!-- Scripts -->
+  <script src="js/auth.js"></script>
   <script src="js/datos.js"></script>
   <script src="js/script.js"></script>
   <script>
+    // Validar sesión antes de cargar el resto de la interfaz
+    const sesion = requireAuth();
+
     document.addEventListener('DOMContentLoaded', async function () {
+      if (!sesion) return; // Si no hay sesión, requireAuth ya redirigió
+      
+      // Mostrar usuario en el menú lateral
+      renderUserBadge();
+
       await loadProducts();
       await loadInvoices();
 

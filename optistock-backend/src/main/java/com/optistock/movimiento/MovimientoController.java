@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/movimientos") // 1. Unificación de la ruta base al estándar v1
-@CrossOrigin(origins = "${cors.allowed-origins}") // 2. CORS dinámico compatible con credentials=true
 public class MovimientoController {
 
     private final MovimientoRepository movRepo;
@@ -52,7 +51,7 @@ public class MovimientoController {
      */
     @PostMapping("/ajuste")
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')") // Restricción estricta de seguridad
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Restricción estricta de seguridad
     public ResponseEntity<MovimientoDTO> registrarAjuste(@RequestBody MovimientoDTO dto) {
         Producto producto = productoRepo.findById(dto.getProductoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
@@ -88,7 +87,7 @@ public class MovimientoController {
      */
     @PostMapping("/transferencia")
     @Transactional
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
     public ResponseEntity<MovimientoDTO> registrarTransferencia(@RequestBody MovimientoDTO dto) {
         Producto producto = productoRepo.findById(dto.getProductoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));

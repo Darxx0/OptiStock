@@ -20,7 +20,7 @@ public class Factura {
     private Cliente cliente;
 
     @Column(name = "id_usuario", nullable = false)
-    private Long idUsuario = 1L;
+    private Long idUsuario;
 
     @Column(nullable = false)
     private LocalDateTime fecha;
@@ -28,20 +28,46 @@ public class Factura {
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleFactura> detalles = new ArrayList<>();
 
-    public Factura() {}
+    public Factura() {
+    }
 
-    public Long getIdFactura() { return idFactura; }
-    public void setIdFactura(Long idFactura) { this.idFactura = idFactura; }
+    public Long getIdFactura() {
+        return idFactura;
+    }
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public void setIdFactura(Long idFactura) {
+        this.idFactura = idFactura;
+    }
 
-    public Long getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+    public Cliente getCliente() {
+        return cliente;
+    }
 
-    public LocalDateTime getFecha() { return fecha; }
-    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 
-    public List<DetalleFactura> getDetalles() { return detalles; }
-    public void setDetalles(List<DetalleFactura> detalles) { this.detalles = detalles; }
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
+
+    public List<DetalleFactura> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetalleFactura> detalles) {
+        this.detalles = detalles;
+    }
 }
