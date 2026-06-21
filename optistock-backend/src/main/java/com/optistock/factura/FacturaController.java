@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class FacturaController {
      */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_VENDEDOR')")
-    public ResponseEntity<FacturaDTO> crear(@RequestBody FacturaDTO dto) {
+    public ResponseEntity<FacturaDTO> crear(@Valid @RequestBody FacturaDTO dto) {
         FacturaDTO nuevaFactura = facturaService.crearFactura(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaFactura);
     }

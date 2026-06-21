@@ -11,25 +11,42 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.servlet.http.HttpServletRequest;
+import com.optistock.audit.AuditoriaService;
+import com.optistock.security.UsuarioActualService;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/pagos") // 1. Estandarización de la ruta base (v1)
 public class PagoController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PagoController.class);
+
     private final PagoRepository pagoRepo;
     private final FacturaRepository facturaRepo;
     private final FacturaService facturaService;
+    private final AuditoriaService auditoriaService;
+    private final HttpServletRequest request;
+    private final UsuarioActualService usuarioActualService;
+    private final PagoService pagoService;
 
-    public PagoController(PagoRepository pagoRepo,
-            FacturaRepository facturaRepo,
-            FacturaService facturaService) {
+    public PagoController(PagoRepository pagoRepo, FacturaRepository facturaRepo, FacturaService facturaService,
+            AuditoriaService auditoriaService, HttpServletRequest request, UsuarioActualService usuarioActualService,
+            PagoService pagoService) {
         this.pagoRepo = pagoRepo;
         this.facturaRepo = facturaRepo;
         this.facturaService = facturaService;
+        this.auditoriaService = auditoriaService;
+        this.request = request;
+        this.usuarioActualService = usuarioActualService;
+        this.pagoService = pagoService;
     }
 
     /**
@@ -59,23 +76,19 @@ public class PagoController {
     @PostMapping
     @Transactional
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<PagoDTO> registrarPago(@RequestBody PagoDTO dto) {
-        Factura factura = facturaRepo.findById(dto.getIdFactura())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Factura no encontrada"));
+    public ResponseEntity<PagoDTO> registrarPago(@Valid @RequestBody PagoDTO dto) {
+        logger.info("Registrando pago. Factura: {}, Monto: {}", dto.getIdFactura(), dto.getMonto());
+        
+        // Uso del servicio para crear el pago
+        Pago guardado = pagoService.crear(dto);
 
-        // Validación de negocio adicional: Evitar montos negativos o en cero
-        if (dto.getMonto() == null || dto.getMonto().compareTo(java.math.BigDecimal.ZERO) <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El monto del pago debe ser mayor a cero");
-        }
+        PagoDTO responseDto = toDTO(guardado);
+        logger.info("Pago registrado: ID={}", responseDto.getIdPago());
+        
+        Integer idUsuario = usuarioActualService.getIdUsuarioActual();
+        auditoriaService.registrar(idUsuario, "CREATE", "pago", guardado.getIdPago(), "Registro de pago por monto " + guardado.getMonto(), request);
 
-        Pago pago = new Pago();
-        pago.setFactura(factura);
-        pago.setTipo(dto.getTipo() != null && !dto.getTipo().isBlank() ? dto.getTipo() : "Efectivo");
-        pago.setMonto(dto.getMonto());
-        pago.setFechaPago(LocalDateTime.now());
-
-        Pago guardado = pagoRepo.save(pago);
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardado));
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     /**

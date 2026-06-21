@@ -13,7 +13,7 @@
     <div class="app-container">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1> OptiStock</h1>
+                <h1>OptiStock</h1>
                 <p>Sistema de Gestión</p>
             </div>
             <nav>
@@ -110,7 +110,6 @@
                 </div>
             </header>
 
-            <!-- KPIs -->
             <div
                 style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">
                 <div class="card" style="text-align:center;padding:1rem;">
@@ -132,11 +131,10 @@
                 </div>
             </div>
 
-            <!-- Gráficos -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> Stock por Categoría</h3>
+                        <h3 class="card-title">Stock por Categoría</h3>
                     </div>
                     <div style="position:relative;height:240px;padding:.5rem;">
                         <canvas id="chart-cat"></canvas>
@@ -152,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- Tabla productos -->
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">📦 Detalle de Productos</h3>
@@ -189,12 +186,43 @@
     <script src="../js/script.js"></script>
     <script>
         let _productos = [];
+        let _categoriasMap = {};
         let chartCat, chartVal;
         const COLORES = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#a855f7', '#14b8a6', '#f97316'];
 
+        // Función auxiliar para resolver el nombre real de una categoría de forma segura
+        function obtenerNombreCategoria(p) {
+            if (p.nombreCategoria) return p.nombreCategoria;
+            if (p.idCategoria && _categoriasMap[p.idCategoria]) {
+                return _categoriasMap[p.idCategoria];
+            }
+            if (p.categoria) {
+                return typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria;
+            }
+            return 'Sin categoría';
+        }
+
+        async function cargarCategoriasAux() {
+            try {
+                const res = await fetch(`${CONFIG.API_BASE}/categorias`);
+                if (res.ok) {
+                    const cats = await res.json();
+                    cats.forEach(c => {
+                        _categoriasMap[c.idCategoria] = c.nombre;
+                    });
+                }
+            } catch (e) {
+                console.error('Error precargando diccionario de categorías:', e);
+            }
+        }
+
         async function cargar() {
+            // 1. Precargar mapa estático de nombres de categorías
+            await cargarCategoriasAux();
+            // 2. Cargar productos desde el caché/API global de datos.js
             await loadProducts();
             _productos = getProducts();
+
             renderKPIs();
             renderCharts();
             filtrar();
@@ -211,10 +239,10 @@
         }
 
         function renderCharts() {
-            // Agrupar por categoría
             const catStock = {}, catValor = {};
+
             _productos.forEach(p => {
-                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || 'Sin categoría';
+                const cat = obtenerNombreCategoria(p);
                 catStock[cat] = (catStock[cat] || 0) + (p.cantidad || 0);
                 catValor[cat] = (catValor[cat] || 0) + (parseFloat(p.precio || 0) * (p.cantidad || 0));
             });
@@ -248,10 +276,12 @@
             const term = document.getElementById('buscar').value.toLowerCase();
             const estado = document.getElementById('filtro-estado').value;
             let lista = _productos;
+
             if (term) lista = lista.filter(p => {
-                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '';
+                const cat = obtenerNombreCategoria(p);
                 return (p.nombre + ' ' + cat).toLowerCase().includes(term);
             });
+
             if (estado === 'ok') lista = lista.filter(p => p.cantidad > CONFIG.MIN_STOCK);
             else if (estado === 'bajo') lista = lista.filter(p => p.cantidad > 0 && p.cantidad <= CONFIG.MIN_STOCK);
             else if (estado === 'sin') lista = lista.filter(p => (p.cantidad || 0) === 0);
@@ -263,25 +293,25 @@
                 return;
             }
             tbody.innerHTML = lista.map(p => {
-                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '—';
+                const cat = obtenerNombreCategoria(p);
                 const cant = p.cantidad || 0;
                 const { texto, clase } = estadoStock(cant);
                 const valorTotal = parseFloat(p.precio || 0) * cant;
                 return `<tr>
-            <td><strong>${p.nombre}</strong></td>
-            <td>${cat}</td>
-            <td style="font-weight:600;">${cant}</td>
-            <td><span class="badge ${clase}">${texto}</span></td>
-            <td>${formatPrice(p.precio || 0)}</td>
-            <td>${formatPrice(valorTotal)}</td>
-        </tr>`;
+                    <td><strong>${p.nombre}</strong></td>
+                    <td>${cat}</td>
+                    <td style="font-weight:600;">${cant}</td>
+                    <td><span class="badge ${clase}">${texto}</span></td>
+                    <td>${formatPrice(p.precio || 0)}</td>
+                    <td>${formatPrice(valorTotal)}</td>
+                </tr>`;
             }).join('');
         }
 
         function exportarCSV() {
             const headers = ['Producto', 'Categoría', 'Stock', 'Estado', 'Precio Unitario', 'Valor Total'];
             const rows = _productos.map(p => {
-                const cat = (typeof p.categoria === 'object' ? p.categoria?.nombre : p.categoria) || '';
+                const cat = obtenerNombreCategoria(p);
                 const cant = p.cantidad || 0;
                 const { texto } = estadoStock(cant);
                 return [p.nombre, cat, cant, texto, p.precio || 0, parseFloat(p.precio || 0) * cant].map(v => `"${v}"`).join(',');

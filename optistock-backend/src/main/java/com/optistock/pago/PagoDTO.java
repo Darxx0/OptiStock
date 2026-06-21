@@ -12,7 +12,7 @@ public class PagoDTO {
     private Long idFactura;
 
     @NotBlank(message = "El tipo de pago es obligatorio")
-    @Pattern(regexp = "^(EFECTIVO|TARJETA|TRANSFERENCIA|NEQUI|DAVIPLATA)$", message = "El tipo de pago no es válido")
+    @Pattern(regexp = "^(Efectivo|Tarjeta|Transferencia|Cheque)$", message = "El tipo de pago no es válido")
     private String tipo;
 
     @NotNull(message = "El monto es obligatorio")

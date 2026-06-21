@@ -13,25 +13,41 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.servlet.http.HttpServletRequest;
+import com.optistock.audit.AuditoriaService;
+import com.optistock.security.UsuarioActualService;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
+
     private final UsuarioRepository usuarioRepo;
     private final RolRepository rolRepo;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final AuditoriaService auditoriaService;
+    private final HttpServletRequest request;
+    private final UsuarioActualService usuarioActualService;
 
     public UsuarioController(UsuarioRepository usuarioRepo, RolRepository rolRepo,
-            JwtTokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
+            JwtTokenProvider tokenProvider, PasswordEncoder passwordEncoder,
+            AuditoriaService auditoriaService, HttpServletRequest request,
+            UsuarioActualService usuarioActualService) {
         this.usuarioRepo = usuarioRepo;
         this.rolRepo = rolRepo;
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.auditoriaService = auditoriaService;
+        this.request = request;
+        this.usuarioActualService = usuarioActualService;
     }
 
     @GetMapping
@@ -53,21 +69,30 @@ public class UsuarioController {
         String login = creds.get("usuarioLogin");
         String pass = creds.get("contrasena");
 
-        if (login == null || pass == null)
+        logger.info("Intento de login: {}", login);
+
+        if (login == null || pass == null) {
+            logger.warn("Login fallido: null. Razón: Credenciales incompletas");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Credenciales incompletas");
+        }
 
         Usuario u = usuarioRepo.findByUsuarioLoginIgnoreCase(login)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                        "Usuario o contraseña incorrectos"));
+                .orElseThrow(() -> {
+                    logger.warn("Login fallido: {}. Razón: Usuario no encontrado", login);
+                    return new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos");
+                });
 
-        if (!passwordEncoder.matches(pass, u.getContrasena()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                    "Usuario o contraseña incorrectos");
+        if (!passwordEncoder.matches(pass, u.getContrasena())) {
+            logger.warn("Login fallido: {}. Razón: Contraseña incorrecta", login);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos");
+        }
 
         String token = tokenProvider.generateToken(
                 u.getIdUsuario(),
                 u.getUsuarioLogin(),
                 u.getRol() != null ? u.getRol().getNombre() : "USER");
+
+        logger.info("Login exitoso: {}", login);
 
         return ResponseEntity.ok(Map.of(
                 "token", token,
@@ -85,12 +110,17 @@ public class UsuarioController {
         Usuario u = toEntity(dto, new Usuario());
         u.setContrasena(passwordEncoder.encode(dto.getContrasena()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(usuarioRepo.save(u)));
+        Usuario guardado = usuarioRepo.save(u);
+        Integer idAdmin = usuarioActualService.getIdUsuarioActual();
+        if(idAdmin == null) idAdmin = guardado.getIdUsuario();
+        auditoriaService.registrar(idAdmin, "CREATE", "usuario", guardado.getIdUsuario(), "Registro de usuario", request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardado));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO dto) {
+    public ResponseEntity<UsuarioDTO> create(@Valid @RequestBody UsuarioDTO dto) {
         validarDTO(dto, null);
 
         if (usuarioRepo.existsByUsuarioLoginIgnoreCase(dto.getUsuarioLogin()))
@@ -99,12 +129,17 @@ public class UsuarioController {
         Usuario u = toEntity(dto, new Usuario());
         u.setContrasena(passwordEncoder.encode(dto.getContrasena()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(usuarioRepo.save(u)));
+        Usuario guardado = usuarioRepo.save(u);
+        Integer idAdmin = usuarioActualService.getIdUsuarioActual();
+        if(idAdmin == null) idAdmin = guardado.getIdUsuario();
+        auditoriaService.registrar(idAdmin, "CREATE", "usuario", guardado.getIdUsuario(), "Creación de usuario por admin", request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardado));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or @usuarioActualService.isCurrentUser(#id)")
-    public ResponseEntity<UsuarioDTO> update(@PathVariable Integer id, @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<UsuarioDTO> update(@PathVariable Integer id, @Valid @RequestBody UsuarioDTO dto) {
         validarDTO(dto, id);
         Usuario u = find(id);
 
@@ -117,7 +152,12 @@ public class UsuarioController {
         if (dto.getContrasena() != null && !dto.getContrasena().isBlank())
             u.setContrasena(passwordEncoder.encode(dto.getContrasena()));
 
-        return ResponseEntity.ok(toDTO(usuarioRepo.save(u)));
+        Usuario guardado = usuarioRepo.save(u);
+        Integer idModificador = usuarioActualService.getIdUsuarioActual();
+        if(idModificador == null) idModificador = guardado.getIdUsuario();
+        auditoriaService.registrar(idModificador, "UPDATE", "usuario", guardado.getIdUsuario(), "Actualización de usuario", request);
+
+        return ResponseEntity.ok(toDTO(guardado));
     }
 
     @DeleteMapping("/{id}")
@@ -125,6 +165,10 @@ public class UsuarioController {
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         find(id);
         usuarioRepo.deleteById(id);
+        
+        Integer idModificador = usuarioActualService.getIdUsuarioActual();
+        auditoriaService.registrar(idModificador, "DELETE", "usuario", id, "Eliminación de usuario", request);
+
         return ResponseEntity.noContent().build();
     }
 

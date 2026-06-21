@@ -112,6 +112,24 @@
                 <h2 class="page-title">Gestión de Categorías</h2>
                 <p class="page-subtitle">Organiza tus productos por categoría</p>
             </header>
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <h3 class="card-title">➕ Nueva Categoría</h3>
+                </div>
+                <div class="card-body" style="padding: 15px;">
+                    <form id="form-categoria" onsubmit="crearCategoria(event)">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" id="cat-nombre" placeholder="Nombre de categoría" required
+                                class="form-control" style="flex: 1;">
+                            <input type="text" id="cat-descripcion" placeholder="Descripción (Opcional)"
+                                class="form-control" style="flex: 2;">
+                            <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Crear
+                                Categoría</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">📂 Categorías de Productos</h3>
@@ -124,11 +142,12 @@
                                 <th>Productos</th>
                                 <th>Stock Total</th>
                                 <th>Valor</th>
+                                <th style="text-align: center; width: 100px;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="categories-table">
                             <tr>
-                                <td colspan="4" class="text-center">Cargando Categorías...</td>
+                                <td colspan="5" class="text-center">Cargando Categorías...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -141,31 +160,141 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
             await loadProducts();
-            cargarCategorías();
+            await loadCategoriasBackend();
         });
-        function cargarCategorías() {
-            var productos = getProducts();
-            var Categorías = {};
+
+        async function loadCategoriasBackend() {
+            let categoriasBackend = [];
+            try {
+                // Usamos el método unificado del datos.js
+                if (typeof loadCategorias === 'function') {
+                    categoriasBackend = await loadCategorias();
+                } else {
+                    const res = await fetch('http://localhost:8080/api/v1/categorias');
+                    if (res.ok) categoriasBackend = await res.json();
+                }
+            } catch (err) {
+                console.error('Error al cargar categorias del backend:', err);
+            }
+            renderCategorias(categoriasBackend);
+        }
+
+        function renderCategorias(categoriasBackend) {
+            var productos = typeof getProducts === 'function' ? getProducts() : [];
+            var stats = {};
+
+            if (categoriasBackend && categoriasBackend.length > 0) {
+                categoriasBackend.forEach(c => {
+                    stats[c.idCategoria] = {
+                        idCategoria: c.idCategoria, // Guardamos el ID explícito para el botón
+                        nombre: c.nombre,
+                        count: 0,
+                        stock: 0,
+                        value: 0,
+                        desc: c.descripcion
+                    };
+                });
+            }
+
             for (var i = 0; i < productos.length; i++) {
                 var p = productos[i];
-                if (!Categorías[p.categoria]) {
-                    Categorías[p.categoria] = { count: 0, stock: 0, value: 0 };
+                var idCat = p.idCategoria;
+
+                if (!idCat || !stats[idCat]) {
+                    if (!stats['undefined']) {
+                        stats['undefined'] = { idCategoria: null, nombre: 'Sin Categoría (undefined)', count: 0, stock: 0, value: 0, desc: 'Productos huérfanos' };
+                    }
+                    idCat = 'undefined';
                 }
-                Categorías[p.categoria].count++;
-                Categorías[p.categoria].stock += p.cantidad;
-                Categorías[p.categoria].value += p.precio * p.cantidad;
+
+                stats[idCat].count++;
+                stats[idCat].stock += p.cantidad;
+                stats[idCat].value += (p.precio * p.cantidad);
             }
+
             var tbody = document.getElementById('categories-table');
             var html = '';
-            for (var cat in Categorías) {
+
+            for (var catId in stats) {
+                var cObj = stats[catId];
+                let descHtml = cObj.desc ? `<br><small style="color: #6c757d; font-size: 0.85em;">${cObj.desc}</small>` : '';
+
+                // Si es la categoría 'undefined' ficticia, deshabilitamos el botón de borrar
+                let botonEliminar = '';
+                if (cObj.idCategoria) {
+                    botonEliminar = `<button onclick="eliminarCategoriaConfirm(${cObj.idCategoria}, '${cObj.nombre}')" class="btn btn-small btn-danger" style="padding: 2px 8px;" title="Eliminar Categoría">🗑️</button>`;
+                } else {
+                    botonEliminar = `<span style="color: #adb5bd; font-size: 0.9em;">—</span>`;
+                }
+
                 html += '<tr>';
-                html += '<td><span class="badge badge-info">' + cat + '</span></td>';
-                html += '<td>' + Categorías[cat].count + '</td>';
-                html += '<td>' + Categorías[cat].stock + '</td>';
-                html += '<td><strong>' + formatPrice(Categorías[cat].value) + '</strong></td>';
+                html += `<td><span class="badge badge-info">${cObj.nombre}</span>${descHtml}</td>`;
+                html += '<td>' + cObj.count + '</td>';
+                html += '<td>' + cObj.stock + '</td>';
+                html += '<td><strong>' + (typeof formatPrice === 'function' ? formatPrice(cObj.value) : '$' + cObj.value) + '</strong></td>';
+                html += `<td style="text-align: center;">${botonEliminar}</td>`;
                 html += '</tr>';
             }
-            tbody.innerHTML = html || '<tr><td colspan="4" class="text-center">No hay Categorías</td></tr>';
+            tbody.innerHTML = html || '<tr><td colspan="5" class="text-center">No hay Categorías</td></tr>';
+        }
+
+        async function eliminarCategoriaConfirm(id, nombre) {
+            if (confirm(`¿Estás seguro de que deseas eliminar la categoría "${nombre}"? Esta acción no se puede deshacer.`)) {
+                try {
+                    if (typeof deleteCategory === 'function') {
+                        await deleteCategory(id);
+                    } else {
+                        // Respaldo directo si no se cargó correctamente el método de datos.js
+                        const res = await fetch(`http://localhost:8080/api/v1/categorias/${id}`, { method: 'DELETE' });
+                        if (!res.ok) throw new Error('Error al eliminar');
+                    }
+
+                    alert('Categoría eliminada con éxito');
+                    await loadCategoriasBackend(); // Recarga y renderiza el listado actualizado
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                    console.error('Error al intentar eliminar la categoría:', err);
+                }
+            }
+        }
+
+        async function crearCategoria(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('cat-nombre').value.trim();
+            const descripcion = document.getElementById('cat-descripcion').value.trim();
+
+            try {
+                const res = await fetch('http://localhost:8080/api/v1/categorias', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, descripcion })
+                });
+
+                if (res.ok) {
+                    alert('Categoría creada exitosamente');
+                    document.getElementById('form-categoria').reset();
+                    await loadCategoriasBackend();
+                } else {
+                    const errorData = await res.json().catch(() => ({}));
+                    let errorMsg = errorData.error || 'No se pudo crear la categoría';
+
+                    if (errorData.errors) {
+                        const detalles = Object.entries(errorData.errors)
+                            .map(([campo, mensaje]) => `${campo}: ${mensaje}`)
+                            .join('\n');
+                        if (detalles) {
+                            errorMsg += '\n' + detalles;
+                        }
+                    }
+                    alert('Error: ' + errorMsg);
+                }
+            } catch (err) {
+                console.error('[inventario.html] Error en crearCategoria:', err);
+                alert('Error de conexión al intentar crear la categoría');
+            }
         }
     </script>
 </body>

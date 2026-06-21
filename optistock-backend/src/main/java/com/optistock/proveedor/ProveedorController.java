@@ -6,6 +6,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +54,7 @@ public class ProveedorController {
      */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<ProveedorDTO> create(@RequestBody ProveedorDTO dto) {
+    public ResponseEntity<ProveedorDTO> create(@Valid @RequestBody ProveedorDTO dto) {
         // Validación básica de negocio
         if (dto.getRazonSocial() == null || dto.getRazonSocial().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La razón social es obligatoria");
@@ -67,7 +69,7 @@ public class ProveedorController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<ProveedorDTO> update(@PathVariable Integer id, @RequestBody ProveedorDTO dto) {
+    public ResponseEntity<ProveedorDTO> update(@PathVariable Integer id, @Valid @RequestBody ProveedorDTO dto) {
         Proveedor p = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado"));
 

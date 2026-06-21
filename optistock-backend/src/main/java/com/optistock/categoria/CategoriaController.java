@@ -6,86 +6,73 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/categorias") // 1. Ruta base unificada con versionado v1
+@RequestMapping("/api/v1/categorias")
 public class CategoriaController {
 
-    private final CategoriaRepository categoriaRepository;
+    private final CategoriaRepository repo;
 
-    public CategoriaController(CategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
+    public CategoriaController(CategoriaRepository repo) {
+        this.repo = repo;
     }
 
-    /**
-     * GET /api/v1/categorias
-     */
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Categoria>> listarCategorias() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+    public ResponseEntity<List<CategoriaDTO>> getAll() {
+        List<CategoriaDTO> categorias = repo.findAll().stream()
+                .map(CategoriaDTO::fromEntity)
+                .collect(Collectors.toList());
         if (categorias.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204 No Content
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(categorias); // 200 OK
+        return ResponseEntity.ok(categorias);
     }
 
-    /**
-     * GET /api/v1/categorias/{id}
-     */
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Categoria> obtenerPorId(@PathVariable Integer id) {
-        Categoria categoria = categoriaRepository.findById(id)
+    public ResponseEntity<CategoriaDTO> getById(@PathVariable Integer id) {
+        Categoria cat = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada"));
-        return ResponseEntity.ok(categoria);
+        return ResponseEntity.ok(CategoriaDTO.fromEntity(cat));
     }
 
-    /**
-     * POST /api/v1/categorias
-     */
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<Categoria> crearCategoria(@RequestBody Categoria categoria) {
-        // Validación básica de negocio interna antes de guardar
-        if (categoria.getNombre() == null || categoria.getNombre().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de la categoría es obligatorio");
-        }
-
-        Categoria nuevaCategoria = categoriaRepository.save(categoria);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaCategoria); // 201 Created
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CategoriaDTO> crearCategoria(@Valid @RequestBody CategoriaDTO dto) {
+        Categoria categoria = new Categoria();
+        categoria.setNombre(dto.getNombre());
+        categoria.setDescripcion(dto.getDescripcion());
+        
+        Categoria guardado = repo.save(categoria);
+        return ResponseEntity.status(HttpStatus.CREATED).body(CategoriaDTO.fromEntity(guardado));
     }
 
-    /**
-     * PUT /api/v1/categorias/{id}
-     */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Integer id,
-            @RequestBody Categoria datosActualizados) {
-        Categoria categoriaExistente = categoriaRepository.findById(id)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CategoriaDTO> actualizarCategoria(@PathVariable Integer id,
+            @Valid @RequestBody CategoriaDTO dto) {
+        Categoria cat = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada"));
 
-        if (datosActualizados.getNombre() == null || datosActualizados.getNombre().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de la categoría no puede estar vacío");
-        }
-
-        categoriaExistente.setNombre(datosActualizados.getNombre());
-
-        return ResponseEntity.ok(categoriaRepository.save(categoriaExistente));
+        cat.setNombre(dto.getNombre());
+        cat.setDescripcion(dto.getDescripcion());
+        
+        Categoria actualizado = repo.save(cat);
+        return ResponseEntity.ok(CategoriaDTO.fromEntity(actualizado));
     }
 
-    /**
-     * DELETE /api/v1/categorias/{id}
-     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> eliminarCategoria(@PathVariable Integer id) {
-        categoriaRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada"));
-
-        categoriaRepository.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        if (!repo.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada");
+        }
+        repo.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

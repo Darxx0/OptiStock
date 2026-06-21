@@ -1,0 +1,8 @@
+com\optistock\pago\PagoService.class
+com\optistock\cliente\ClienteService.class
+com\optistock\audit\AuditoriaService.class
+com\optistock\cliente\ClienteDTO.class
+com\optistock\audit\AuditoriaRepository.class
+com\optistock\audit\Auditoria.class
+com\optistock\categoria\CategoriaDTO.class
+com\optistock\exception\BusinessException.class

@@ -60,7 +60,7 @@ public class ProductoService {
             p.setDescripcion(dto.getDescripcion());
         if (dto.getPrecio() != null)
             p.setPrecioUnitario(dto.getPrecio());
-        if (dto.getCategoria() != null || dto.getIdCategoria() != null) {
+        if (dto.getIdCategoria() != null) {
             p.setCategoria(resolveCategoria(dto));
         }
         if (dto.getCantidad() != null)
@@ -78,7 +78,6 @@ public class ProductoService {
         productoRepository.save(p);
     }
 
-    // Resuelve categoria por idCategoria o por nombre (crea si no existe)
     private Categoria resolveCategoria(ProductoDTO dto) {
         if (dto.getIdCategoria() != null) {
             return categoriaRepository.findById(dto.getIdCategoria())
@@ -86,14 +85,6 @@ public class ProductoService {
                             HttpStatus.BAD_REQUEST,
                             "Categoría no encontrada: " + dto.getIdCategoria()));
         }
-        if (dto.getCategoria() != null && !dto.getCategoria().isBlank()) {
-            return categoriaRepository.findByNombreIgnoreCase(dto.getCategoria())
-                    .orElseGet(() -> {
-                        Categoria nueva = new Categoria();
-                        nueva.setNombre(dto.getCategoria());
-                        return categoriaRepository.save(nueva);
-                    });
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Se requiere categoria o idCategoria");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El ID de la categoría es obligatorio");
     }
 }

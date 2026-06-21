@@ -6,90 +6,77 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
+import com.optistock.audit.AuditoriaService;
+import com.optistock.security.UsuarioActualService;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/clientes") // 1. Unificación al estándar de versión v1
+@RequestMapping("/api/v1/clientes")
 public class ClienteController {
 
-    private final ClienteRepository clienteRepository;
+    private final ClienteService clienteService;
+    private final AuditoriaService auditoriaService;
+    private final HttpServletRequest request;
+    private final UsuarioActualService usuarioActualService;
 
-    public ClienteController(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
+    public ClienteController(ClienteService clienteService, AuditoriaService auditoriaService, 
+            HttpServletRequest request, UsuarioActualService usuarioActualService) {
+        this.clienteService = clienteService;
+        this.auditoriaService = auditoriaService;
+        this.request = request;
+        this.usuarioActualService = usuarioActualService;
     }
 
-    /**
-     * GET /api/v1/clientes
-     */
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Cliente>> getAll() {
-        List<Cliente> clientes = clienteRepository.findAll();
+    public ResponseEntity<List<ClienteDTO>> getAll() {
+        List<ClienteDTO> clientes = clienteService.obtenerTodos();
         if (clientes.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(clientes);
     }
 
-    /**
-     * GET /api/v1/clientes/{id}
-     */
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Cliente> getById(@PathVariable Long id) {
-        Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
-        return ResponseEntity.ok(cliente);
+    public ResponseEntity<ClienteDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(clienteService.obtenerPorId(id));
     }
 
-    /**
-     * POST /api/v1/clientes
-     */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<Cliente> create(@RequestBody Cliente cliente) {
-        if (cliente.getNombre() == null || cliente.getNombre().isBlank() ||
-                cliente.getNumeroDocumento() == null || cliente.getNumeroDocumento().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El nombre y el número de documento son obligatorios");
-        }
+    public ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteDTO dto) {
+        ClienteDTO creado = clienteService.crear(dto);
+        
+        Integer idUsuario = usuarioActualService.getIdUsuarioActual();
+        auditoriaService.registrar(idUsuario, "CREATE", "cliente", creado.getIdCliente().intValue(), "Creación de cliente", request);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(clienteRepository.save(cliente));
+        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
-    /**
-     * PUT /api/v1/clientes/{id}
-     */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody Cliente datos) {
-        Cliente clienteExistente = clienteRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+    public ResponseEntity<ClienteDTO> update(@PathVariable Long id, @Valid @RequestBody ClienteDTO datos) {
+        ClienteDTO actualizado = clienteService.actualizar(id, datos);
 
-        if (datos.getNombre() == null || datos.getNombre().isBlank() ||
-                datos.getNumeroDocumento() == null || datos.getNumeroDocumento().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Los campos obligatorios no pueden estar vacíos");
-        }
+        Integer idUsuario = usuarioActualService.getIdUsuarioActual();
+        auditoriaService.registrar(idUsuario, "UPDATE", "cliente", actualizado.getIdCliente().intValue(), "Actualización de cliente", request);
 
-        clienteExistente.setNombre(datos.getNombre());
-        clienteExistente.setApellido(datos.getApellido());
-        clienteExistente.setTipoDocumento(datos.getTipoDocumento());
-        clienteExistente.setNumeroDocumento(datos.getNumeroDocumento());
-
-        return ResponseEntity.ok(clienteRepository.save(clienteExistente));
+        return ResponseEntity.ok(actualizado);
     }
 
-    /**
-     * DELETE /api/v1/clientes/{id}
-     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!clienteRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
-        }
-        clienteRepository.deleteById(id);
+        clienteService.eliminar(id);
+        
+        Integer idUsuario = usuarioActualService.getIdUsuarioActual();
+        auditoriaService.registrar(idUsuario, "DELETE", "cliente", id.intValue(), "Eliminación de cliente", request);
+
         return ResponseEntity.noContent().build();
     }
 }

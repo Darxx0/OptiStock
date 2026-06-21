@@ -175,18 +175,20 @@
                             placeholder="Ej: Distribuidora Nacional S.A.S" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Teléfono *</label>
-                        <input type="tel" id="prov-telefono" class="form-control" placeholder="Ej: 601 234 5678"
-                            required>
+                        <label class="form-label">Teléfono * (7 a 15 dígitos)</label>
+                        <input type="tel" id="prov-telefono" class="form-control" placeholder="Ej: 6012345678"
+                            minlength="7" maxlength="15" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email</label>
                         <input type="email" id="prov-correo" class="form-control" placeholder="ventas@empresa.com">
                     </div>
                     <div class="form-group" style="grid-column:1/-1;">
-                        <label class="form-label">Tipo Correo</label>
-                        <input type="text" id="prov-tipo-correo" class="form-control"
-                            placeholder="Corporativo, Personal, Ventas">
+                        <label class="form-label">Tipo Correo *</label>
+                        <select id="prov-tipo-correo" class="form-control" required>
+                            <option value="CORPORATIVO">Corporativo</option>
+                            <option value="PERSONAL">Personal</option>
+                        </select>
                     </div>
                 </div>
                 <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem;">
@@ -206,15 +208,16 @@
             const tbody = document.getElementById('proveedores-tbody');
             document.getElementById('contador-proveedores').textContent = lista.length + ' registros';
             if (!lista.length) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="padding:2rem; color:var(--color-texto-claro);">No se encontraron proveedores</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:2rem; color:var(--color-texto-claro);">No se encontraron proveedores</td></tr>';
                 return;
             }
             tbody.innerHTML = lista.map(p => `
                 <tr>
+                    <td>${p.idProveedor}</td>
                     <td><strong>${p.razonSocial}</strong></td>
                     <td>${p.correo || '-'}</td>
                     <td>${p.telefono || '-'}</td>
-                    <td>${p.tipoCorreo || '-'}</td>
+                    <td><span class="badge">${p.tipoCorreo || '-'}</span></td>
                     <td>
                         <button class="btn btn-secondary"
                             style="padding:0.25rem 0.6rem;font-size:0.8rem;"
@@ -236,41 +239,33 @@
         }
 
         async function abrirModalProveedor(id = null) {
-
             document.getElementById('prov-id').value = '';
             document.getElementById('prov-razon-social').value = '';
             document.getElementById('prov-correo').value = '';
             document.getElementById('prov-telefono').value = '';
-            document.getElementById('prov-tipo-correo').value = '';
+            document.getElementById('prov-tipo-correo').value = 'CORPORATIVO';
 
-            document.getElementById('modal-proveedor-titulo').textContent =
-                'Nuevo Proveedor';
+            document.getElementById('modal-proveedor-titulo').textContent = 'Nuevo Proveedor';
 
             if (id) {
-
+                // Fetch configurado con interceptor o cabeceras si es necesario
                 const r = await fetch(`${API_PROVEEDORES}/${id}`);
                 const p = await r.json();
 
-                document.getElementById('modal-proveedor-titulo').textContent =
-                    'Editar Proveedor';
-
+                document.getElementById('modal-proveedor-titulo').textContent = 'Editar Proveedor';
                 document.getElementById('prov-id').value = p.idProveedor;
+                document.getElementById('prov-razon-social').value = p.razonSocial || '';
+                document.getElementById('prov-correo').value = p.correo || '';
+                document.getElementById('prov-telefono').value = p.telefono || '';
 
-                document.getElementById('prov-razon-social').value =
-                    p.razonSocial || '';
-
-                document.getElementById('prov-correo').value =
-                    p.correo || '';
-
-                document.getElementById('prov-telefono').value =
-                    p.telefono || '';
-
-                document.getElementById('prov-tipo-correo').value =
-                    p.tipoCorreo || '';
+                // Forzar compatibilidad si el registro viejo viene como "Cop" o "Corporativo"
+                let tipoMapeado = String(p.tipoCorreo).toUpperCase();
+                if (tipoMapeado.startsWith("COP")) tipoMapeado = "CORPORATIVO";
+                if (tipoMapeado.startsWith("PER")) tipoMapeado = "PERSONAL";
+                document.getElementById('prov-tipo-correo').value = tipoMapeado;
             }
 
-            document.getElementById('modal-proveedor').style.display =
-                'flex';
+            document.getElementById('modal-proveedor').style.display = 'flex';
         }
 
         function editarProveedor(id) { abrirModalProveedor(id); }
@@ -280,42 +275,31 @@
         }
 
         async function guardarProveedor() {
-
-            const id =
-                document.getElementById('prov-id').value;
+            const id = document.getElementById('prov-id').value;
+            const telefonoRaw = document.getElementById('prov-telefono').value.trim();
 
             const body = {
-                razonSocial:
-                    document.getElementById('prov-razon-social').value.trim(),
-
-                correo:
-                    document.getElementById('prov-correo').value.trim(),
-
-                telefono:
-                    document.getElementById('prov-telefono').value.trim(),
-
-                tipoCorreo:
-                    document.getElementById('prov-tipo-correo').value.trim()
+                razonSocial: document.getElementById('prov-razon-social').value.trim(),
+                correo: document.getElementById('prov-correo').value.trim(),
+                telefono: telefonoRaw,
+                tipoCorreo: document.getElementById('prov-tipo-correo').value
             };
 
+            // Validaciones estrictas de Frontend alineadas con Spring Boot
             if (!body.razonSocial) {
-                showNotification(
-                    'La razón social es obligatoria',
-                    'warning'
-                );
+                showNotification('La razón social es obligatoria', 'warning');
                 return;
             }
 
-            const url =
-                id
-                    ? `${API_PROVEEDORES}/${id}`
-                    : API_PROVEEDORES;
+            if (telefonoRaw.length < 7 || telefonoRaw.length > 15) {
+                showNotification('El teléfono debe contener entre 7 y 15 dígitos', 'warning');
+                return;
+            }
 
-            const method =
-                id
-                    ? 'PUT'
-                    : 'POST';
+            const url = id ? `${API_PROVEEDORES}/${id}` : API_PROVEEDORES;
+            const method = id ? 'PUT' : 'POST';
 
+            // Petición al backend compartiendo el formato JSON exacto exigido
             const r = await fetch(url, {
                 method,
                 headers: {
@@ -325,59 +309,46 @@
             });
 
             if (!r.ok) {
-                showNotification(
-                    'Error al guardar',
-                    'error'
-                );
+                const errData = await r.json();
+                const mensajeError = errData.errors
+                    ? Object.values(errData.errors).join(', ')
+                    : 'Error al guardar el proveedor';
+                showNotification(mensajeError, 'error');
                 return;
             }
 
             cerrarModalProveedor();
-
             await cargarProveedores();
-
-            showNotification(
-                id
-                    ? 'Proveedor actualizado'
-                    : 'Proveedor creado'
-            );
+            showNotification(id ? 'Proveedor actualizado' : 'Proveedor creado');
         }
 
         async function eliminarProveedor(id) {
+            if (!confirm('¿Eliminar proveedor?')) return;
 
-            if (!confirm('¿Eliminar proveedor?'))
-                return;
-
-            const r = await fetch(
-                `${API_PROVEEDORES}/${id}`,
-                {
-                    method: 'DELETE'
-                }
-            );
+            const r = await fetch(`${API_PROVEEDORES}/${id}`, {
+                method: 'DELETE'
+            });
 
             if (!r.ok) {
-                showNotification(
-                    'Error al eliminar',
-                    'error'
-                );
+                showNotification('Error al eliminar', 'error');
                 return;
             }
 
             await cargarProveedores();
-
-            showNotification(
-                'Proveedor eliminado',
-                'warning'
-            );
+            showNotification('Proveedor eliminado', 'warning');
         }
 
         async function cargarProveedores() {
-
-            const r = await fetch(API_PROVEEDORES);
-
-            const lista = await r.json();
-
-            renderTabla(lista);
+            try {
+                const r = await fetch(API_PROVEEDORES);
+                if (!r.ok) throw new Error('No se pudo mapear la lista');
+                const lista = await r.json();
+                renderTabla(lista);
+            } catch (error) {
+                console.error(error);
+                document.getElementById('proveedores-tbody').innerHTML =
+                    '<tr><td colspan="6" class="text-center" style="color:var(--color-error);">Error de comunicación con el servidor.</td></tr>';
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {

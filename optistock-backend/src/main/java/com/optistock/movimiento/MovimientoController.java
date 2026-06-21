@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.validation.Valid;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +54,7 @@ public class MovimientoController {
     @PostMapping("/ajuste")
     @Transactional
     @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Restricción estricta de seguridad
-    public ResponseEntity<MovimientoDTO> registrarAjuste(@RequestBody MovimientoDTO dto) {
+    public ResponseEntity<MovimientoDTO> registrarAjuste(@Valid @RequestBody MovimientoDTO dto) {
         Producto producto = productoRepo.findById(dto.getProductoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
 
@@ -88,7 +90,7 @@ public class MovimientoController {
     @PostMapping("/transferencia")
     @Transactional
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'VENDEDOR')")
-    public ResponseEntity<MovimientoDTO> registrarTransferencia(@RequestBody MovimientoDTO dto) {
+    public ResponseEntity<MovimientoDTO> registrarTransferencia(@Valid @RequestBody MovimientoDTO dto) {
         Producto producto = productoRepo.findById(dto.getProductoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
 

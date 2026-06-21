@@ -222,7 +222,7 @@
                     selectCategoria.appendChild(option);
                 });
 
-                console.log('✅ [inventario.html] Categorías cargadas correctamente:', categorias);
+                console.log('[inventario.html] Categorías cargadas correctamente:', categorias);
             } catch (e) {
                 console.error('[inventario.html] Error al cargar categorías:', e);
                 showNotification('Error al cargar categorías', 'error');
@@ -249,15 +249,18 @@
 
         function renderTablaProductos(filtro = '') {
             let productos = getProducts();
+
+            const selectCategoria = document.getElementById('idCategoria');
+
             if (filtro) {
                 productos = productos.filter(p =>
                     p.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-                    (p.categoria || '').toLowerCase().includes(filtro.toLowerCase())
+                    (p.nombreCategoria || '').toLowerCase().includes(filtro.toLowerCase())
                 );
             }
             const categoriaFiltro = document.getElementById('filtro-categoria').value;
             if (categoriaFiltro) {
-                productos = productos.filter(p => p.categoria === categoriaFiltro);
+                productos = productos.filter(p => p.idCategoria === parseInt(categoriaFiltro));
             }
             const tbody = document.getElementById('tbody-productos');
             document.getElementById('total-productos').textContent =
@@ -266,24 +269,37 @@
                 tbody.innerHTML = '<tr><td colspan="7" class="text-center">No hay productos</td></tr>';
                 return;
             }
-            tbody.innerHTML = productos.map(p => `
-                <tr>
-                    <td>${p.id}</td>
-                    <td>${p.nombre}</td>
-                    <td>${p.categoria || ''}</td>
-                    <td>${formatPrice(p.precio)}</td>
-                    <td>${p.cantidad ?? 0}</td>
-                    <td>
-                        <span class="badge ${(p.cantidad ?? 0) <= 5 ? 'badge-warning' : 'badge-success'}">
-                            ${(p.cantidad ?? 0) <= 5 ? 'Stock bajo' : 'OK'}
-                        </span>
-                    </td>
-                    <td class="table-actions">
-                        <button onclick="editarProducto(${p.id})" class="btn btn-small btn-primary">✏️</button>
-                        <button onclick="eliminarProductoConfirm(${p.id})" class="btn btn-small btn-danger">🗑️</button>
-                    </td>
-                </tr>
-            `).join('');
+
+            tbody.innerHTML = productos.map(p => {
+                // Buscamos dinámicamente si el ID del producto corresponde a un texto del select cargado
+                let nombreMostrado = p.nombreCategoria;
+
+                if (!nombreMostrado && p.idCategoria && selectCategoria) {
+                    const opcionEncontrada = Array.from(selectCategoria.options).find(opt => opt.value == p.idCategoria);
+                    if (opcionEncontrada && opcionEncontrada.value !== "") {
+                        nombreMostrado = opcionEncontrada.textContent;
+                    }
+                }
+
+                return `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.nombre}</td>
+                        <td><span class="badge badge-info">${nombreMostrado || 'Sin Categoría'}</span></td>
+                        <td>${formatPrice(p.precio)}</td>
+                        <td>${p.cantidad ?? 0}</td>
+                        <td>
+                            <span class="badge ${(p.cantidad ?? 0) <= 5 ? 'badge-warning' : 'badge-success'}">
+                                ${(p.cantidad ?? 0) <= 5 ? 'Stock bajo' : 'OK'}
+                            </span>
+                        </td>
+                        <td class="table-actions">
+                            <button onclick="editarProducto(${p.id})" class="btn btn-small btn-primary">✏️</button>
+                            <button onclick="eliminarProductoConfirm(${p.id})" class="btn btn-small btn-danger">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function filtrarProductos() {
@@ -308,7 +324,7 @@
                 descripcion: document.getElementById('descripcion').value
             };
 
-            console.log('📤 Enviando producto al servidor:', producto);
+            console.log('Enviando producto al servidor:', producto);
 
             try {
                 if (productoEditando) {
@@ -324,7 +340,7 @@
                 renderTablaProductos();
             } catch (err) {
                 showNotification('Error al guardar: ' + err.message, 'error');
-                console.error('❌ Error detallado:', err);
+                console.error('Error detallado:', err);
             }
         }
 
@@ -332,9 +348,15 @@
             const producto = getProduct(id);
             if (!producto) return;
             productoEditando = id;
-            document.getElementById('producto-id').value = producto.id;
+
+            const elId = document.getElementById('producto-id');
+            if (elId) elId.value = producto.id;
+
             document.getElementById('nombre').value = producto.nombre;
-            document.getElementById('idCategoria').value = producto.idCategoria || '';
+
+            const idCat = producto.idCategoria ? parseInt(producto.idCategoria) : "";
+            document.getElementById('idCategoria').value = idCat;
+
             document.getElementById('precio').value = producto.precio;
             document.getElementById('cantidad').value = producto.cantidad ?? 0;
             document.getElementById('descripcion').value = producto.descripcion || '';
@@ -359,6 +381,7 @@
                 try {
                     await deleteProduct(id);
                     showNotification('Producto eliminado correctamente');
+                    await loadProducts();
                     renderTablaProductos();
                 } catch (err) {
                     showNotification('Error al eliminar: ' + err.message, 'error');

@@ -8,14 +8,21 @@ public class UsuarioDTO {
     private Integer idUsuario;
 
     @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 100, message = "El nombre debe tener entre 2 y 100 caracteres")
     private String nombre;
 
     @NotBlank(message = "El apellido es obligatorio")
+    @Size(min = 2, max = 100, message = "El apellido debe tener entre 2 y 100 caracteres")
     private String apellido;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")
-    @Size(min = 4, max = 20, message = "El nombre de usuario debe tener entre 4 y 20 caracteres")
+    @Size(min = 4, max = 50, message = "El nombre de usuario debe tener entre 4 y 50 caracteres")
+    @Pattern(regexp = "^[a-zA-Z0-9_.-]+$", message = "El formato del usuario no es válido")
     private String usuarioLogin;
+
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El formato del correo no es válido")
+    private String email;
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
@@ -63,6 +70,14 @@ public class UsuarioDTO {
 
     public void setUsuarioLogin(String usuarioLogin) {
         this.usuarioLogin = usuarioLogin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getContrasena() {

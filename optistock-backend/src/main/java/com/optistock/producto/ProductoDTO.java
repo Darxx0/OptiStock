@@ -8,14 +8,13 @@ public class ProductoDTO {
     private Integer id;
 
     @NotBlank(message = "El nombre del producto es obligatorio")
-    @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
+    @Size(min = 3, max = 150, message = "El nombre debe tener entre 3 y 150 caracteres")
     private String nombre;
 
     @NotNull(message = "El precio es obligatorio")
     @DecimalMin(value = "0.01", message = "El precio debe ser mayor a cero")
+    @DecimalMax(value = "9999999.99", message = "El precio excede el límite permitido")
     private BigDecimal precio;
-
-    private String categoria;
 
     @Size(max = 255, message = "La descripción no puede exceder los 255 caracteres")
     private String descripcion;
@@ -39,10 +38,8 @@ public class ProductoDTO {
         dto.cantidad = p.getCantidad();
 
         if (p.getCategoria() != null) {
-            dto.categoria = p.getCategoria().getNombre();
             dto.idCategoria = p.getCategoria().getIdCategoria();
         } else {
-            dto.categoria = "";
             dto.idCategoria = null;
         }
         return dto;
@@ -71,14 +68,6 @@ public class ProductoDTO {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
     }
 
     public String getDescripcion() {
