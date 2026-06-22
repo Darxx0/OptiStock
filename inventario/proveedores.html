@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proveedores | Sistema de Inventario</title>
+    <title>Proveedores | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 
@@ -115,7 +115,7 @@
             <div class="card" style="margin-bottom: 1rem;">
                 <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
                     <input type="text" id="buscar-proveedor" class="form-control"
-                        placeholder="🔍 Buscar por nombre, NIT o ciudad..." style="flex:1; min-width:200px;"
+                        placeholder="Buscar por nombre, NIT o ciudad..." style="flex:1; min-width:200px;"
                         oninput="filtrarProveedores()">
                     <select id="filtro-estado" class="form-control" style="width:160px;"
                         onchange="filtrarProveedores()">
@@ -129,7 +129,7 @@
             <!-- Tabla -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">🏢 Lista de Proveedores</h3>
+                    <h3 class="card-title">Lista de Proveedores</h3>
                     <span id="contador-proveedores" class="badge badge-info">0 registros</span>
                 </div>
                 <div class="table-container">
@@ -258,7 +258,6 @@
                 document.getElementById('prov-correo').value = p.correo || '';
                 document.getElementById('prov-telefono').value = p.telefono || '';
 
-                // Forzar compatibilidad si el registro viejo viene como "Cop" o "Corporativo"
                 let tipoMapeado = String(p.tipoCorreo).toUpperCase();
                 if (tipoMapeado.startsWith("COP")) tipoMapeado = "CORPORATIVO";
                 if (tipoMapeado.startsWith("PER")) tipoMapeado = "PERSONAL";

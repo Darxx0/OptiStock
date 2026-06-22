@@ -108,7 +108,7 @@
             <!-- Formulario -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title" id="form-titulo">➕ Agregar Cliente</h3>
+                    <h3 class="card-title" id="form-titulo">Agregar Cliente</h3>
                 </div>
                 <form id="form-cliente">
                     <div class="form-grid">
@@ -150,7 +150,7 @@
             <div class="card">
                 <div class="search-bar">
                     <input type="text" id="buscar-cliente" class="search-input"
-                        placeholder="🔍 Buscar por nombre o documento...">
+                        placeholder="Buscar por nombre o documento...">
                 </div>
             </div>
 
@@ -262,7 +262,7 @@
             document.getElementById('apellido').value = c.apellido;
             document.getElementById('tipoDocumento').value = c.tipoDocumento;
             document.getElementById('numeroDocumento').value = c.numeroDocumento;
-            document.getElementById('form-titulo').textContent = '✏️ Editar Cliente';
+            document.getElementById('form-titulo').textContent = 'Editar Cliente';
             document.getElementById('btn-texto').textContent = 'Actualizar Cliente';
             document.getElementById('btn-cancelar').style.display = 'inline-flex';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -271,7 +271,7 @@
         function cancelarEdicion() {
             clienteEditando = null;
             document.getElementById('form-cliente').reset();
-            document.getElementById('form-titulo').textContent = '➕ Agregar Cliente';
+            document.getElementById('form-titulo').textContent = 'Agregar Cliente';
             document.getElementById('btn-texto').textContent = 'Agregar Cliente';
             document.getElementById('btn-cancelar').style.display = 'none';
         }

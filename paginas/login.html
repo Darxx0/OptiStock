@@ -11,7 +11,7 @@
         :root {
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --bg-color: #1e40af;
             --glass-bg: rgba(15, 23, 42, 0.65);
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
@@ -28,38 +28,21 @@
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-gradient);
+            background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
             position: relative;
-        }
-
-        /* Ambient glowing circles */
-        .glow-circle {
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 70%);
-            filter: blur(40px);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .glow-1 {
-            top: 10%;
-            left: 15%;
-        }
-
-        .glow-2 {
-            bottom: 10%;
-            right: 15%;
         }
 
         .container {
@@ -299,13 +282,25 @@
                 transform: translateX(4px);
             }
         }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            .brand h1 {
+                font-size: 1.75rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="glow-circle glow-1"></div>
-    <div class="glow-circle glow-2"></div>
-
     <div class="container">
         <div class="brand">
             <h1>OptiStock</h1>
@@ -337,7 +332,7 @@
                                 <input type="password" id="login-password" class="form-control" placeholder="••••••••"
                                     required autocomplete="current-password">
                                 <button type="button" class="password-toggle"
-                                    onclick="togglePassword('login-password')">👁️</button>
+                                    onclick="togglePassword('login-password')">&#128065;</button>
                             </div>
                         </div>
                         <button type="submit" class="btn-submit">Iniciar Sesión</button>
@@ -368,7 +363,7 @@
                                 <input type="password" id="reg-password" class="form-control"
                                     placeholder="Mín. 5 caracteres" required autocomplete="new-password">
                                 <button type="button" class="password-toggle"
-                                    onclick="togglePassword('reg-password')">👁️</button>
+                                    onclick="togglePassword('login-password')">&#128065;</button>
                             </div>
                         </div>
                         <div class="form-group">

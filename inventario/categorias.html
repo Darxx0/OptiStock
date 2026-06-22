@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorías | Sistema de Inventario</title>
+    <title>Categorías | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 
@@ -114,7 +114,7 @@
             </header>
             <div class="card" style="margin-bottom: 20px;">
                 <div class="card-header">
-                    <h3 class="card-title">➕ Nueva Categoría</h3>
+                    <h3 class="card-title">Nueva Categoría</h3>
                 </div>
                 <div class="card-body" style="padding: 15px;">
                     <form id="form-categoria" onsubmit="crearCategoria(event)">
@@ -132,7 +132,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">📂 Categorías de Productos</h3>
+                    <h3 class="card-title">Categorías de Productos</h3>
                 </div>
                 <div class="table-container">
                     <table>
@@ -166,7 +166,6 @@
         async function loadCategoriasBackend() {
             let categoriasBackend = [];
             try {
-                // Usamos el método unificado del datos.js
                 if (typeof loadCategorias === 'function') {
                     categoriasBackend = await loadCategorias();
                 } else {
@@ -186,7 +185,7 @@
             if (categoriasBackend && categoriasBackend.length > 0) {
                 categoriasBackend.forEach(c => {
                     stats[c.idCategoria] = {
-                        idCategoria: c.idCategoria, // Guardamos el ID explícito para el botón
+                        idCategoria: c.idCategoria,
                         nombre: c.nombre,
                         count: 0,
                         stock: 0,
@@ -250,7 +249,7 @@
                     }
 
                     alert('Categoría eliminada con éxito');
-                    await loadCategoriasBackend(); // Recarga y renderiza el listado actualizado
+                    await loadCategoriasBackend();
                 } catch (err) {
                     alert('Error: ' + err.message);
                     console.error('Error al intentar eliminar la categoría:', err);

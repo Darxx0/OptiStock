@@ -5,24 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Analytics - Sistema de Gestión de Inventario y Facturación">
-    <title>Analytics | Sistema de Inventario</title>
+    <title>Analíticas | OptiStock</title>
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
 
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1> OptiStock</h1>
+                <h1>OptiStock</h1>
                 <p>Sistema de Gestión</p>
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <!-- Dashboard -->
                     <li class="nav-section active" id="section-dashboard">
                         <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
-                            <span> Dashboard</span>
+                            <span>Dashboard</span>
                             <span class="nav-section-icon">▶</span>
                         </button>
                         <ul class="nav-submenu">
@@ -42,10 +40,9 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Inventario -->
                     <li class="nav-section" id="section-inventory">
                         <button class="nav-section-title" onclick="toggleSection('section-inventory')">
-                            <span> Inventario</span>
+                            <span>Inventario</span>
                             <span class="nav-section-icon">▶</span>
                         </button>
                         <ul class="nav-submenu">
@@ -69,10 +66,9 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Facturación -->
                     <li class="nav-section" id="section-billing">
                         <button class="nav-section-title" onclick="toggleSection('section-billing')">
-                            <span> Facturación</span>
+                            <span>Facturación</span>
                             <span class="nav-section-icon">▶</span>
                         </button>
                         <ul class="nav-submenu">
@@ -93,10 +89,9 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Reportes -->
                     <li class="nav-section" id="section-reports">
                         <button class="nav-section-title" onclick="toggleSection('section-reports')">
-                            <span> Reportes</span>
+                            <span>Reportes</span>
                             <span class="nav-section-icon">▶</span>
                         </button>
                         <ul class="nav-submenu">
@@ -114,7 +109,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Configuración -->
                     <li class="nav-section" id="section-settings">
                         <button class="nav-section-title" onclick="toggleSection('section-settings')">
                             <span>⚙️ Configuración</span>
@@ -132,7 +126,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Perfil -->
                     <li class="nav-item">
                         <a href="../../configuracion/perfil.html" class="nav-link">
                             <span class="nav-icon">👤</span>
@@ -142,18 +135,17 @@
                 </ul>
             </nav>
         </aside>
-        <!-- Contenido Principal -->
+
         <main class="main-content">
             <header class="page-header">
                 <h2 class="page-title">Analíticas</h2>
                 <p class="page-subtitle">Análisis detallado de tus métricas</p>
             </header>
-            <!-- Métricas de Rendimiento -->
+
             <section class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Ventas del Mes</span>
-                        <span class="stat-icon">📈</span>
                     </div>
                     <div class="stat-value" id="ventas-mes">$0</div>
                     <div class="stat-change">+0% vs mes anterior</div>
@@ -161,7 +153,6 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Productos Vendidos</span>
-                        <span class="stat-icon">📦</span>
                     </div>
                     <div class="stat-value" id="productos-vendidos">0</div>
                     <div class="stat-change">Este mes</div>
@@ -169,7 +160,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Clientes Activos</span>
-                        <span class="stat-icon">👤</span>
+
                     </div>
                     <div class="stat-value" id="clientes-activos">0</div>
                     <div class="stat-change">Clientes únicos</div>
@@ -177,16 +168,15 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Ticket Promedio</span>
-                        <span class="stat-icon">💵</span>
                     </div>
                     <div class="stat-value" id="ticket-promedio">$0</div>
                     <div class="stat-change">Por factura</div>
                 </div>
             </section>
-            <!-- Gráficos y Análisis -->
+
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">📊 Ventas por Categoría</h3>
+                    <h3 class="card-title">Ventas por Categoría</h3>
                 </div>
                 <div class="table-container">
                     <table>
@@ -206,10 +196,10 @@
                     </table>
                 </div>
             </div>
-            <!-- Productos Más Vendidos -->
+
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">🏆 Productos Más Vendidos</h3>
+                    <h3 class="card-title">Productos Más Vendidos</h3>
                 </div>
                 <div class="table-container">
                     <table>
@@ -231,108 +221,173 @@
             </div>
         </main>
     </div>
-    <!-- Scripts -->
+
     <script src="../../js/datos.js"></script>
     <script src="../../js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
-            // ¡ESTO ES LO QUE FALTABA!
-            await loadProducts();
-            await loadInvoices();
+            if (typeof loadProducts === 'function') await loadProducts();
+            if (typeof loadCategorias === 'function') await loadCategorias();
+            if (typeof loadInvoices === 'function') await loadInvoices();
 
-            // Ahora que ambos datos están en el caché, podemos procesar
             cargarAnalytics();
         });
 
         function cargarAnalytics() {
-            var facturas = getInvoices();
-            var productos = getProducts();
-            // Calcular ventas del mes
+            var facturas = typeof getInvoices === 'function' ? getInvoices() : [];
             var ventasMes = 0;
             var productosVendidos = 0;
             var clientesUnicos = {};
+
             for (var i = 0; i < facturas.length; i++) {
-                ventasMes += facturas[i].total;
-                for (var j = 0; j < facturas[i].items.length; j++) {
-                    productosVendidos += facturas[i].items[j].cantidad;
+                var factura = facturas[i];
+                ventasMes += parseFloat(factura.total) || 0;
+
+                if (factura.items) {
+                    for (var j = 0; j < factura.items.length; j++) {
+                        var item = factura.items[j];
+                        productosVendidos += parseInt(item.cantidad) || 0;
+                    }
                 }
-                clientesUnicos[facturas[i].cliente] = true;
+                if (factura.cliente) {
+                    var idCliente = typeof factura.cliente === 'object' ? (factura.cliente.id || factura.cliente.nombre) : factura.cliente;
+                    clientesUnicos[idCliente] = true;
+                }
             }
+
             var ticketPromedio = facturas.length > 0 ? ventasMes / facturas.length : 0;
-            document.getElementById('ventas-mes').textContent = formatPrice(ventasMes);
+            var fnFormato = typeof formatPrice === 'function' ? formatPrice : function (v) { return '$' + v.toFixed(2); };
+
+            document.getElementById('ventas-mes').textContent = fnFormato(ventasMes);
             document.getElementById('productos-vendidos').textContent = productosVendidos;
             document.getElementById('clientes-activos').textContent = Object.keys(clientesUnicos).length;
-            document.getElementById('ticket-promedio').textContent = formatPrice(ticketPromedio);
-            // Ventas por categoría
+            document.getElementById('ticket-promedio').textContent = fnFormato(ticketPromedio);
+
             cargarVentasPorCategoria();
             cargarTopProductos();
         }
+
         function cargarVentasPorCategoria() {
-            var facturas = getInvoices();
-            var Categorías = {};
+            var facturas = typeof getInvoices === 'function' ? getInvoices() : [];
+            var listaProductos = typeof getProducts === 'function' ? getProducts() : [];
+            var listaCategorias = typeof getCategorias === 'function' ? getCategorias() : [];
+
+            var categoriasData = {};
             var totalVentas = 0;
+
             for (var i = 0; i < facturas.length; i++) {
-                for (var j = 0; j < facturas[i].items.length; j++) {
-                    var item = facturas[i].items[j];
-                    var producto = getProduct(item.productoId);
-                    if (producto) {
-                        var cat = producto.categoria;
-                        if (!Categorías[cat]) {
-                            Categorías[cat] = { cantidad: 0, ingresos: 0 };
+                var factura = facturas[i];
+                if (!factura.items) continue;
+
+                for (var j = 0; j < factura.items.length; j++) {
+                    var item = factura.items[j];
+
+                    var idProductoBuscado = parseInt(item.productoId);
+                    if (isNaN(idProductoBuscado)) continue;
+
+                    var productoMaestro = listaProductos.find(p => p.id === idProductoBuscado);
+                    var catName = "Sin Categoría";
+
+                    if (productoMaestro) {
+                        var idCat = productoMaestro.idCategoria || (productoMaestro.categoria && productoMaestro.categoria.idCategoria);
+
+                        if (idCat) {
+                            var categoriaMaestra = listaCategorias.find(c => c.idCategoria === parseInt(idCat) || c.id === parseInt(idCat));
+                            if (categoriaMaestra && categoriaMaestra.nombre) {
+                                catName = categoriaMaestra.nombre;
+                            }
+                        } else if (productoMaestro.categoria && productoMaestro.categoria.nombre) {
+                            // Por si el backend nos mandó el objeto de categoría completo dentro del producto
+                            catName = productoMaestro.categoria.nombre;
                         }
-                        Categorías[cat].cantidad += item.cantidad;
-                        Categorías[cat].ingresos += item.precio * item.cantidad;
-                        totalVentas += item.precio * item.cantidad;
                     }
+
+                    // Seguro por si acaso algo llegó nulo desde la API
+                    if (!catName || catName === "undefined" || catName === "null") {
+                        catName = "Sin Categoría";
+                    }
+
+                    if (!categoriasData[catName]) {
+                        categoriasData[catName] = { cantidad: 0, ingresos: 0 };
+                    }
+
+                    var cantidadVendida = parseInt(item.cantidad) || 0;
+                    var precioVenta = parseFloat(item.precio || 0);
+                    var subtotal = precioVenta * cantidadVendida;
+
+                    categoriasData[catName].cantidad += cantidadVendida;
+                    categoriasData[catName].ingresos += subtotal;
+                    totalVentas += subtotal;
                 }
             }
+
             var tbody = document.getElementById('ventas-categoria');
             var html = '';
-            for (var cat in Categorías) {
-                var porcentaje = totalVentas > 0 ? (Categorías[cat].ingresos / totalVentas * 100).toFixed(1) : 0;
+            var fnFormato = typeof formatPrice === 'function' ? formatPrice : function (v) { return '$' + v.toFixed(2); };
+
+            for (var cat in categoriasData) {
+                var porcentaje = totalVentas > 0 ? ((categoriasData[cat].ingresos / totalVentas) * 100).toFixed(1) : 0;
                 html += '<tr>';
                 html += '<td><span class="badge badge-info">' + cat + '</span></td>';
-                html += '<td>' + Categorías[cat].cantidad + '</td>';
-                html += '<td><strong>' + formatPrice(Categorías[cat].ingresos) + '</strong></td>';
+                html += '<td>' + categoriasData[cat].cantidad + '</td>';
+                html += '<td><strong>' + fnFormato(categoriasData[cat].ingresos) + '</strong></td>';
                 html += '<td>' + porcentaje + '%</td>';
                 html += '</tr>';
             }
-            tbody.innerHTML = html || '<tr><td colspan="4" class="text-center">No hay datos disponibles</td></tr>';
+
+            tbody.innerHTML = html || '<tr><td colspan="4" class="text-center">No hay ventas registradas aún</td></tr>';
         }
+
         function cargarTopProductos() {
-            var facturas = getInvoices();
+            var facturas = typeof getInvoices === 'function' ? getInvoices() : [];
             var productosVendidos = {};
+
             for (var i = 0; i < facturas.length; i++) {
-                for (var j = 0; j < facturas[i].items.length; j++) {
-                    var item = facturas[i].items[j];
-                    if (!productosVendidos[item.productoId]) {
-                        productosVendidos[item.productoId] = {
-                            nombre: item.nombre,
+                var factura = facturas[i];
+                if (!factura.items) continue;
+
+                for (var j = 0; j < factura.items.length; j++) {
+                    var item = factura.items[j];
+                    var idBuscado = parseInt(item.productoId);
+                    if (isNaN(idBuscado)) continue;
+
+                    if (!productosVendidos[idBuscado]) {
+                        productosVendidos[idBuscado] = {
+                            nombre: item.nombre || "Producto Desconocido",
                             cantidad: 0,
                             ingresos: 0
                         };
                     }
-                    productosVendidos[item.productoId].cantidad += item.cantidad;
-                    productosVendidos[item.productoId].ingresos += item.precio * item.cantidad;
+
+                    var cantidadVendida = parseInt(item.cantidad) || 0;
+                    var precioVenta = parseFloat(item.precio || 0);
+
+                    productosVendidos[idBuscado].cantidad += cantidadVendida;
+                    productosVendidos[idBuscado].ingresos += (precioVenta * cantidadVendida);
                 }
             }
-            // Convertir a array y ordenar
-            var productos = [];
+
+            var arrayProductos = [];
             for (var id in productosVendidos) {
-                productos.push(productosVendidos[id]);
+                arrayProductos.push(productosVendidos[id]);
             }
-            productos.sort(function (a, b) { return b.cantidad - a.cantidad; });
+
+            arrayProductos.sort(function (a, b) { return b.cantidad - a.cantidad; });
+
             var tbody = document.getElementById('top-productos');
             var html = '';
-            for (var i = 0; i < Math.min(5, productos.length); i++) {
+            var fnFormato = typeof formatPrice === 'function' ? formatPrice : function (v) { return '$' + v.toFixed(2); };
+
+            for (var k = 0; k < Math.min(5, arrayProductos.length); k++) {
                 html += '<tr>';
-                html += '<td>' + (i + 1) + '</td>';
-                html += '<td><strong>' + productos[i].nombre + '</strong></td>';
-                html += '<td>' + productos[i].cantidad + '</td>';
-                html += '<td>' + formatPrice(productos[i].ingresos) + '</td>';
+                html += '<td>' + (k + 1) + '</td>';
+                html += '<td><strong>' + arrayProductos[k].nombre + '</strong></td>';
+                html += '<td>' + arrayProductos[k].cantidad + '</td>';
+                html += '<td>' + fnFormato(arrayProductos[k].ingresos) + '</td>';
                 html += '</tr>';
             }
-            tbody.innerHTML = html || '<tr><td colspan="4" class="text-center">No hay datos disponibles</td></tr>';
+
+            tbody.innerHTML = html || '<tr><td colspan="4" class="text-center">No hay productos vendidos aún</td></tr>';
         }
     </script>
 </body>

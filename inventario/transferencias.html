@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transferencias | Sistema de Inventario</title>
+    <title>Transferencias | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 
@@ -114,7 +114,7 @@
             <div class="card" style="margin-bottom:1rem;">
                 <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
                     <input type="text" id="buscar-transferencia" class="form-control"
-                        placeholder="🔍 Buscar por producto u origen/destino..." style="flex:1; min-width:200px;"
+                        placeholder="Buscar por producto u origen/destino..." style="flex:1; min-width:200px;"
                         oninput="filtrarTransferencias()">
                     <select id="filtro-estado-trans" class="form-control" style="width:160px;"
                         onchange="filtrarTransferencias()">
@@ -129,7 +129,7 @@
             <!-- Tabla -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">🔄 Registro de Transferencias</h3>
+                    <h3 class="card-title">Registro de Transferencias</h3>
                     <span id="contador-transferencias" class="badge badge-info">0 registros</span>
                 </div>
                 <div class="table-container">

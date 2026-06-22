@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturación | Sistema de Gestión</title>
+    <title>Facturación | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 
@@ -122,7 +122,7 @@
             <!-- Formulario Nueva Factura -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">🧾 Nueva Factura</h3>
+                    <h3 class="card-title">Nueva Factura</h3>
                 </div>
                 <form id="form-factura">
                     <div class="form-grid">
@@ -144,7 +144,7 @@
                         </div>
                     </div>
                     <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--color-gris);">
-                    <h4 style="margin-bottom: 1rem;">📦 Productos</h4>
+                    <h4 style="margin-bottom: 1rem;">Productos</h4>
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="producto-select">Seleccionar Producto</label>
@@ -159,7 +159,7 @@
                         <div class="form-group" style="display: flex; align-items: flex-end;">
                             <button type="button" onclick="agregarProductoFactura()" class="btn btn-primary"
                                 style="width: 100%;">
-                                ➕ Agregar
+                                Agregar
                             </button>
                         </div>
                     </div>
@@ -188,11 +188,9 @@
                     </div>
                     <div class="btn-group" style="margin-top: 1.5rem;">
                         <button type="submit" class="btn btn-success">
-                            <span>💾</span>
                             <span>Generar Factura</span>
                         </button>
                         <button type="button" onclick="limpiarFormulario()" class="btn btn-secondary">
-                            <span>🔄</span>
                             <span>Limpiar</span>
                         </button>
                     </div>
@@ -201,7 +199,7 @@
             <!-- Historial de Facturas -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">📜 Historial de Facturas</h3>
+                    <h3 class="card-title">Historial de Facturas</h3>
                     <span class="badge badge-info" id="total-facturas">0 facturas</span>
                 </div>
                 <div class="table-container">
@@ -235,7 +233,7 @@
             <div id="modal-factura-body"></div>
             <div class="modal-footer">
                 <button onclick="cerrarModal()" class="btn btn-secondary">Cerrar</button>
-                <button onclick="imprimirFactura()" class="btn btn-primary">🖨️ Imprimir</button>
+                <button onclick="imprimirFactura()" class="btn btn-primary">Imprimir</button>
             </div>
         </div>
     </div>
@@ -352,12 +350,12 @@
             };
             try {
                 await createInvoice(factura);
-                alert('✔️ Factura guardada en la base de datos');
+                alert('Factura guardada en la base de datos');
                 limpiarFormulario();
                 await cargarFacturas();
                 cargarProductosSelect();
             } catch (err) {
-                alert('❌ Error al guardar factura: ' + err.message);
+                alert('Error al guardar factura: ' + err.message);
             }
         }
         function limpiarFormulario() {
@@ -382,7 +380,7 @@
                     <td>${f.cliente}</td>
                     <td>${(f.items || []).length} producto(s)</td>
                     <td><strong>${formatPrice(f.total)}</strong></td>
-                    <td><button onclick="verFactura(${f.id})" class="btn btn-small btn-primary">👁️ Ver</button></td>
+                    <td><button onclick="verFactura(${f.id})" class="btn btn-small btn-primary">Ver</button></td>
                 </tr>
             `).join('');
         }
