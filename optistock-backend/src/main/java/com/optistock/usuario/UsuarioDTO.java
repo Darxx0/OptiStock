@@ -20,10 +20,6 @@ public class UsuarioDTO {
     @Pattern(regexp = "^[a-zA-Z0-9_.-]+$", message = "El formato del usuario no es válido")
     private String usuarioLogin;
 
-    @NotBlank(message = "El correo es obligatorio")
-    @Email(message = "El formato del correo no es válido")
-    private String email;
-
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     // Con esto evitamos que la contraseña se devuelva en respuestas JSON
@@ -70,14 +66,6 @@ public class UsuarioDTO {
 
     public void setUsuarioLogin(String usuarioLogin) {
         this.usuarioLogin = usuarioLogin;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getContrasena() {

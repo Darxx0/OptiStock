@@ -36,7 +36,9 @@ window.fetch = async function (resource, options = {}) {
     const newOptions = { ...options };
     newOptions.headers = { ...options.headers };
 
-    if (token && typeof url === 'string' && url.includes('/api/v1/')) {
+    const esRutaPublica = typeof url === 'string' && (url.includes('/usuarios/registro') || url.includes('/usuarios/login'));
+
+    if (token && typeof url === 'string' && url.includes('/api/v1/') && !esRutaPublica) {
         newOptions.headers['Authorization'] = `Bearer ${token}`;
     }
 

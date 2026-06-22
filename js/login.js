@@ -105,7 +105,8 @@ async function handleRegisterSubmit(e) {
     const apellido = document.getElementById('reg-apellido').value.trim();
     const usuarioLogin = document.getElementById('reg-username').value.trim();
     const contrasena = document.getElementById('reg-password').value;
-    const idRol = parseInt(document.getElementById('reg-role') ? document.getElementById('reg-role').value : document.getElementById('reg-rol').value);
+    const rolElement = document.getElementById('reg-rol');
+    const idRol = rolElement ? parseInt(rolElement.value) : 2;
 
     // Validación mínima local
     if (contrasena.length < 5) {
