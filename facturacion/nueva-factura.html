@@ -10,7 +10,6 @@
 
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1> OptiStock</h1>
@@ -18,7 +17,6 @@
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <!-- Dashboard -->
                     <li class="nav-section" id="section-dashboard">
                         <button class="nav-section-title" onclick="toggleSection('section-dashboard')">
                             <span> Dashboard</span>
@@ -34,7 +32,6 @@
                                     class="nav-link">Notificaciones</a></li>
                         </ul>
                     </li>
-                    <!-- Inventario -->
                     <li class="nav-section" id="section-inventory">
                         <button class="nav-section-title" onclick="toggleSection('section-inventory')">
                             <span> Inventario</span>
@@ -54,7 +51,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Facturación -->
                     <li class="nav-section active" id="section-billing">
                         <button class="nav-section-title" onclick="toggleSection('section-billing')">
                             <span> Facturación</span>
@@ -71,7 +67,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Reportes -->
                     <li class="nav-section" id="section-reports">
                         <button class="nav-section-title" onclick="toggleSection('section-reports')">
                             <span> Reportes</span>
@@ -88,7 +83,6 @@
                                     class="nav-link">Personalizados</a></li>
                         </ul>
                     </li>
-                    <!-- Configuración -->
                     <li class="nav-section" id="section-settings">
                         <button class="nav-section-title" onclick="toggleSection('section-settings')">
                             <span>⚙️ Configuración</span>
@@ -103,7 +97,6 @@
                                     class="nav-link">Impuestos</a></li>
                         </ul>
                     </li>
-                    <!-- Perfil -->
                     <li class="nav-item">
                         <a href="../configuracion/perfil.html" class="nav-link">
                             <span class="nav-icon">👤</span>
@@ -113,13 +106,11 @@
                 </ul>
             </nav>
         </aside>
-        <!-- Contenido Principal -->
         <main class="main-content">
             <header class="page-header">
                 <h2 class="page-title">Facturación</h2>
                 <p class="page-subtitle">Crea y gestiona facturas</p>
             </header>
-            <!-- Formulario Nueva Factura -->
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Nueva Factura</h3>
@@ -163,13 +154,11 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Lista de productos agregados -->
                     <div id="productos-factura" style="margin-top: 1rem; margin-bottom: 1rem;">
                         <div class="empty-state">
                             <p class="empty-state-text">No hay productos agregados</p>
                         </div>
                     </div>
-                    <!-- Totales -->
                     <div
                         style="background-color: var(--color-gris-claro); padding: 1.5rem; border-radius: var(--radio-borde); margin-top: 1rem;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -196,7 +185,6 @@
                     </div>
                 </form>
             </div>
-            <!-- Historial de Facturas -->
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Historial de Facturas</h3>
@@ -224,7 +212,6 @@
             </div>
         </main>
     </div>
-    <!-- Modal Ver Factura -->
     <div id="modal-factura" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -261,20 +248,20 @@
             const select = document.getElementById('producto-select');
             const cantidad = parseInt(document.getElementById('producto-cantidad').value);
             if (!select.value) {
-                alert('⚠️ Selecciona un producto');
+                showNotification('Selecciona un producto', 'warning');
                 return;
             }
             const productoId = parseInt(select.value);
             const producto = getProduct(productoId);
             if (!producto.cantidad || producto.cantidad <= 0) {
-                alert('⚠️ Este producto no tiene stock disponible');
+                showNotification('Este producto no tiene stock disponible', 'warning');
                 return;
             }
             if (cantidad <= 0 || cantidad > producto.cantidad) {
-                alert('⚠️ Stock insuficiente. Disponible: ' + producto.cantidad);
+                showNotification('Stock insuficiente. Disponible: ' + producto.cantidad, 'warning');
                 return;
             }
-            // Verificar si ya existe
+
             const existe = productosFacturaActual.find(p => p.productoId === productoId);
             if (existe) {
                 existe.cantidad += cantidad;
@@ -338,7 +325,7 @@
         async function generarFactura(e) {
             e.preventDefault();
             if (productosFacturaActual.length === 0) {
-                alert('⚠️ Agrega al menos un producto');
+                showNotification('Agrega al menos un producto', 'warning');
                 return;
             }
             const factura = {
@@ -350,12 +337,12 @@
             };
             try {
                 await createInvoice(factura);
-                alert('Factura guardada en la base de datos');
+                showNotification('Factura guardada correctamente en la base de datos', 'success');
                 limpiarFormulario();
                 await cargarFacturas();
                 cargarProductosSelect();
             } catch (err) {
-                alert('Error al guardar factura: ' + err.message);
+                showNotification('Error al guardar factura: ' + err.message, 'error');
             }
         }
         function limpiarFormulario() {
@@ -427,7 +414,7 @@
         function imprimirFactura() {
             window.print();
         }
-        // Cerrar modal al hacer clic fuera
+
         document.getElementById('modal-factura').addEventListener('click', function (e) {
             if (e.target === this) {
                 cerrarModal();

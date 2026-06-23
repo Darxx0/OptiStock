@@ -202,25 +202,70 @@
         const LS_PREF = 'optistock_preferencias_fiscales';
         let _impuestos = [];
 
+        // Función reutilizable para obtener los headers de seguridad de OptiStock
+        function getAuthHeaders() {
+            const sesion = JSON.parse(localStorage.getItem('optistock_session') || '{}');
+            const token = sesion.token || '';
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': token.startsWith('Bearer ') ? token : `Bearer ${token}`
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            // Protección de sesión activa
-            requireAuth();
+            const sesionLocal = JSON.parse(localStorage.getItem('optistock_session') || 'null');
+            if (!sesionLocal) {
+                console.warn('[impuestos.html] Sin sesión activa. Redirigiendo a login...');
+                window.location.href = '../paginas/login.html';
+                return;
+            }
+
             if (typeof renderUserBadge === 'function') renderUserBadge();
 
             await cargarImpuestos();
             cargarPreferenciasLocales();
         });
 
-        // ── Carga y renderizado de la tabla desde la API (Spring Boot) ─────────────────
+        // ── Carga limpia y renderizado de la tabla desde la API (Spring Boot) ─────────────────
         async function cargarImpuestos() {
+            // 🛡️ ESCUDO ANTIBUCLE: Si ya se intentó cargar en este ciclo de recarga, frena en seco
+            if (sessionStorage.getItem('optistock_bloqueo_bucle') === 'true') {
+                console.warn('[OptiStock] Bucle detectado y bloqueado por seguridad.');
+                // Limpiamos el bloqueo después de 3 segundos por si el usuario recarga manualmente
+                setTimeout(() => sessionStorage.removeItem('optistock_bloqueo_bucle'), 3000);
+                return;
+            }
+
             try {
-                const r = await fetch(API_IMP);
+                // Marcamos que estamos haciendo la petición
+                sessionStorage.setItem('optistock_bloqueo_bucle', 'true');
+
+                const r = await fetch(API_IMP, {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
+
+                if (r.status === 401 || r.status === 403) {
+                    console.error("Acceso denegado. Token inválido o expirado.");
+                    window.location.href = '../paginas/login.html';
+                    return;
+                }
+
+                // Si la petición pasa con éxito, liberamos el bloqueo
                 _impuestos = r.ok ? await r.json() : [];
                 renderTablaImpuestos(_impuestos);
                 actualizarSelectDefault();
-            } catch {
+
+                // Todo salió bien, quitamos el escudo
+                sessionStorage.removeItem('optistock_bloqueo_bucle');
+
+            } catch (error) {
+                console.error("Error crítico en fetch de impuestos:", error);
                 document.getElementById('impuestos-tbody').innerHTML =
                     '<tr><td colspan="5" class="text-center" style="color: var(--color-error);">No se pudo establecer conexión con el módulo fiscal del backend</td></tr>';
+
+                // Aunque falle, no removemos el bloqueo inmediatamente para evitar el bucle infinito
+                setTimeout(() => sessionStorage.removeItem('optistock_bloqueo_bucle'), 5000);
             }
         }
 
@@ -236,10 +281,10 @@
                     <td><code>${i.codigo || '—'}</code></td>
                     <td><strong>${i.nombre}</strong></td>
                     <td>${i.porcentaje}%</td>
-                    <td><span class="badge badge-success">Activo</span></td>
+                    <td><span class="badge ${i.activo ? 'badge-success' : 'badge-danger'}">${i.activo ? 'Activo' : 'Inactivo'}</span></td>
                     <td>
-                        <button class="btn btn-secondary" style="padding: .25rem .6rem; font-size: .8rem;" onclick="editarImpuesto(${i.idImpuesto})">✏️ Editar</button>
-                        <button class="btn" style="padding: .25rem .6rem; font-size: .8rem; background: var(--color-error); color: #fff; border: none; cursor: pointer; border-radius: var(--radio-borde);" onclick="eliminarImpuesto(${i.idImpuesto})">🗑️</button>
+                        <button class="btn btn-secondary" style="padding: .25rem .6rem; font-size: .8rem;" onclick="editarImpuesto(${i.id})">✏️ Editar</button>
+                        <button class="btn" style="padding: .25rem .6rem; font-size: .8rem; background: var(--color-error); color: #fff; border: none; cursor: pointer; border-radius: var(--radio-borde);" onclick="eliminarImpuesto(${i.id})">🗑️</button>
                     </td>
                 </tr>`).join('');
         }
@@ -250,10 +295,10 @@
             document.getElementById('modal-title').textContent = 'Registrar Tasa';
 
             if (id !== null) {
-                const imp = _impuestos.find(x => x.idImpuesto === id);
+                const imp = _impuestos.find(x => x.id === id); // Ajustado a i.id de tu DTO
                 if (imp) {
                     document.getElementById('modal-title').textContent = 'Modificar Tasa Fiscal';
-                    document.getElementById('imp-id').value = imp.idImpuesto;
+                    document.getElementById('imp-id').value = imp.id;
                     document.getElementById('imp-codigo').value = imp.codigo || '';
                     document.getElementById('imp-nombre').value = imp.nombre;
                     document.getElementById('imp-porcentaje').value = imp.porcentaje;
@@ -277,20 +322,27 @@
                 return;
             }
 
+            // Construimos el DTO mapeado exactamente igual que en Java
             const body = { codigo, nombre, porcentaje };
+            if (id) body.id = parseInt(id); // Si editamos, agregamos el id numérico al cuerpo
 
             try {
                 const r = await fetch(id ? `${API_IMP}/${id}` : API_IMP, {
                     method: id ? 'PUT' : 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(), // Corregido: Ahora sí envía las cabeceras de seguridad con JWT
                     body: JSON.stringify(body)
                 });
+
+                if (r.status === 401 || r.status === 403) {
+                    if (typeof showNotification === 'function') showNotification('No tienes permisos de administrador para realizar esta acción', 'error');
+                    return;
+                }
 
                 if (!r.ok) throw new Error();
 
                 cerrarModalImpuesto();
                 await cargarImpuestos();
-                if (typeof showNotification === 'function') showNotification('Estructura tributaria actualizada');
+                if (typeof showNotification === 'function') showNotification('Estructura tributaria actualizada con éxito');
             } catch {
                 if (typeof showNotification === 'function') showNotification('Error al procesar la solicitud en el servidor', 'error');
             }
@@ -299,7 +351,16 @@
         async function eliminarImpuesto(id) {
             if (!confirm('¿Está seguro de eliminar esta tasa? Los productos vinculados podrían presentar discrepancias en facturación.')) return;
             try {
-                const r = await fetch(`${API_IMP}/${id}`, { method: 'DELETE' });
+                const r = await fetch(`${API_IMP}/${id}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders() // Corregido: Autorización añadida para eliminación segura
+                });
+
+                if (r.status === 401 || r.status === 403) {
+                    if (typeof showNotification === 'function') showNotification('No autorizado para eliminar registros fiscales', 'error');
+                    return;
+                }
+
                 if (!r.ok) throw new Error();
                 await cargarImpuestos();
                 if (typeof showNotification === 'function') showNotification('Tasa removida del sistema', 'warning');
@@ -315,7 +376,7 @@
                 sel.innerHTML = '<option value="">Sin tasas registradas</option>';
                 return;
             }
-            sel.innerHTML = _impuestos.map(i => `<option value="${i.idImpuesto}">${i.nombre} (${i.porcentaje}%)</option>`).join('');
+            sel.innerHTML = _impuestos.map(i => `<option value="${i.id}">${i.nombre} (${i.porcentaje}%)</option>`).join('');
 
             const pref = JSON.parse(localStorage.getItem(LS_PREF) || '{}');
             if (pref.idImpuestoDefault) sel.value = pref.idImpuestoDefault;

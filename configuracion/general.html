@@ -139,7 +139,15 @@
                             <option value="yyyy-MM-dd">AAAA-MM-DD</option>
                         </select>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
+                    <div class="form-group">
+                        <label class="form-label">Preferencia de Notificaciones</label>
+                        <select id="cfg-notificaciones" class="form-control">
+                            <option value="todas">Todas las alertas (Stock, Facturas, Envíos)</option>
+                            <option value="solo-stock">Solo Stock Crítico y Alertas</option>
+                            <option value="silencioso">Modo Silencioso (Solo UI, sin pop-ups)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Nombre del Sistema (Visualización en Encabezados)</label>
                         <input type="text" id="cfg-sistema-nombre" class="form-control" placeholder="OptiStock">
                     </div>
@@ -259,6 +267,7 @@
             if (cfg.timezone) document.getElementById('cfg-timezone').value = cfg.timezone;
             if (cfg.fecha) document.getElementById('cfg-fecha').value = cfg.fecha;
             if (cfg.nombre) document.getElementById('cfg-sistema-nombre').value = cfg.nombre;
+            if (cfg.notificaciones) document.getElementById('cfg-notificaciones').value = cfg.notificaciones;
         }
 
         function guardarSistema() {
@@ -267,10 +276,14 @@
                 moneda: document.getElementById('cfg-moneda').value,
                 timezone: document.getElementById('cfg-timezone').value,
                 fecha: document.getElementById('cfg-fecha').value,
-                nombre: document.getElementById('cfg-sistema-nombre').value.trim() || 'OptiStock'
+                nombre: document.getElementById('cfg-sistema-nombre').value.trim() || 'OptiStock',
+                notificaciones: document.getElementById('cfg-notificaciones').value
             };
             localStorage.setItem(LS_CFG, JSON.stringify(cfg));
-            if (typeof CONFIG !== 'undefined') CONFIG.MIN_STOCK = cfg.minStock;
+            if (typeof CONFIG !== 'undefined') {
+                CONFIG.MIN_STOCK = cfg.minStock;
+                CONFIG.NOTIFICACIONES_PREF = cfg.notificaciones;
+            }
             if (typeof showNotification === 'function') showNotification('Configuración guardada con éxito');
         }
 
