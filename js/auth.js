@@ -1,5 +1,5 @@
 /**
- * auth.js — Módulo central de sesión y permisos de OptiStock
+ * auth.js — Modulo de sesión y permisos de OptiStock
  *
  * Diseño escalable:
  * - La sesión vive en localStorage['optistock_session'] como JSON.
@@ -34,7 +34,7 @@ const PERMISOS_ROL = {
 
 /**
  * Devuelve el objeto de sesión activo o null.
- * Estructura: { id, nombre, apellido, login, rol, idRol }
+ * Estructura: { id, nombre, apellido, login, rol, idRol, token }
  */
 function getSession() {
     try {
@@ -44,9 +44,9 @@ function getSession() {
     }
 }
 
-function setSession(usuarioDTO) {
-    // PARCHE DE COMPATIBILIDAD: Si el backend envía el rol con prefijo de Spring Security
-    // (ej. 'ROLE_ADMIN'), le removemos el 'ROLE_' para que el frontend siga reconociendo 'ADMIN'.
+// AJUSTE: Ahora recibe el objeto del usuario Y el token JWT devuelto por Spring Boot
+function setSession(usuarioDTO, token) {
+    // PARCHE DE COMPATIBILIDAD
     let rolLimpio = usuarioDTO.nombreRol || 'ADMIN';
     if (typeof rolLimpio === 'string' && rolLimpio.startsWith('ROLE_')) {
         rolLimpio = rolLimpio.replace('ROLE_', '');
@@ -57,8 +57,9 @@ function setSession(usuarioDTO) {
         nombre: usuarioDTO.nombre,
         apellido: usuarioDTO.apellido,
         login: usuarioDTO.usuarioLogin,
-        rol: rolLimpio.toUpperCase(), // Guardará 'ADMIN', 'VENDEDOR', etc.
-        idRol: usuarioDTO.idRol
+        rol: rolLimpio.toUpperCase(),
+        idRol: usuarioDTO.idRol,
+        token: token
     };
     localStorage.setItem('optistock_session', JSON.stringify(sesion));
     return sesion;
@@ -66,16 +67,19 @@ function setSession(usuarioDTO) {
 
 function cerrarSesion() {
     localStorage.removeItem('optistock_session');
-    window.location.href = '../Index.html';
+    const path = window.location.pathname;
+    if (path.includes('/facturacion/') || path.includes('/inventario/') || path.includes('/configuracion/') || path.includes('/paginas/')) {
+        window.location.href = '../../Index.html';
+    } else {
+        window.location.href = '../Index.html';
+    }
 }
 
 // ─── Guardia de ruta ─────────────────────────────────────────────────────────
 
-/**
- * Llama esto al inicio de cada página protegida.
- */
 function requireAuth() {
     const s = getSession();
+    // Ahora que el token sí se guarda en setSession, esto funcionará de maravilla
     if (!s || !s.token) {
         console.warn('[auth.js] requireAuth: No hay sesión activa o falta el token. Redirigiendo a login...');
         const path = window.location.pathname;

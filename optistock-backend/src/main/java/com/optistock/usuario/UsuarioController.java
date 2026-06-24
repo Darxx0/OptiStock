@@ -111,9 +111,19 @@ public class UsuarioController {
         u.setContrasena(passwordEncoder.encode(dto.getContrasena()));
 
         Usuario guardado = usuarioRepo.save(u);
-        Integer idAdmin = usuarioActualService.getIdUsuarioActual();
-        if(idAdmin == null) idAdmin = guardado.getIdUsuario();
-        auditoriaService.registrar(idAdmin, "CREATE", "usuario", guardado.getIdUsuario(), "Registro de usuario", request);
+
+        // ─── AUDITORÍA BLINDADA CONTRA ERROR 500 ─────────────────────────────
+        try {
+            Integer idAdmin = usuarioActualService.getIdUsuarioActual();
+            if (idAdmin == null)
+                idAdmin = guardado.getIdUsuario();
+            auditoriaService.registrar(idAdmin, "CREATE", "usuario", guardado.getIdUsuario(), "Registro de usuario",
+                    request);
+        } catch (Exception e) {
+            // Captura el fallo silenciosamente en el backend para no colgar la respuesta
+            // HTTP
+            System.err.println("[Auditoria Error] Falló el registro de auditoría pública: " + e.getMessage());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardado));
     }
@@ -130,9 +140,17 @@ public class UsuarioController {
         u.setContrasena(passwordEncoder.encode(dto.getContrasena()));
 
         Usuario guardado = usuarioRepo.save(u);
-        Integer idAdmin = usuarioActualService.getIdUsuarioActual();
-        if(idAdmin == null) idAdmin = guardado.getIdUsuario();
-        auditoriaService.registrar(idAdmin, "CREATE", "usuario", guardado.getIdUsuario(), "Creación de usuario por admin", request);
+
+        // ─── AUDITORÍA BLINDADA ──────────────────────────────────────────────
+        try {
+            Integer idAdmin = usuarioActualService.getIdUsuarioActual();
+            if (idAdmin == null)
+                idAdmin = guardado.getIdUsuario();
+            auditoriaService.registrar(idAdmin, "CREATE", "usuario", guardado.getIdUsuario(),
+                    "Creación de usuario por admin", request);
+        } catch (Exception e) {
+            System.err.println("[Auditoria Error] Falló el registro de auditoría administrativa: " + e.getMessage());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardado));
     }
@@ -154,8 +172,10 @@ public class UsuarioController {
 
         Usuario guardado = usuarioRepo.save(u);
         Integer idModificador = usuarioActualService.getIdUsuarioActual();
-        if(idModificador == null) idModificador = guardado.getIdUsuario();
-        auditoriaService.registrar(idModificador, "UPDATE", "usuario", guardado.getIdUsuario(), "Actualización de usuario", request);
+        if (idModificador == null)
+            idModificador = guardado.getIdUsuario();
+        auditoriaService.registrar(idModificador, "UPDATE", "usuario", guardado.getIdUsuario(),
+                "Actualización de usuario", request);
 
         return ResponseEntity.ok(toDTO(guardado));
     }
@@ -165,7 +185,7 @@ public class UsuarioController {
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         find(id);
         usuarioRepo.deleteById(id);
-        
+
         Integer idModificador = usuarioActualService.getIdUsuarioActual();
         auditoriaService.registrar(idModificador, "DELETE", "usuario", id, "Eliminación de usuario", request);
 

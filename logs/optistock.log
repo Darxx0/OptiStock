@@ -1,0 +1,40 @@
+2026-06-23T16:35:25.327-05:00  INFO 21984 --- [optistock-backend] [main] com.optistock.OptistockApplication       : Starting OptistockApplication using Java 21.0.10 with PID 21984 (C:\Users\jd835\OneDrive\Escritorio\Proyecto SENA\optistock-backend\target\classes started by JoseDaniel in C:\Users\jd835\OneDrive\Escritorio\Proyecto SENA)
+2026-06-23T16:35:25.368-05:00 DEBUG 21984 --- [optistock-backend] [main] com.optistock.OptistockApplication       : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-23T16:35:25.375-05:00  INFO 21984 --- [optistock-backend] [main] com.optistock.OptistockApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-06-23T16:35:27.619-05:00  INFO 21984 --- [optistock-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-23T16:35:27.956-05:00  INFO 21984 --- [optistock-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 300 ms. Found 11 JPA repository interfaces.
+2026-06-23T16:35:30.120-05:00  INFO 21984 --- [optistock-backend] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-23T16:35:30.163-05:00  INFO 21984 --- [optistock-backend] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-23T16:35:30.164-05:00  INFO 21984 --- [optistock-backend] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-23T16:35:30.379-05:00  INFO 21984 --- [optistock-backend] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-23T16:35:30.380-05:00  INFO 21984 --- [optistock-backend] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4859 ms
+2026-06-23T16:35:30.965-05:00  INFO 21984 --- [optistock-backend] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-23T16:35:31.242-05:00  INFO 21984 --- [optistock-backend] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-23T16:35:31.384-05:00  INFO 21984 --- [optistock-backend] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-23T16:35:32.434-05:00  INFO 21984 --- [optistock-backend] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-23T16:35:32.541-05:00  INFO 21984 --- [optistock-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-23T16:35:32.973-05:00  INFO 21984 --- [optistock-backend] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@60fc7f43
+2026-06-23T16:35:32.978-05:00  INFO 21984 --- [optistock-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-23T16:35:33.123-05:00  WARN 21984 --- [optistock-backend] [main] org.hibernate.dialect.Dialect            : HHH000511: The 5.5.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2026-06-23T16:35:33.135-05:00  WARN 21984 --- [optistock-backend] [main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-23T16:35:35.781-05:00  INFO 21984 --- [optistock-backend] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-23T16:35:35.787-05:00  INFO 21984 --- [optistock-backend] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-23T16:35:36.945-05:00  INFO 21984 --- [optistock-backend] [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-23T16:35:38.144-05:00  WARN 21984 --- [optistock-backend] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-23T16:35:38.203-05:00  WARN 21984 --- [optistock-backend] [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 7bda2b1c-845a-412d-9da8-d6ee9b453657
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-23T16:35:39.140-05:00  INFO 21984 --- [optistock-backend] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6d398b6c, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@a8ef0c2, org.springframework.security.web.context.SecurityContextHolderFilter@63fef83c, org.springframework.security.web.header.HeaderWriterFilter@608448e7, org.springframework.web.filter.CorsFilter@46c5747f, org.springframework.security.web.authentication.logout.LogoutFilter@3448a248, com.optistock.security.JwtAuthenticationFilter@6eaa8abf, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@52811dc1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4f9191c1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4fe91eed, org.springframework.security.web.session.SessionManagementFilter@2eb27091, org.springframework.security.web.access.ExceptionTranslationFilter@4f876114, org.springframework.security.web.access.intercept.AuthorizationFilter@6921ce3f]
+2026-06-23T16:35:39.765-05:00  INFO 21984 --- [optistock-backend] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-23T16:35:39.789-05:00  INFO 21984 --- [optistock-backend] [main] com.optistock.OptistockApplication       : Started OptistockApplication in 15.618 seconds (process running for 16.534)
+2026-06-23T16:35:43.820-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-23T16:35:43.822-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-23T16:35:43.827-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-06-23T16:35:55.660-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-3] c.optistock.usuario.UsuarioController    : Intento de login: admin2
+2026-06-23T16:35:56.327-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-3] c.optistock.usuario.UsuarioController    : Login exitoso: admin2
+2026-06-23T16:36:05.300-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-9] com.optistock.audit.AuditoriaService     : Auditoría -> Usuario: 3, Acción: DELETE, Entidad: usuario, RegistroID: 14, Descripción: Eliminación de usuario
+2026-06-23T16:36:45.993-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-1] c.optistock.usuario.UsuarioController    : Intento de login: SantiP
+2026-06-23T16:36:46.602-05:00  INFO 21984 --- [optistock-backend] [http-nio-8080-exec-1] c.optistock.usuario.UsuarioController    : Login exitoso: SantiP
