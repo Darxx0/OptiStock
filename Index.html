@@ -235,14 +235,12 @@
   <script src="js/datos.js"></script>
   <script src="js/script.js"></script>
   <script>
-    // Validar sesión antes de cargar el resto de la interfaz
-    const sesion = requireAuth();
-
+    // La validación de sesión y renderizado del menú (requireAuth y renderUserBadge) 
+    // ahora se ejecutan en script.js (DOMContentLoaded).
+    
     document.addEventListener('DOMContentLoaded', async function () {
-      if (!sesion) return; // Si no hay sesión, requireAuth ya redirigió
-
-      // Mostrar usuario en el menú lateral
-      renderUserBadge();
+      const sesion = getSession();
+      if (!sesion) return;
 
       await loadProducts();
       await loadInvoices();

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -243,8 +243,7 @@
         let _roles = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const sesion = requireAuth();
-            if (typeof renderUserBadge === 'function') renderUserBadge();
+            const sesion = getSession();
 
             const esAdmin = sesion && sesion.rol && sesion.rol.toUpperCase() === 'ADMIN';
 

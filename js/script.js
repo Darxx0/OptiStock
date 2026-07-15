@@ -4,6 +4,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    requireAuth();
+    renderUserBadge();
     initNavigation();
     highlightActiveLink();
 });

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -213,14 +213,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const sesionLocal = JSON.parse(localStorage.getItem('optistock_session') || 'null');
-            if (!sesionLocal) {
-                console.warn('[impuestos.html] Sin sesión activa. Redirigiendo a login...');
-                window.location.href = '../paginas/login.html';
-                return;
-            }
-
-            if (typeof renderUserBadge === 'function') renderUserBadge();
+            const sesionLocal = getSession();
+            if (!sesionLocal) return;
 
             await cargarImpuestos();
             cargarPreferenciasLocales();

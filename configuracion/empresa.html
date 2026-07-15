@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -151,9 +151,6 @@
         const LS_EMP = 'optistock_config_empresa';
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Protección de ciclo de vida e inicialización de sesión
-            requireAuth();
-            if (typeof renderUserBadge === 'function') renderUserBadge();
 
             cargarEmpresa();
         });

@@ -23,8 +23,7 @@ public class MovimientoDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "El costo debe ser mayor a cero")
     private BigDecimal costoUnitario;
 
-    @NotBlank(message = "El tipo de movimiento es obligatorio (ENTRADA/SALIDA)")
-    @Pattern(regexp = "^(ENTRADA|SALIDA)$", message = "El tipo de movimiento debe ser ENTRADA o SALIDA")
+    @NotBlank(message = "El tipo de movimiento es obligatorio")
     private String tipoMovimiento;
 
     @NotBlank(message = "La referencia es obligatoria")

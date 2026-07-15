@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -164,9 +164,6 @@
     <script src="../js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Protección de ruta e inicialización de datos de sesión
-            requireAuth();
-            if (typeof renderUserBadge === 'function') renderUserBadge();
 
             cargarDatosSesion();
         });

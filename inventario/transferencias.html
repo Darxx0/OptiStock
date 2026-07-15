@@ -229,19 +229,18 @@
     <script src="../js/datos.js"></script>
     <script src="../js/script.js"></script>
     <script>
-        const LS_TRANS = 'optistock_transferencias';
+        const API_MOV = CONFIG.API_BASE + '/movimientos';
+        let _transferencias = [];
 
-        function getTransferencias() {
-            try { return JSON.parse(localStorage.getItem(LS_TRANS)) || []; } catch { return []; }
-        }
-        function saveTransferencias(data) { localStorage.setItem(LS_TRANS, JSON.stringify(data)); }
-
-        function registrarEnHistorial(entry) {
+        async function cargarTransferencias() {
             try {
-                const h = JSON.parse(localStorage.getItem('optistock_historial')) || [];
-                h.unshift(entry);
-                localStorage.setItem('optistock_historial', JSON.stringify(h));
-            } catch { }
+                const r = await fetch(API_MOV);
+                const todos = await r.json();
+                _transferencias = todos.filter(m => m.tipoMovimiento === 'Transferencia');
+                filtrarTransferencias();
+            } catch {
+                document.getElementById('transferencias-tbody').innerHTML = '<tr><td colspan="8" class="text-center" style="color:var(--color-error);">Error al conectar con el servidor</td></tr>';
+            }
         }
 
         function estadoBadge(estado) {
@@ -256,43 +255,37 @@
                 tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="padding:2rem; color:var(--color-texto-claro);">No hay transferencias registradas</td></tr>';
                 return;
             }
-            tbody.innerHTML = lista.map(t => `
+            tbody.innerHTML = lista.map(t => {
+                let origen = '-', destino = '-';
+                if (t.referencia && t.referencia.includes('→')) {
+                    const partes = t.referencia.split(' | ')[0].split('→');
+                    origen = partes[0] ? partes[0].trim() : '-';
+                    destino = partes[1] ? partes[1].trim() : '-';
+                } else if (t.referencia) {
+                    origen = t.referencia.split(' | ')[0];
+                    destino = origen;
+                }
+                const responsable = t.referencia && t.referencia.includes(' | ') ? t.referencia.split(' | ')[1] : '-';
+                
+                return `
         <tr>
             <td>${formatDate(t.fecha)}</td>
             <td><strong>${t.productoNombre}</strong></td>
             <td>${t.cantidad}</td>
-            <td>${t.origen}</td>
-            <td>${t.destino}</td>
-            <td>${t.responsable || '-'}</td>
-            <td>${estadoBadge(t.estado)}</td>
-            <td>
-                ${t.estado === 'Pendiente' ? `
-                    <button class="btn btn-secondary" style="padding:0.25rem 0.6rem;font-size:0.8rem;" onclick="cambiarEstado(${t.id},'Completada')">✔ Completar</button>
-                    <button class="btn" style="padding:0.25rem 0.6rem;font-size:0.8rem;background:var(--color-error);color:#fff;border:none;border-radius:var(--radio-borde);cursor:pointer;" onclick="cambiarEstado(${t.id},'Cancelada')">✕</button>
-                ` : '-'}
-            </td>
-        </tr>
-    `).join('');
+            <td>${origen}</td>
+            <td>${destino}</td>
+            <td>${responsable}</td>
+            <td>${estadoBadge('Completada')}</td>
+            <td>-</td>
+        </tr>`;
+            }).join('');
         }
 
         function filtrarTransferencias() {
             const term = document.getElementById('buscar-transferencia').value.toLowerCase();
-            const estado = document.getElementById('filtro-estado-trans').value;
-            let lista = getTransferencias();
-            if (term) lista = lista.filter(t => (t.productoNombre + ' ' + t.origen + ' ' + t.destino).toLowerCase().includes(term));
-            if (estado) lista = lista.filter(t => t.estado === estado);
+            let lista = _transferencias;
+            if (term) lista = lista.filter(t => (t.productoNombre + ' ' + (t.referencia || '')).toLowerCase().includes(term));
             renderTransferencias(lista);
-        }
-
-        function cambiarEstado(id, nuevoEstado) {
-            const lista = getTransferencias();
-            const idx = lista.findIndex(t => t.id === id);
-            if (idx > -1) {
-                lista[idx].estado = nuevoEstado;
-                saveTransferencias(lista);
-                filtrarTransferencias();
-                showNotification(`Transferencia marcada como ${nuevoEstado}`);
-            }
         }
 
         async function abrirModalTransferencia() {
@@ -322,72 +315,47 @@
             const cantidad = parseInt(document.getElementById('trans-cantidad').value);
             const origen = document.getElementById('trans-origen').value.trim();
             const destino = document.getElementById('trans-destino').value.trim();
-            const estado = document.getElementById('trans-estado').value;
+            const responsable = document.getElementById('trans-responsable').value.trim();
+            const observaciones = document.getElementById('trans-observaciones').value.trim();
             const stockActual = parseInt(document.getElementById('trans-stock-actual').value) || 0;
 
             if (!prodId || !cantidad || !origen || !destino) {
                 showNotification('Completa los campos obligatorios (*)', 'warning');
                 return;
             }
-            if (estado === 'Completada' && cantidad > stockActual) {
+            if (cantidad > stockActual) {
                 showNotification('La cantidad supera el stock disponible', 'error');
                 return;
             }
 
-            const productoNombre = prodSel.options[prodSel.selectedIndex].text.split(' (')[0];
-
-            // Si la transferencia está completada, actualizar el stock
-            if (estado === 'Completada') {
-                try {
-                    const prod = getProduct(prodId);
-                    await updateProduct(prodId, { ...prod, cantidad: stockActual - cantidad });
-                } catch {
-                    showNotification('Error al actualizar el stock en el servidor', 'error');
-                    return;
-                }
-            }
-
-            const transferencia = {
-                id: Date.now(),
-                fecha: document.getElementById('trans-fecha').value || new Date().toISOString(),
+            const body = {
                 productoId: prodId,
-                productoNombre,
                 cantidad,
-                origen,
-                destino,
-                estado,
-                responsable: document.getElementById('trans-responsable').value.trim(),
-                observaciones: document.getElementById('trans-observaciones').value.trim(),
-                stockAntes: stockActual,
-                stockDespues: estado === 'Completada' ? stockActual - cantidad : stockActual
+                tipoMovimiento: 'Transferencia',
+                referencia: `${origen} → ${destino}`,
+                responsable: responsable,
+                observaciones: observaciones,
+                costoUnitario: null
             };
 
-            const lista = getTransferencias();
-            lista.unshift(transferencia);
-            saveTransferencias(lista);
-
-            registrarEnHistorial({
-                id: transferencia.id,
-                fecha: transferencia.fecha,
-                tipo: 'Transferencia',
-                subTipo: `${origen} → ${destino}`,
-                productoId: prodId,
-                productoNombre,
-                cantidad,
-                stockAntes: stockActual,
-                stockDespues: transferencia.stockDespues,
-                motivo: `Transferencia a ${destino}`,
-                responsable: transferencia.responsable,
-                observaciones: transferencia.observaciones
-            });
-
-            cerrarModalTransferencia();
-            filtrarTransferencias();
-            showNotification('Transferencia registrada correctamente');
+            try {
+                const r = await fetch(`${API_MOV}/transferencia`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!r.ok) {
+                    const err = await r.text();
+                    showNotification('Error: ' + err, 'error'); return;
+                }
+                cerrarModalTransferencia();
+                await cargarTransferencias();
+                showNotification('Transferencia registrada correctamente');
+            } catch { showNotification('Error al conectar con el servidor', 'error'); }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            filtrarTransferencias();
+            cargarTransferencias();
         });
     </script>
 </body>

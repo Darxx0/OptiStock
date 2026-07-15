@@ -32,13 +32,43 @@ const PERMISOS_ROL = {
 
 // ─── Sesión ───────────────────────────────────────────────────────────────────
 
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+
 /**
  * Devuelve el objeto de sesión activo o null.
  * Estructura: { id, nombre, apellido, login, rol, idRol, token }
  */
 function getSession() {
     try {
-        return JSON.parse(localStorage.getItem('optistock_session'));
+        const sesion = JSON.parse(localStorage.getItem('optistock_session'));
+        if (sesion && sesion.token) {
+            const decoded = parseJwt(sesion.token);
+            if (decoded) {
+                // El JWT de OptiStock puede tener el rol en un claim específico o en 'roles'
+                // Ajustamos el rol dinámicamente desde el token si existe
+                let rolToken = decoded.roles || decoded.rol || sesion.rol;
+                if (Array.isArray(rolToken) && rolToken.length > 0) {
+                    rolToken = rolToken[0];
+                }
+                if (typeof rolToken === 'string' && rolToken.startsWith('ROLE_')) {
+                    rolToken = rolToken.replace('ROLE_', '');
+                }
+                sesion.rol = rolToken.toUpperCase();
+                sesion.login = decoded.sub || sesion.login;
+            }
+        }
+        return sesion;
     } catch {
         return null;
     }
@@ -128,11 +158,22 @@ function renderUserBadge() {
         header.appendChild(badge);
     }
 
-    // Ocultar secciones del menú según rol
-    if (!esAdmin()) {
-        const secSettings = document.getElementById('section-settings');
-        if (secSettings && !hasPermiso('configuracion')) {
-            secSettings.style.display = 'none';
+    // Ocultar o remover secciones del menú según rol
+    const permisos = PERMISOS_ROL[s.rol] || [];
+    
+    // Mapeo de secciones del DOM vs permisos requeridos
+    const sectionMap = {
+        'section-dashboard': 'dashboard',
+        'section-inventory': 'inventario',
+        'section-billing': 'facturacion',
+        'section-reports': 'reportes',
+        'section-settings': 'configuracion'
+    };
+
+    for (const [id, reqPermiso] of Object.entries(sectionMap)) {
+        const sec = document.getElementById(id);
+        if (sec && !permisos.includes(reqPermiso)) {
+            sec.remove(); // purgar del DOM
         }
     }
 }

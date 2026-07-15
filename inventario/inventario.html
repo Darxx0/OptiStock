@@ -203,7 +203,7 @@
     <script>
         let productoEditando = null;
 
-        const sesion = requireAuth();
+        const sesion = getSession();
 
         async function cargarCategorias() {
             try {
@@ -231,8 +231,6 @@
 
         document.addEventListener('DOMContentLoaded', async function () {
             if (!sesion) return;
-
-            renderUserBadge();
 
             await cargarCategorias();
 

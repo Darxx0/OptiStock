@@ -188,12 +188,60 @@
     <script src="../js/datos.js"></script>
     <script src="../js/script.js"></script>
     <script>
-        const LS_HIST = 'optistock_historial';
+        const API_MOV = CONFIG.API_BASE + '/movimientos';
+        let _movimientos = [];
+
+        async function cargarMovimientos() {
+            try {
+                const r = await fetch(API_MOV);
+                _movimientos = await r.json();
+            } catch {
+                console.error("Error cargando movimientos");
+            }
+        }
 
         function getHistorial() {
-            // Combinar historial local + facturas de la API como movimientos de venta
-            const local = (() => { try { return JSON.parse(localStorage.getItem(LS_HIST)) || []; } catch { return []; } })();
-            return local;
+            // Convertir la lista de la API al formato esperado por la tabla
+            return _movimientos.map(m => {
+                let tipo = 'Ajuste';
+                let subTipo = '';
+                if (m.tipoMovimiento === 'Transferencia') {
+                    tipo = 'Transferencia';
+                    if (m.referencia && m.referencia.includes('→')) {
+                        subTipo = m.referencia.split(' | ')[0];
+                    }
+                } else if (m.tipoMovimiento === 'Ajuste-Entrada') {
+                    tipo = 'Ajuste';
+                    subTipo = 'Entrada';
+                } else if (m.tipoMovimiento === 'Ajuste-Salida') {
+                    tipo = 'Ajuste';
+                    subTipo = 'Salida';
+                }
+
+                let motivo = m.referencia;
+                let responsable = '';
+                let obs = '';
+                
+                if (m.referencia && m.referencia.includes(' | ')) {
+                    const partes = m.referencia.split(' | ');
+                    motivo = partes[0];
+                    responsable = partes[1] || '';
+                    obs = partes[2] || '';
+                }
+
+                return {
+                    id: m.idMovimiento,
+                    fecha: m.fecha,
+                    tipo: tipo,
+                    subTipo: subTipo,
+                    productoId: m.productoId,
+                    productoNombre: m.productoNombre,
+                    cantidad: m.cantidad,
+                    motivo: motivo,
+                    responsable: responsable,
+                    observaciones: obs
+                };
+            });
         }
 
         function tipoBadge(tipo, subTipo) {
@@ -324,6 +372,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await loadProducts();
             await loadInvoices();
+            await cargarMovimientos();
             filtrarHistorial();
         });
     </script>
