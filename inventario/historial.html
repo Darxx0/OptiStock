@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Inventario | Optistock</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth.js"></script>
 </head>
 
 <body>
@@ -221,7 +222,7 @@
                 let motivo = m.referencia;
                 let responsable = '';
                 let obs = '';
-                
+
                 if (m.referencia && m.referencia.includes(' | ')) {
                     const partes = m.referencia.split(' | ');
                     motivo = partes[0];

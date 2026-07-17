@@ -36,7 +36,7 @@ function parseJwt(token) {
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
         return JSON.parse(jsonPayload);
@@ -108,8 +108,16 @@ function cerrarSesion() {
 // ─── Guardia de ruta ─────────────────────────────────────────────────────────
 
 function requireAuth() {
+
+    const path = window.location.pathname;
+
+    // Si ya estamos en el login, detenemos la ejecución para evitar el bucle infinito
+    if (path.endsWith('login.html')) {
+        return null;
+    }
+
     const s = getSession();
-    // Ahora que el token sí se guarda en setSession, esto funcionará de maravilla
+    // Ahora que el token sí se guarda en setSession
     if (!s || !s.token) {
         console.warn('[auth.js] requireAuth: No hay sesión activa o falta el token. Redirigiendo a login...');
         const path = window.location.pathname;
@@ -160,7 +168,7 @@ function renderUserBadge() {
 
     // Ocultar o remover secciones del menú según rol
     const permisos = PERMISOS_ROL[s.rol] || [];
-    
+
     // Mapeo de secciones del DOM vs permisos requeridos
     const sectionMap = {
         'section-dashboard': 'dashboard',
@@ -176,4 +184,43 @@ function renderUserBadge() {
             sec.remove(); // purgar del DOM
         }
     }
+
+}
+
+// ─── Inicialización Automática al cargar el script ────────────────────────────
+
+// Se ejecuta inmediatamente al importar el script para proteger la ruta
+const sesionValidada = requireAuth();
+
+// Una vez que el DOM esté completamente cargado, renderizamos el badge y aplicamos permisos
+if (sesionValidada) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', ejecutarLimpiezaUI);
+    } else {
+        ejecutarLimpiezaUI();
+    }
+}
+
+function ejecutarLimpiezaUI() {
+    renderUserBadge();
+    aplicarPermisosElementosEspeciales();
+}
+
+/**
+ * Recorre la página buscando elementos con el atributo 'data-permiso'
+ * y los remueve del DOM si el rol del usuario no tiene ese permiso.
+ */
+function aplicarPermisosElementosEspeciales() {
+    const s = getSession();
+    if (!s) return;
+
+    const permisos = PERMISOS_ROL[s.rol] || [];
+    const elementosProtegidos = document.querySelectorAll('[data-permiso]');
+
+    elementosProtegidos.forEach(el => {
+        const permisoRequerido = el.getAttribute('data-permiso');
+        if (!permisos.includes(permisoRequerido)) {
+            el.remove(); // Remueve el elemento para evitar que sea visible o inspeccionable fácilmente
+        }
+    });
 }

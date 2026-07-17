@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transferencias | OptiStock</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth.js"></script>
 </head>
 
 <body>
@@ -266,7 +267,7 @@
                     destino = origen;
                 }
                 const responsable = t.referencia && t.referencia.includes(' | ') ? t.referencia.split(' | ')[1] : '-';
-                
+
                 return `
         <tr>
             <td>${formatDate(t.fecha)}</td>

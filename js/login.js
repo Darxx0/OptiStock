@@ -180,22 +180,16 @@ async function handleLoginSubmit(e) {
 
         const data = await res.json();
 
-        // ─── INTEGRACIÓN CON AUTH.JS ──────────────────────────────────────────
-        // 1. Delegamos en setSession() para estructurar el usuario y limpiar el prefijo 'ROLE_'
-        const sesion = setSession(data.usuario);
-
-        // 2. Le inyectamos el token JWT que devolvió la API al mismo objeto
-        sesion.token = data.token;
-
-        // 3. Volvemos a guardar la sesión ya enriquecida con el token
-        localStorage.setItem('optistock_session', JSON.stringify(sesion));
+        // ─── INTEGRACIÓN CON AUTH.JS (CORREGIDO) ──────────────────────────────
+        // Guardamos todo en un solo paso para evitar que requireAuth() nos rebote por falta de token
+        setSession(data.usuario, data.token);
 
         console.log('[login.js] Login exitoso:', usuarioLogin);
 
         // Mostrar alerta de éxito ANTES de redirigir
         showAlert('¡Login exitoso! Redirigiendo...', 'success');
 
-        // Redirigir después de 1 segundo para que se vea la alerta
+        // Redirigir después de 1 segundo
         setTimeout(() => {
             window.location.href = '../Index.html';
         }, 1000);
